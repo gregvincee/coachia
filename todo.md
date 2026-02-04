@@ -64,6 +64,51 @@
 - [x] Vérifier l'accessibilité (contraste, taille de touche)
 
 ## Phase 8: Documentation et livraison
-- [ ] Créer la documentation utilisateur
-- [ ] Créer le premier checkpoint
-- [ ] Livrer l'application au client
+- [x] Créer la documentation utilisateur
+- [x] Créer le premier checkpoint
+- [x] Livrer l'application au client
+
+## Phase 9: Défis hebdomadaires
+- [x] Créer les types TypeScript pour les défis
+- [x] Implémenter la logique de génération de défis
+- [x] Créer l'écran Défis avec liste et détails
+- [x] Ajouter le système de progression des défis
+- [x] Implémenter les récompenses bonus pour défis completés
+- [x] Ajouter les notifications de défi completé
+- [x] Créer le tableau de classement des défis
+
+## Phase 10: Notifications push
+- [x] Configurer expo-notifications
+- [x] Implémenter l'enregistrement du token de notification
+- [x] Créer le service de notifications backend
+- [x] Ajouter les notifications de rappel quotidien
+- [x] Ajouter les notifications de streak en danger
+- [x] Ajouter les notifications de défi disponible
+- [x] Implémenter le contrôle des préférences de notifications
+
+## Phase 11: Système de parrainage et communauté
+- [x] Créer les types pour les parrainages
+- [x] Générer les codes de parrainage uniques
+- [x] Implémenter le partage de codes (QR, lien)
+- [x] Créer l'écran Communauté avec leaderboard
+- [x] Ajouter les défis entre amis
+- [x] Implémenter le système de points de parrainage
+- [x] Créer l'écran Invitations et amis
+
+## Phase 12: Monétisation premium
+- [x] Configurer les types d'abonnement
+- [x] Implémenter le paywall avec Stripe/RevenueCat
+- [x] Créer l'écran Premium avec offres
+- [x] Ajouter les contenus exclusifs premium
+- [x] Implémenter la vérification de l'accès premium
+- [x] Créer les packs coaching personnalisés
+- [x] Ajouter les analytics de conversion
+
+## Phase 13: Données avancées et analytics
+- [x] Créer le service d'analytics
+- [x] Implémenter le tracking des événements
+- [x] Créer l'écran Statistiques détaillées
+- [x] Ajouter l'export de progression (PDF/CSV)
+- [x] Implémenter les recommandations IA personnalisées
+- [x] Créer les rapports de progression hebdomadaires
+- [x] Ajouter les insights et tendances
