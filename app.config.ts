@@ -28,11 +28,11 @@ const schemeFromBundleId = `manus${timestamp}`;
 
 const env = {
   // App branding - update these values directly (do not use env vars)
-  appName: "CoachIA - Micro-coaching Instantané",
-  appSlug: "micro-coaching-ia",
+  appName: "CoachIA",
+  appSlug: "{{project_name}}",
   // S3 URL of the app logo - set this to the URL returned by generate_image when creating custom logo
   // Leave empty to use the default icon from assets/images/icon.png
-  logoUrl: "",
+  logoUrl: "https://private-us-east-1.manuscdn.com/sessionFile/5t7JPE52Fvy6uMuw4UtQFf/sandbox/LsEXOKlxuSN3YYYBxoBNqJ-img-1_1770220969000_na1fn_Y29hY2hpYS1sb2dv.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNXQ3SlBFNTJGdnk2dU11dzRVdFFGZi9zYW5kYm94L0xzRVhPS2x4dVNOM1lZWUJ4b0JOcUotaW1nLTFfMTc3MDIyMDk2OTAwMF9uYTFmbl9ZMjloWTJocFlTMXNiMmR2LnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=ZMLh4WvlYm5FnDMILOH4FGOpiXIUs5QcTpMSRSUx2qvb2U6BiC47qArjzKjpJUZUc4RwjuVnBT8Oh00Sot8d1XXiwvl3-Cr5QaDdlSe2NKJJCypRrjOx4eY5EIz28Hmf1cM5BId77x4rrZ24EFOmMVwFmtShzxbDVp3Vz3vHHVJ5zga6NZAyRxkLYrXhOfBJft1Ej0g4HoUaNj8dE6b9EgCaj~~IdgS0Al4W79kNWLFov9cjZnzLx6Ey8O1sAetJojl0kQKFi7FQUBow-FJAb804CB7cmKXZXSiY6Wx83KGnm2n-m4HvRCU38jUBWi30wFH7ug-52pSJvmjL8poCPg__",
   scheme: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,

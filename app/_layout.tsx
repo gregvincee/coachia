@@ -18,6 +18,8 @@ import type { EdgeInsets, Metrics, Rect } from "react-native-safe-area-context";
 
 import { trpc, createTRPCClient } from "@/lib/trpc";
 import { initManusRuntime, subscribeSafeAreaInsets } from "@/lib/_core/manus-runtime";
+import { isOnboardingCompleted } from "@/lib/storage";
+import { useRouter, useSegments } from "expo-router";
 
 const DEFAULT_WEB_INSETS: EdgeInsets = { top: 0, right: 0, bottom: 0, left: 0 };
 const DEFAULT_WEB_FRAME: Rect = { x: 0, y: 0, width: 0, height: 0 };
@@ -32,11 +34,37 @@ export default function RootLayout() {
 
   const [insets, setInsets] = useState<EdgeInsets>(initialInsets);
   const [frame, setFrame] = useState<Rect>(initialFrame);
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean | null>(null);
+  const router = useRouter();
+  const segments = useSegments();
 
   // Initialize Manus runtime for cookie injection from parent container
   useEffect(() => {
     initManusRuntime();
   }, []);
+
+  // Check onboarding status
+  useEffect(() => {
+    async function checkOnboarding() {
+      const completed = await isOnboardingCompleted();
+      setOnboardingComplete(completed);
+    }
+    checkOnboarding();
+  }, []);
+
+  // Navigate based on onboarding status
+  useEffect(() => {
+    if (onboardingComplete === null) return;
+
+    const inTabs = segments[0] === '(tabs)';
+    const inOnboarding = segments[0] === 'onboarding';
+
+    if (!onboardingComplete && !inOnboarding) {
+      router.replace('/onboarding');
+    } else if (onboardingComplete && inOnboarding) {
+      router.replace('/(tabs)');
+    }
+  }, [onboardingComplete, segments]);
 
   const handleSafeAreaUpdate = useCallback((metrics: Metrics) => {
     setInsets(metrics.insets);
@@ -87,6 +115,7 @@ export default function RootLayout() {
           {/* in order for ios apps tab switching to work properly, use presentation: "fullScreenModal" for login page, whenever you decide to use presentation: "modal*/}
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="onboarding" />
             <Stack.Screen name="oauth/callback" />
           </Stack>
           <StatusBar style="auto" />

@@ -1,45 +1,106 @@
-import { ScrollView, Text, View, TouchableOpacity } from "react-native";
+import { ScrollView, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 
-import { ScreenContainer } from "@/components/screen-container";
+import { ScreenContainer } from '@/components/screen-container';
+import { SkillCard } from '@/components/skill-card';
+import { SKILLS } from '@/lib/data';
+import { getUserProfile, createDefaultUserProfile, getSkillsProgress } from '@/lib/storage';
+import type { UserProfile, SkillProgress } from '@/lib/types';
+import { useColors } from '@/hooks/use-colors';
+import { getLevelFromXP, getProgressInLevel } from '@/lib/data';
 
-/**
- * Home Screen - NativeWind Example
- *
- * This template uses NativeWind (Tailwind CSS for React Native).
- * You can use familiar Tailwind classes directly in className props.
- *
- * Key patterns:
- * - Use `className` instead of `style` for most styling
- * - Theme colors: use tokens directly (bg-background, text-foreground, bg-primary, etc.); no dark: prefix needed
- * - Responsive: standard Tailwind breakpoints work on web
- * - Custom colors defined in tailwind.config.js
- */
 export default function HomeScreen() {
+  const router = useRouter();
+  const colors = useColors();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [skillsProgress, setSkillsProgress] = useState<Record<string, SkillProgress>>({});
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  async function loadData() {
+    let userProfile = await getUserProfile();
+    if (!userProfile) {
+      userProfile = await createDefaultUserProfile();
+    }
+    setProfile(userProfile);
+
+    const progress = await getSkillsProgress();
+    setSkillsProgress(progress);
+  }
+
+  const handleSkillPress = (skillId: string) => {
+    router.push(`/coaching/${skillId}`);
+  };
+
+  if (!profile) {
+    return (
+      <ScreenContainer className="p-6">
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-muted">Chargement...</Text>
+        </View>
+      </ScreenContainer>
+    );
+  }
+
+  const progressPercent = getProgressInLevel(profile.xp, profile.level);
+
   return (
     <ScreenContainer className="p-6">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="flex-1 gap-8">
-          {/* Hero Section */}
-          <View className="items-center gap-2">
-            <Text className="text-4xl font-bold text-foreground">Welcome</Text>
-            <Text className="text-base text-muted text-center">
-              Edit app/(tabs)/index.tsx to get started
+        <View className="flex-1 gap-6">
+          {/* Header */}
+          <View className="gap-2">
+            <Text className="text-3xl font-bold text-foreground">
+              Bonjour, {profile.name} 👋
+            </Text>
+            <Text className="text-base text-muted">
+              Quelle compétence voulez-vous développer aujourd'hui ?
             </Text>
           </View>
 
-          {/* Example Card */}
-          <View className="w-full max-w-sm self-center bg-surface rounded-2xl p-6 shadow-sm border border-border">
-            <Text className="text-lg font-semibold text-foreground mb-2">NativeWind Ready</Text>
-            <Text className="text-sm text-muted leading-relaxed">
-              Use Tailwind CSS classes directly in your React Native components.
-            </Text>
+          {/* Progress Bar */}
+          <View className="bg-surface rounded-2xl p-4 border border-border">
+            <View className="flex-row items-center justify-between mb-2">
+              <Text className="text-sm font-semibold text-foreground">
+                Niveau {profile.level}
+              </Text>
+              <Text className="text-xs text-muted">
+                {profile.xp} XP
+              </Text>
+            </View>
+            <View
+              className="h-2 rounded-full"
+              style={{ backgroundColor: colors.border }}
+            >
+              <View
+                className="h-2 rounded-full"
+                style={{
+                  width: `${progressPercent}%`,
+                  backgroundColor: colors.primary,
+                }}
+              />
+            </View>
           </View>
 
-          {/* Example Button */}
-          <View className="items-center">
-            <TouchableOpacity className="bg-primary px-6 py-3 rounded-full active:opacity-80">
-              <Text className="text-background font-semibold">Get Started</Text>
-            </TouchableOpacity>
+          {/* Skills Grid */}
+          <View className="gap-4">
+            <Text className="text-lg font-semibold text-foreground">
+              Compétences disponibles
+            </Text>
+            <View className="flex-row flex-wrap gap-3">
+              {SKILLS.map((skill) => (
+                <View key={skill.id} style={{ width: '47%' }}>
+                  <SkillCard
+                    skill={skill}
+                    onPress={() => handleSkillPress(skill.id)}
+                    level={skillsProgress[skill.id]?.level}
+                  />
+                </View>
+              ))}
+            </View>
           </View>
         </View>
       </ScrollView>
