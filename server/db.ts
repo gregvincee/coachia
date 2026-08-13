@@ -1,7 +1,17 @@
-import { eq } from "drizzle-orm";
+import { desc, eq, gte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import {
+  InsertMicroPurchaseTransaction,
+  InsertCommerceEvent,
+  InsertUser,
+  InsertUserWallet,
+  commerceEvents,
+  microPurchaseTransactions,
+  users,
+  userWallets,
+} from "../drizzle/schema";
 import { ENV } from "./_core/env";
+import { buildCommerceMetrics } from "./commerce-metrics";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -89,4 +99,121 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+export async function getUserWallet(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const results = await db.select().from(userWallets).where(eq(userWallets.userId, userId)).limit(1);
+  return results[0];
+}
+
+export async function getOrCreateUserWallet(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const existing = await getUserWallet(userId);
+  if (existing) return existing;
+
+  const values: InsertUserWallet = { userId };
+  await db.insert(userWallets).values(values).onDuplicateKeyUpdate({ set: { updatedAt: new Date() } });
+  const wallet = await getUserWallet(userId);
+  if (!wallet) throw new Error("Unable to create user wallet");
+  return wallet;
+}
+
+export async function updateUserWallet(
+  userId: number,
+  values: Partial<Omit<InsertUserWallet, "id" | "userId" | "createdAt">>,
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await getOrCreateUserWallet(userId);
+  await db.update(userWallets).set({ ...values, updatedAt: new Date() }).where(eq(userWallets.userId, userId));
+  return getUserWallet(userId);
+}
+
+export async function getMicroPurchaseByPaymentIntent(paymentIntentId: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const results = await db
+    .select()
+    .from(microPurchaseTransactions)
+    .where(eq(microPurchaseTransactions.paymentIntentId, paymentIntentId))
+    .limit(1);
+  return results[0];
+}
+
+export async function recordMicroPurchase(values: InsertMicroPurchaseTransaction) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.insert(microPurchaseTransactions).values(values);
+  return getMicroPurchaseByPaymentIntent(values.paymentIntentId);
+}
+
+export async function updateMicroPurchase(
+  paymentIntentId: string,
+  values: Partial<Omit<InsertMicroPurchaseTransaction, "id" | "userId" | "productId" | "paymentIntentId" | "createdAt">>,
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db
+    .update(microPurchaseTransactions)
+    .set({ ...values, updatedAt: new Date() })
+    .where(eq(microPurchaseTransactions.paymentIntentId, paymentIntentId));
+  return getMicroPurchaseByPaymentIntent(paymentIntentId);
+}
+
+export async function recordCommerceEvent(values: InsertCommerceEvent) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(commerceEvents).values(values);
+}
+
+export async function getUserPurchaseHistory(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(microPurchaseTransactions)
+    .where(eq(microPurchaseTransactions.userId, userId))
+    .orderBy(desc(microPurchaseTransactions.createdAt));
+}
+
+/**
+ * Agrège uniquement les événements et montants nécessaires au pilotage du
+ * Store. Les identifiants personnels n’apparaissent pas dans ce rapport.
+ */
+export async function getCommerceMetrics(since: Date) {
+  const db = await getDb();
+  if (!db) return { since, products: [], totalRevenueCents: 0, paidOrders: 0 };
+
+  const events = await db
+    .select({
+      productId: commerceEvents.productId,
+      checkoutStarts: sql<number>`SUM(CASE WHEN ${commerceEvents.eventType} = 'checkout_started' THEN 1 ELSE 0 END)`,
+      paidEvents: sql<number>`SUM(CASE WHEN ${commerceEvents.eventType} = 'payment_confirmed' THEN 1 ELSE 0 END)`,
+    })
+    .from(commerceEvents)
+    .where(gte(commerceEvents.createdAt, since))
+    .groupBy(commerceEvents.productId);
+
+  const transactions = await db
+    .select({
+      productId: microPurchaseTransactions.productId,
+      paidOrders: sql<number>`COUNT(*)`,
+      revenueCents: sql<number>`SUM(${microPurchaseTransactions.amountCents})`,
+    })
+    .from(microPurchaseTransactions)
+    .where(gte(microPurchaseTransactions.createdAt, since))
+    .groupBy(microPurchaseTransactions.productId);
+
+  const summary = buildCommerceMetrics(events, transactions);
+  return {
+    since,
+    ...summary,
+  };
+}

@@ -8,6 +8,20 @@
       "when": 1763372440610,
       "tag": "0000_elite_eternals",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1786659202241,
+      "tag": "0001_careful_barracuda",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1786659497852,
+      "tag": "0002_mature_spectrum",
+      "breakpoints": true
     }
   ]
 }

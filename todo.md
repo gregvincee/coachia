@@ -165,3 +165,11 @@
 - [ ] Ajouter le support du lecteur d'écran
 - [ ] Implémenter le contraste amélioré
 - [ ] Ajouter les raccourcis clavier
+
+## Phase 21: Micro-paiements rentables
+- [x] Corriger et fiabiliser les dépendances Stripe et Expo côté serveur
+- [x] Créer une intention de paiement sécurisée pour chaque micro-achat
+- [x] Attribuer les droits d’achat à partir des webhooks Stripe vérifiés
+- [x] Synchroniser les crédits de sessions et les quotas de l’utilisateur
+- [x] Mesurer les événements de conversion et les revenus par produit
+- [x] Tester les refus, doublons et confirmations de paiement

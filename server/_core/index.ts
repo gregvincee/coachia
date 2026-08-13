@@ -6,6 +6,7 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
+import { registerStripeWebhook } from "../payment-webhook";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise((resolve) => {
@@ -50,6 +51,10 @@ async function startServer() {
     }
     next();
   });
+
+  // Stripe requiert les octets bruts pour vérifier la signature de ses webhooks.
+  app.use("/api/payments/stripe-webhook", express.raw({ type: "application/json" }));
+  registerStripeWebhook(app);
 
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));

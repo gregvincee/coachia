@@ -2,9 +2,18 @@ import { z } from "zod";
 import { COOKIE_NAME } from "../shared/const.js";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { SKILL_PROMPTS } from "../lib/data";
+import { MICRO_PURCHASES_CATALOG } from "../lib/micro-purchases";
+import { getCommerceMetrics, getUserPurchaseHistory, getUserWallet, recordCommerceEvent } from "./db";
+import { TRPCError } from "@trpc/server";
+import {
+  createMicroPurchaseCheckout,
+  createMicroPurchaseIntent,
+  isStripeConfigured,
+  verifyAndFulfilMicroPurchase,
+} from "./micro-purchase-service";
 
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -18,6 +27,72 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
+  }),
+
+  commerce: router({
+    /** Le catalogue et ses prix sont distribués en lecture seule. */
+    catalog: publicProcedure.query(() => ({
+      products: Object.values(MICRO_PURCHASES_CATALOG),
+      stripeEnabled: isStripeConfigured(),
+    })),
+
+    /** Les crédits sont liés au compte authentifié, jamais à un identifiant client fourni. */
+    wallet: protectedProcedure.query(async ({ ctx }) => {
+      return (await getUserWallet(ctx.user.id)) ?? {
+        userId: ctx.user.id,
+        sessionCredits: 0,
+        hintCredits: 0,
+        streakSavers: 0,
+        challengePasses: 0,
+        premiumContentPasses: 0,
+        masterclassPasses: 0,
+        coachingMinutes: 0,
+        xpBoostExpiresAt: null,
+        monthlyBundleExpiresAt: null,
+      };
+    }),
+
+    history: protectedProcedure.query(({ ctx }) => getUserPurchaseHistory(ctx.user.id)),
+
+    trackStoreEvent: protectedProcedure
+      .input(z.object({ eventType: z.enum(["store_view", "product_selected"]), productId: z.string().max(80).optional() }))
+      .mutation(async ({ ctx, input }) => {
+        await recordCommerceEvent({ userId: ctx.user.id, eventType: input.eventType, productId: input.productId ?? null });
+        return { success: true };
+      }),
+
+    metrics: protectedProcedure
+      .input(z.object({ days: z.number().int().min(1).max(365).default(30) }))
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Accès administrateur requis." });
+        const since = new Date();
+        since.setDate(since.getDate() - input.days);
+        return getCommerceMetrics(since);
+      }),
+
+    /** Crée un paiement ponctuel en recalculant le prix depuis le catalogue serveur. */
+    createIntent: protectedProcedure
+      .input(z.object({ productId: z.string().min(1).max(80) }))
+      .mutation(async ({ ctx, input }) => {
+        return createMicroPurchaseIntent(ctx.user.id, input.productId);
+      }),
+
+    /** Checkout Stripe hébergé pour le Web. La base de retour est vérifiée côté serveur. */
+    createCheckout: protectedProcedure
+      .input(z.object({ productId: z.string().min(1).max(80), returnBaseUrl: z.string().url() }))
+      .mutation(async ({ ctx, input }) => {
+        return createMicroPurchaseCheckout(ctx.user.id, input.productId, input.returnBaseUrl);
+      }),
+
+    /**
+     * Vérification de secours après le retour client. Le webhook reste la
+     * source d’autorité : les deux flux sont idempotents par PaymentIntent.
+     */
+    confirmIntent: protectedProcedure
+      .input(z.object({ paymentIntentId: z.string().min(3).max(255) }))
+      .mutation(async ({ ctx, input }) => {
+        return verifyAndFulfilMicroPurchase(ctx.user.id, input.paymentIntentId);
+      }),
   }),
 
   // Chat IA pour le coaching

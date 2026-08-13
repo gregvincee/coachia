@@ -395,9 +395,11 @@ describe('Payment & Notification Integration', () => {
   });
 
   it('should send reminder before subscription renewal', () => {
+    const renewalDate = new Date();
+    renewalDate.setDate(renewalDate.getDate() + 2);
     const subscription = {
       id: 'sub_123',
-      currentPeriodEnd: new Date('2026-06-21'),
+      currentPeriodEnd: renewalDate,
     };
 
     const daysUntilRenewal = Math.floor(
@@ -408,5 +410,6 @@ describe('Payment & Notification Integration', () => {
     const shouldSendReminder = daysUntilRenewal <= 3;
 
     expect(daysUntilRenewal).toBeGreaterThan(0);
+    expect(shouldSendReminder).toBe(true);
   });
 });
