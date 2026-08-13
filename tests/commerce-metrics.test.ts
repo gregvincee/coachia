@@ -20,6 +20,10 @@ describe("métriques de conversion Commerce", () => {
     ]);
     expect(metrics.totalRevenueCents).toBe(1497);
     expect(metrics.paidOrders).toBe(3);
+    expect(metrics.totalCheckoutStarts).toBe(10);
+    expect(metrics.totalConfirmedEvents).toBe(3);
+    expect(metrics.conversionRate).toBe(0.3);
+    expect(metrics.averageOrderValueCents).toBe(499);
   });
 
   it("gère un paiement sans événement de checkout", () => {

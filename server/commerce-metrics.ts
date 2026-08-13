@@ -54,9 +54,18 @@ export function buildCommerceMetrics(
     conversionRate: value.checkoutStarts > 0 ? value.paidEvents / value.checkoutStarts : 0,
   }));
 
+  const totalCheckoutStarts = products.reduce((sum, product) => sum + product.checkoutStarts, 0);
+  const totalConfirmedEvents = products.reduce((sum, product) => sum + product.paidEvents, 0);
+  const totalRevenueCents = products.reduce((sum, product) => sum + product.revenueCents, 0);
+  const paidOrders = products.reduce((sum, product) => sum + product.paidOrders, 0);
+
   return {
     products,
-    totalRevenueCents: products.reduce((sum, product) => sum + product.revenueCents, 0),
-    paidOrders: products.reduce((sum, product) => sum + product.paidOrders, 0),
+    totalCheckoutStarts,
+    totalConfirmedEvents,
+    totalRevenueCents,
+    paidOrders,
+    conversionRate: totalCheckoutStarts > 0 ? totalConfirmedEvents / totalCheckoutStarts : 0,
+    averageOrderValueCents: paidOrders > 0 ? Math.round(totalRevenueCents / paidOrders) : 0,
   };
 }

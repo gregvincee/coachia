@@ -67,7 +67,30 @@ export const appRouter = router({
         if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Accès administrateur requis." });
         const since = new Date();
         since.setDate(since.getDate() - input.days);
-        return getCommerceMetrics(since);
+        const metrics = await getCommerceMetrics(since);
+        return {
+          periodDays: input.days,
+          since: metrics.since,
+          totals: {
+            revenueCents: metrics.totalRevenueCents,
+            paidOrders: metrics.paidOrders,
+            checkoutStarts: metrics.totalCheckoutStarts,
+            totalConfirmedEvents: metrics.totalConfirmedEvents,
+            conversionRate: metrics.conversionRate,
+            averageOrderValueCents: metrics.averageOrderValueCents,
+          },
+          products: metrics.products
+            .map((product) => {
+              const catalogProduct = MICRO_PURCHASES_CATALOG[product.productId as keyof typeof MICRO_PURCHASES_CATALOG];
+              return {
+                ...product,
+                name: catalogProduct?.name ?? product.productId,
+                category: catalogProduct?.category ?? "unknown",
+                priceCents: catalogProduct ? Math.round(catalogProduct.price * 100) : null,
+              };
+            })
+            .sort((left, right) => right.revenueCents - left.revenueCents),
+        };
       }),
 
     /** Crée un paiement ponctuel en recalculant le prix depuis le catalogue serveur. */

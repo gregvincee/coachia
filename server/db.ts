@@ -189,7 +189,18 @@ export async function getUserPurchaseHistory(userId: number) {
  */
 export async function getCommerceMetrics(since: Date) {
   const db = await getDb();
-  if (!db) return { since, products: [], totalRevenueCents: 0, paidOrders: 0 };
+  if (!db) {
+    return {
+      since,
+      products: [],
+      totalCheckoutStarts: 0,
+      totalConfirmedEvents: 0,
+      totalRevenueCents: 0,
+      paidOrders: 0,
+      conversionRate: 0,
+      averageOrderValueCents: 0,
+    };
+  }
 
   const events = await db
     .select({

@@ -8,10 +8,12 @@ import { useColors } from '@/hooks/use-colors';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { getSettings, saveSettings } from '@/lib/storage';
 import type { AppSettings } from '@/lib/types';
+import { useRouter } from 'expo-router';
 
 export default function SettingsScreen() {
   const colors = useColors();
   const colorScheme = useColorScheme();
+  const router = useRouter();
   const [settings, setSettings] = useState<AppSettings | null>(null);
 
   useEffect(() => {
@@ -95,6 +97,16 @@ export default function SettingsScreen() {
                   />
                 }
               />
+            </View>
+          </View>
+
+          {/* About Section */}
+          <View>
+            <Text className="text-lg font-semibold text-foreground mb-3">
+              Administration
+            </Text>
+            <View className="bg-surface rounded-2xl border border-border overflow-hidden">
+              <SettingRow label="Tableau de bord du Store" value="›" onPress={() => router.push('/admin-dashboard')} />
             </View>
           </View>
 

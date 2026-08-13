@@ -173,3 +173,10 @@
 - [x] Synchroniser les crédits de sessions et les quotas de l’utilisateur
 - [x] Mesurer les événements de conversion et les revenus par produit
 - [x] Tester les refus, doublons et confirmations de paiement
+
+## Phase 22: Tableau de bord administrateur
+- [x] Protéger l’accès aux métriques par le rôle administrateur
+- [x] Exposer les indicateurs de revenus, ventes et conversion par produit
+- [x] Créer l’écran mobile du tableau de bord avec filtres de période
+- [x] Afficher les performances par produit et les états sans données
+- [x] Tester les autorisations et les calculs de synthèse
