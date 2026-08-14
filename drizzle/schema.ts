@@ -17,6 +17,7 @@ export const users = mysqlTable("users", {
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  subscriptionPlan: mysqlEnum("subscriptionPlan", ["free", "pro", "elite"]).default("free").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
@@ -88,3 +89,38 @@ export const commerceEvents = mysqlTable("commerceEvents", {
 
 export type CommerceEvent = typeof commerceEvents.$inferSelect;
 export type InsertCommerceEvent = typeof commerceEvents.$inferInsert;
+
+/** Coûts IA quotidiens agrégés : aucune conversation ni identifiant personnel n’est stocké ici. */
+export const aiDailyUsage = mysqlTable("aiDailyUsage", {
+  id: int("id").autoincrement().primaryKey(),
+  day: varchar("day", { length: 10 }).notNull(),
+  requestCount: int("requestCount").default(0).notNull(),
+  promptTokens: int("promptTokens").default(0).notNull(),
+  completionTokens: int("completionTokens").default(0).notNull(),
+  estimatedCostMilliCents: int("estimatedCostMilliCents").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [uniqueIndex("aiDailyUsage_day_unique").on(table.day)]);
+
+/** Compteur minimal par utilisateur, réservé au respect des quotas de son plan. */
+export const userDailyAiUsage = mysqlTable("userDailyAiUsage", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  day: varchar("day", { length: 10 }).notNull(),
+  promptRequests: int("promptRequests").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [uniqueIndex("userDailyAiUsage_user_day_unique").on(table.userId, table.day)]);
+
+/** Télémétrie quotidienne agrégée du cache Redis : hits/misses et aucun contenu utilisateur. */
+export const redisCacheDailyMetrics = mysqlTable("redisCacheDailyMetrics", {
+  id: int("id").autoincrement().primaryKey(),
+  day: varchar("day", { length: 10 }).notNull(),
+  cacheHits: int("cacheHits").default(0).notNull(),
+  cacheMisses: int("cacheMisses").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [uniqueIndex("redisCacheDailyMetrics_day_unique").on(table.day)]);
+
+export type AiDailyUsage = typeof aiDailyUsage.$inferSelect;
+export type RedisCacheDailyMetric = typeof redisCacheDailyMetrics.$inferSelect;

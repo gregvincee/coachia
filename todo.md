@@ -180,3 +180,11 @@
 - [x] Créer l’écran mobile du tableau de bord avec filtres de période
 - [x] Afficher les performances par produit et les états sans données
 - [x] Tester les autorisations et les calculs de synthèse
+
+## Phase 23: COACHIA ALERT ENGINE
+- [x] Définir les contrats décisionnels, seuils et niveaux d’alerte
+- [x] Mesurer les coûts IA journaliers et appliquer la protection Free à 90 %
+- [x] Instrumenter les statistiques cache Redis et alerter sous 50 % sur 24 h
+- [x] Comparer la conversion checkout par produit sur deux périodes de 7 jours
+- [x] Exposer les alertes aux seuls administrateurs et les afficher dans le dashboard
+- [x] Tester les seuils, le volume minimal et les exemptions Pro/Elite

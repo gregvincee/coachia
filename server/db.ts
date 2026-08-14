@@ -1,12 +1,15 @@
-import { desc, eq, gte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, lt, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertMicroPurchaseTransaction,
   InsertCommerceEvent,
   InsertUser,
   InsertUserWallet,
+  aiDailyUsage,
   commerceEvents,
   microPurchaseTransactions,
+  redisCacheDailyMetrics,
+  userDailyAiUsage,
   users,
   userWallets,
 } from "../drizzle/schema";
@@ -188,6 +191,11 @@ export async function getUserPurchaseHistory(userId: number) {
  * Store. Les identifiants personnels n’apparaissent pas dans ce rapport.
  */
 export async function getCommerceMetrics(since: Date) {
+  return getCommerceMetricsBetween(since);
+}
+
+/** Agrège une période fermée pour comparer la conversion actuelle à la précédente. */
+export async function getCommerceMetricsBetween(since: Date, until?: Date) {
   const db = await getDb();
   if (!db) {
     return {
@@ -202,6 +210,13 @@ export async function getCommerceMetrics(since: Date) {
     };
   }
 
+  const periodFilter = until
+    ? and(gte(commerceEvents.createdAt, since), lt(commerceEvents.createdAt, until))
+    : gte(commerceEvents.createdAt, since);
+  const transactionPeriodFilter = until
+    ? and(gte(microPurchaseTransactions.createdAt, since), lt(microPurchaseTransactions.createdAt, until))
+    : gte(microPurchaseTransactions.createdAt, since);
+
   const events = await db
     .select({
       productId: commerceEvents.productId,
@@ -209,7 +224,7 @@ export async function getCommerceMetrics(since: Date) {
       paidEvents: sql<number>`SUM(CASE WHEN ${commerceEvents.eventType} = 'payment_confirmed' THEN 1 ELSE 0 END)`,
     })
     .from(commerceEvents)
-    .where(gte(commerceEvents.createdAt, since))
+    .where(periodFilter)
     .groupBy(commerceEvents.productId);
 
   const transactions = await db
@@ -219,7 +234,7 @@ export async function getCommerceMetrics(since: Date) {
       revenueCents: sql<number>`SUM(${microPurchaseTransactions.amountCents})`,
     })
     .from(microPurchaseTransactions)
-    .where(gte(microPurchaseTransactions.createdAt, since))
+    .where(transactionPeriodFilter)
     .groupBy(microPurchaseTransactions.productId);
 
   const summary = buildCommerceMetrics(events, transactions);
@@ -227,4 +242,104 @@ export async function getCommerceMetrics(since: Date) {
     since,
     ...summary,
   };
+}
+
+function getDayKey(date = new Date()): string {
+  return date.toISOString().slice(0, 10);
+}
+
+export type AiUsageInput = {
+  userId: number;
+  promptTokens: number;
+  completionTokens: number;
+  estimatedCostMilliCents: number;
+  occurredAt?: Date;
+};
+
+/** Enregistre des coûts agrégés et le compteur individuel minimal requis pour les quotas. */
+export async function recordAiUsage(input: AiUsageInput) {
+  const db = await getDb();
+  if (!db) return;
+  const day = getDayKey(input.occurredAt);
+
+  await db.insert(aiDailyUsage).values({
+    day,
+    requestCount: 1,
+    promptTokens: input.promptTokens,
+    completionTokens: input.completionTokens,
+    estimatedCostMilliCents: input.estimatedCostMilliCents,
+  }).onDuplicateKeyUpdate({
+    set: {
+      requestCount: sql`${aiDailyUsage.requestCount} + 1`,
+      promptTokens: sql`${aiDailyUsage.promptTokens} + ${input.promptTokens}`,
+      completionTokens: sql`${aiDailyUsage.completionTokens} + ${input.completionTokens}`,
+      estimatedCostMilliCents: sql`${aiDailyUsage.estimatedCostMilliCents} + ${input.estimatedCostMilliCents}`,
+      updatedAt: new Date(),
+    },
+  });
+
+  await db.insert(userDailyAiUsage).values({ userId: input.userId, day, promptRequests: 1 }).onDuplicateKeyUpdate({
+    set: {
+      promptRequests: sql`${userDailyAiUsage.promptRequests} + 1`,
+      updatedAt: new Date(),
+    },
+  });
+}
+
+export async function getAiDailyUsage(date = new Date()) {
+  const db = await getDb();
+  const day = getDayKey(date);
+  if (!db) {
+    return { day, requestCount: 0, promptTokens: 0, completionTokens: 0, estimatedCostMilliCents: 0 };
+  }
+  const [usage] = await db.select().from(aiDailyUsage).where(eq(aiDailyUsage.day, day)).limit(1);
+  return usage ?? { day, requestCount: 0, promptTokens: 0, completionTokens: 0, estimatedCostMilliCents: 0 };
+}
+
+export async function getUserDailyPromptUsage(userId: number, date = new Date()): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const [usage] = await db.select().from(userDailyAiUsage).where(and(eq(userDailyAiUsage.userId, userId), eq(userDailyAiUsage.day, getDayKey(date)))).limit(1);
+  return usage?.promptRequests ?? 0;
+}
+
+export async function recordRedisCacheOutcome(outcome: "hit" | "miss", occurredAt = new Date()) {
+  const db = await getDb();
+  if (!db) return;
+  const day = getDayKey(occurredAt);
+  const hitIncrement = outcome === "hit" ? 1 : 0;
+  const missIncrement = outcome === "miss" ? 1 : 0;
+
+  await db.insert(redisCacheDailyMetrics).values({ day, cacheHits: hitIncrement, cacheMisses: missIncrement }).onDuplicateKeyUpdate({
+    set: {
+      cacheHits: sql`${redisCacheDailyMetrics.cacheHits} + ${hitIncrement}`,
+      cacheMisses: sql`${redisCacheDailyMetrics.cacheMisses} + ${missIncrement}`,
+      updatedAt: new Date(),
+    },
+  });
+}
+
+export async function getRedisCacheMetricsSince(since: Date) {
+  const db = await getDb();
+  if (!db) return { cacheHits: 0, cacheMisses: 0 };
+  const [metrics] = await db.select({
+    cacheHits: sql<number>`COALESCE(SUM(${redisCacheDailyMetrics.cacheHits}), 0)`,
+    cacheMisses: sql<number>`COALESCE(SUM(${redisCacheDailyMetrics.cacheMisses}), 0)`,
+  }).from(redisCacheDailyMetrics).where(gte(redisCacheDailyMetrics.day, getDayKey(since)));
+  return { cacheHits: Number(metrics?.cacheHits ?? 0), cacheMisses: Number(metrics?.cacheMisses ?? 0) };
+}
+
+/** Nombre d’échecs de paiement par produit, pour diagnostiquer une faible conversion sans exposer les acheteurs. */
+export async function getCheckoutFailuresBetween(since: Date, until?: Date): Promise<Record<string, number>> {
+  const db = await getDb();
+  if (!db) return {};
+  const filter = until
+    ? and(gte(commerceEvents.createdAt, since), lt(commerceEvents.createdAt, until), eq(commerceEvents.eventType, "payment_failed"))
+    : and(gte(commerceEvents.createdAt, since), eq(commerceEvents.eventType, "payment_failed"));
+  const rows = await db.select({
+    productId: commerceEvents.productId,
+    failureCount: sql<number>`COUNT(*)`,
+  }).from(commerceEvents).where(filter).groupBy(commerceEvents.productId);
+
+  return Object.fromEntries(rows.filter((row) => row.productId).map((row) => [row.productId as string, Number(row.failureCount ?? 0)]));
 }

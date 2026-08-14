@@ -6,7 +6,15 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { SKILL_PROMPTS } from "../lib/data";
 import { MICRO_PURCHASES_CATALOG } from "../lib/micro-purchases";
-import { getCommerceMetrics, getUserPurchaseHistory, getUserWallet, recordCommerceEvent } from "./db";
+import {
+  getAiDailyUsage,
+  getCommerceMetrics,
+  getUserDailyPromptUsage,
+  getUserPurchaseHistory,
+  getUserWallet,
+  recordAiUsage,
+  recordCommerceEvent,
+} from "./db";
 import { TRPCError } from "@trpc/server";
 import {
   createMicroPurchaseCheckout,
@@ -14,6 +22,10 @@ import {
   isStripeConfigured,
   verifyAndFulfilMicroPurchase,
 } from "./micro-purchase-service";
+import { checkAIBudgetAlert, getCoachIAAlerts } from "./alert-engine";
+import { getEffectiveAiQuota } from "../lib/subscription-limits";
+import { estimateAiCostMilliCents } from "./ai-cost";
+import { createCoachingCacheKey, getCachedCoachingResponse, setCachedCoachingResponse } from "./_core/redis-cache";
 
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -93,6 +105,12 @@ export const appRouter = router({
         };
       }),
 
+    /** Les alertes opérationnelles ne sont exposées qu’au compte administrateur. */
+    alerts: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Accès administrateur requis." });
+      return { alerts: await getCoachIAAlerts() };
+    }),
+
     /** Crée un paiement ponctuel en recalculant le prix depuis le catalogue serveur. */
     createIntent: protectedProcedure
       .input(z.object({ productId: z.string().min(1).max(80) }))
@@ -120,7 +138,7 @@ export const appRouter = router({
 
   // Chat IA pour le coaching
   ai: router({
-    chat: publicProcedure
+    chat: protectedProcedure
       .input(
         z.object({
           skillId: z.string(),
@@ -132,8 +150,28 @@ export const appRouter = router({
           ),
         })
       )
-      .mutation(async ({ input }) => {
+      .mutation(async ({ ctx, input }) => {
         const { skillId, messages } = input;
+
+        const dailyUsage = await getAiDailyUsage();
+        const currentBudgetAlert = checkAIBudgetAlert(dailyUsage);
+        const quota = getEffectiveAiQuota(ctx.user.subscriptionPlan, currentBudgetAlert?.level ?? null);
+        const usedPrompts = await getUserDailyPromptUsage(ctx.user.id);
+        if (usedPrompts >= quota.dailyPrompts) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: quota.protectionApplied
+              ? "La protection budgétaire limite temporairement les demandes Free. Les abonnés ne sont pas concernés."
+              : "Votre quota quotidien de coaching IA est atteint.",
+          });
+        }
+
+        const cacheKey = createCoachingCacheKey(skillId, messages);
+        const cached = await getCachedCoachingResponse(cacheKey);
+        if (cached) {
+          await recordAiUsage({ userId: ctx.user.id, promptTokens: 0, completionTokens: 0, estimatedCostMilliCents: 0 });
+          return cached;
+        }
 
         // Récupérer le prompt système pour la compétence
         const systemPrompt = SKILL_PROMPTS[skillId] || SKILL_PROMPTS["productivity"];
@@ -157,6 +195,14 @@ export const appRouter = router({
 
         // Générer des suggestions de réponses rapides
         const suggestions = generateQuickReplies(skillId, assistantMessage);
+
+        await recordAiUsage({
+          userId: ctx.user.id,
+          promptTokens: response.usage?.prompt_tokens ?? 0,
+          completionTokens: response.usage?.completion_tokens ?? 0,
+          estimatedCostMilliCents: estimateAiCostMilliCents(response.usage),
+        });
+        await setCachedCoachingResponse(cacheKey, { message: assistantMessage, suggestions });
 
         return {
           message: assistantMessage,

@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Linking,
   RefreshControl,
   ScrollView,
   Text,
@@ -13,6 +14,7 @@ import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
 import { useAuth } from "@/hooks/use-auth";
 import { trpc } from "@/lib/trpc";
+import type { CoachIAAlert } from "@/lib/types-alerts";
 
 const PERIODS = [
   { label: "7 j", days: 7 },
@@ -33,17 +35,25 @@ export default function AdminDashboardScreen() {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const [days, setDays] = useState<(typeof PERIODS)[number]["days"]>(30);
+  const [expandedAlertIds, setExpandedAlertIds] = useState<string[]>([]);
   const metrics = trpc.commerce.metrics.useQuery({ days }, { enabled: isAuthenticated });
+  const alertMetrics = trpc.commerce.alerts.useQuery(undefined, { enabled: isAuthenticated });
 
   const onRefresh = useCallback(async () => {
-    await metrics.refetch();
-  }, [metrics]);
+    await Promise.all([metrics.refetch(), alertMetrics.refetch()]);
+  }, [alertMetrics, metrics]);
 
   const errorCode = (metrics.error as { data?: { code?: string } } | null)?.data?.code;
   const isForbidden = errorCode === "FORBIDDEN" || errorCode === "UNAUTHORIZED";
   const products = metrics.data?.products ?? [];
   const totals = metrics.data?.totals;
+  const alerts = alertMetrics.data?.alerts ?? [];
   const confirmedWidth = Math.min(100, Math.round((totals?.conversionRate ?? 0) * 100));
+  const toggleAlert = useCallback((alertId: string) => {
+    setExpandedAlertIds((current) => current.includes(alertId)
+      ? current.filter((id) => id !== alertId)
+      : [...current, alertId]);
+  }, []);
 
   const header = useMemo(() => (
     <View className="gap-5 pb-5">
@@ -85,6 +95,26 @@ export default function AdminDashboardScreen() {
         <Notice title="Données indisponibles" description="Impossible de charger les métriques. Réessayez dans quelques instants." />
       ) : totals ? (
         <View className="px-4 gap-4">
+          <View className="gap-3">
+            <View className="flex-row items-center justify-between">
+              <Text className="text-lg font-bold text-foreground">Alertes opérationnelles</Text>
+              <Text className="text-sm font-semibold text-muted">{alerts.length} active{alerts.length > 1 ? "s" : ""}</Text>
+            </View>
+            {alertMetrics.isLoading ? (
+              <View className="rounded-2xl border border-border bg-surface p-4"><Text className="text-sm text-muted">Analyse des alertes…</Text></View>
+            ) : alerts.length === 0 ? (
+              <View className="rounded-2xl border border-success/30 bg-surface p-4"><Text className="text-sm font-semibold text-success">Aucune alerte active</Text><Text className="mt-1 text-sm leading-5 text-muted">Les seuils opérationnels surveillés sont actuellement dans leur plage attendue.</Text></View>
+            ) : alerts.map((alert) => (
+              <AlertCard
+                key={alert.id}
+                alert={alert}
+                expanded={expandedAlertIds.includes(alert.id)}
+                onPress={() => toggleAlert(alert.id)}
+                onOpenStripe={alert.action.stripePath ? () => Linking.openURL(alert.action.stripePath as string) : undefined}
+              />
+            ))}
+          </View>
+
           <View className="flex-row gap-3">
             <MetricCard label="Revenu brut" value={formatCurrency(totals.revenueCents)} emphasis />
             <MetricCard label="Ventes" value={String(totals.paidOrders)} />
@@ -111,7 +141,7 @@ export default function AdminDashboardScreen() {
         </View>
       ) : null}
     </View>
-  ), [authLoading, confirmedWidth, days, isAuthenticated, isForbidden, metrics.error, metrics.isLoading, router, totals]);
+  ), [alertMetrics.isLoading, alerts, authLoading, confirmedWidth, days, expandedAlertIds, isAuthenticated, isForbidden, metrics.error, metrics.isLoading, router, toggleAlert, totals]);
 
   return (
     <ScreenContainer className="p-0">
@@ -133,7 +163,7 @@ export default function AdminDashboardScreen() {
           </View>
         )}
         ListEmptyComponent={totals && !metrics.isLoading ? <Notice title="Pas encore de ventes" description="Les résultats apparaîtront ici après les premiers checkouts et paiements confirmés." /> : null}
-        refreshControl={<RefreshControl refreshing={metrics.isFetching} onRefresh={onRefresh} />}
+        refreshControl={<RefreshControl refreshing={metrics.isFetching || alertMetrics.isFetching} onRefresh={onRefresh} />}
         contentContainerStyle={{ paddingBottom: 32 }}
       />
     </ScreenContainer>
@@ -146,6 +176,55 @@ function MetricCard({ label, value, emphasis = false }: { label: string; value: 
 
 function MiniMetric({ label, value }: { label: string; value: string }) {
   return <View className="gap-1"><Text className="text-xs text-muted">{label}</Text><Text className="text-sm font-bold text-foreground">{value}</Text></View>;
+}
+
+function AlertCard({
+  alert,
+  expanded,
+  onPress,
+  onOpenStripe,
+}: {
+  alert: CoachIAAlert;
+  expanded: boolean;
+  onPress: () => void;
+  onOpenStripe?: () => void;
+}) {
+  const styles = alert.level === "CRITICAL"
+    ? { border: "border-error/40", badge: "bg-error", label: "Critique", value: "text-error" }
+    : alert.level === "WARNING"
+      ? { border: "border-warning/40", badge: "bg-warning", label: "À vérifier", value: "text-warning" }
+      : { border: "border-success/40", badge: "bg-success", label: "Information", value: "text-success" };
+  const value = alert.type === "AI_BUDGET"
+    ? formatCurrency(alert.valeurActuelle)
+    : formatPercent(alert.valeurActuelle);
+  const threshold = alert.type === "AI_BUDGET"
+    ? formatCurrency(alert.seuil)
+    : formatPercent(alert.seuil);
+
+  return (
+    <View className={`rounded-2xl border bg-surface p-4 ${styles.border}`}>
+      <TouchableOpacity accessibilityRole="button" accessibilityState={{ expanded }} accessibilityLabel={`Alerte ${styles.label}: ${alert.problème}`} onPress={onPress} activeOpacity={0.75}>
+        <View className="flex-row items-start gap-3">
+          <View className={`mt-1 h-3 w-3 rounded-full ${styles.badge}`} />
+          <View className="flex-1 gap-1">
+            <View className="flex-row items-center justify-between gap-2"><Text className={`text-xs font-bold uppercase ${styles.value}`}>{styles.label}</Text><Text className="text-xs text-muted">{alert.période}</Text></View>
+            <Text className="text-base font-bold text-foreground">{alert.problème}</Text>
+            <Text className="text-sm leading-5 text-muted">{alert.métrique} : <Text className="font-bold text-foreground">{value}</Text> · Seuil : {threshold}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      {expanded ? (
+        <View className="mt-4 gap-3 border-t border-border pt-4">
+          <Text className="text-sm leading-5 text-muted"><Text className="font-bold text-foreground">Impact estimé. </Text>{alert.impactEstimé}</Text>
+          <Text className="text-sm leading-5 text-muted"><Text className="font-bold text-foreground">Décision recommandée. </Text>{alert.actionRecommandée}</Text>
+          {alert.comparaisonPériodePrécédente ? <Text className="text-sm text-muted">Période précédente : {formatPercent(alert.comparaisonPériodePrécédente.valeur)}{alert.comparaisonPériodePrécédente.évolution !== null ? ` · Évolution : ${formatPercent(alert.comparaisonPériodePrécédente.évolution)}` : ""}</Text> : null}
+          <Text className="text-xs text-muted">Volume minimal : {alert.volumeMinimalAtteint ? "atteint" : "non atteint"} · Action automatique : {alert.actionAutomatiqueAppliquée ? "appliquée" : "non appliquée"}</Text>
+          {onOpenStripe ? <TouchableOpacity accessibilityRole="link" accessibilityLabel="Ouvrir le diagnostic Stripe" onPress={onOpenStripe} activeOpacity={0.75} className="self-start rounded-full bg-primary px-4 py-2"><Text className="font-bold text-white">Ouvrir Stripe et les paiements</Text></TouchableOpacity> : null}
+        </View>
+      ) : null}
+    </View>
+  );
 }
 
 function Notice({ title, description }: { title: string; description: string }) {

@@ -21,6 +21,7 @@ function createContext(role: "user" | "admin"): TrpcContext {
       email: "admin@example.com",
       loginMethod: "manus",
       role,
+      subscriptionPlan: "free",
       createdAt: new Date(),
       updatedAt: new Date(),
       lastSignedIn: new Date(),
