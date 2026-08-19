@@ -188,3 +188,10 @@
 - [x] Comparer la conversion checkout par produit sur deux périodes de 7 jours
 - [x] Exposer les alertes aux seuls administrateurs et les afficher dans le dashboard
 - [x] Tester les seuils, le volume minimal et les exemptions Pro/Elite
+
+## Phase 24: Lancement bêta et paiements
+- [ ] Configurer Stripe en mode test puis valider le webhook et l’attribution des achats
+- [ ] Préparer une page d’inscription, les politiques minimales et le message de la bêta
+- [ ] Recruter une première cohorte ciblée et recueillir les consentements
+- [ ] Mesurer activation, rétention, checkout, paiement et coût IA par cohorte
+- [ ] Décider les améliorations prioritaires à partir des données du premier mois
