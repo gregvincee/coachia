@@ -14,6 +14,7 @@ import { useState, useEffect, useRef } from 'react';
 import * as Haptics from 'expo-haptics';
 
 import { ScreenContainer } from '@/components/screen-container';
+import { BetaStepCelebration } from '@/components/beta-step-celebration';
 import { ChatBubble } from '@/components/chat-bubble';
 import { QuickReply } from '@/components/quick-reply';
 import { IconSymbol } from '@/components/ui/icon-symbol';
@@ -24,6 +25,7 @@ import {
   getChatHistory,
   addChatMessage,
   completeBetaWelcomeStep,
+  getBetaWelcomeProgress,
 } from '@/lib/storage';
 import { addXP, updateStreak } from '@/lib/gamification';
 import type { ChatMessage } from '@/lib/types';
@@ -38,6 +40,7 @@ export default function CoachingScreen() {
   const [inputText, setInputText] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showBetaCelebration, setShowBetaCelebration] = useState(false);
 
   const skill = SKILLS.find((s) => s.id === skillId);
 
@@ -141,7 +144,9 @@ export default function CoachingScreen() {
 
       // Mettre à jour l'XP de l'utilisateur
       await updateUserXP(10); // +10 XP par message
+      const betaProgress = await getBetaWelcomeProgress();
       await completeBetaWelcomeStep('first_session');
+      if (!betaProgress.first_session) setShowBetaCelebration(true);
       // Un signal anonyme suffit pour la cohorte : aucun texte de coaching n'est transmis.
       betaActivityMutation.mutate();
 
@@ -271,6 +276,12 @@ export default function CoachingScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+      <BetaStepCelebration
+        visible={showBetaCelebration}
+        title="Première session validée"
+        message="Très bon départ : votre jalon bêta est enregistré."
+        onFinished={() => setShowBetaCelebration(false)}
+      />
     </ScreenContainer>
   );
 }

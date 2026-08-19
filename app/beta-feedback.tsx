@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Platform, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
-import * as Haptics from "expo-haptics";
+import { Alert, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { Stack } from "expo-router";
 
 import { ScreenContainer } from "@/components/screen-container";
+import { BetaStepCelebration } from "@/components/beta-step-celebration";
 import {
   BETA_FEEDBACK_CATEGORIES,
   createBetaFeedback,
@@ -12,7 +12,7 @@ import {
   type BetaFeedbackCategory,
   validateBetaFeedback,
 } from "@/lib/beta-feedback";
-import { addBetaFeedback, completeBetaWelcomeStep, getBetaFeedback } from "@/lib/storage";
+import { addBetaFeedback, completeBetaWelcomeStep, getBetaFeedback, getBetaWelcomeProgress } from "@/lib/storage";
 import { trpc } from "@/lib/trpc";
 
 export default function BetaFeedbackScreen() {
@@ -21,6 +21,7 @@ export default function BetaFeedbackScreen() {
   const [message, setMessage] = useState("");
   const [feedbacks, setFeedbacks] = useState<BetaFeedback[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [showBetaCelebration, setShowBetaCelebration] = useState(false);
   const betaFeedbackMutation = trpc.beta.recordFeedback.useMutation();
 
   useEffect(() => {
@@ -40,13 +41,13 @@ export default function BetaFeedbackScreen() {
       const feedback = createBetaFeedback(draft);
       const updated = await addBetaFeedback(feedback);
       setFeedbacks(updated);
+      const betaProgress = await getBetaWelcomeProgress();
       await completeBetaWelcomeStep("share_feedback");
+      if (!betaProgress.share_feedback) setShowBetaCelebration(true);
       // Le commentaire reste local. Seule la note volontaire alimente l’agrégat bêta administrateur.
       betaFeedbackMutation.mutate({ rating });
       setRating(0);
       setMessage("");
-      if (Platform.OS !== "web") void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      Alert.alert("Merci", "Votre retour est enregistré sur cet appareil. Vous pouvez l’exporter quand vous le souhaitez.");
     } finally {
       setIsSaving(false);
     }
@@ -143,6 +144,12 @@ export default function BetaFeedbackScreen() {
           ))}
         </View>
       </ScrollView>
+      <BetaStepCelebration
+        visible={showBetaCelebration}
+        title="Retour enregistré"
+        message="Merci : votre deuxième jalon bêta est validé."
+        onFinished={() => setShowBetaCelebration(false)}
+      />
     </ScreenContainer>
   );
 }

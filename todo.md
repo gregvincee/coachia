@@ -225,3 +225,8 @@
 - [x] Créer l’écran d’accueil bêta accessible depuis les paramètres
 - [x] Conserver localement la progression des étapes de test
 - [x] Tester le guidage et la persistance de l’accueil bêta
+
+## Phase 30: Célébration des jalons bêta
+- [x] Définir une célébration courte compatible avec les préférences d’accessibilité
+- [x] Afficher l’animation et le retour haptique lors d’un nouveau jalon validé
+- [x] Tester la célébration sans perturber la progression persistante
