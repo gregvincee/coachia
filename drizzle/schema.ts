@@ -124,3 +124,30 @@ export const redisCacheDailyMetrics = mysqlTable("redisCacheDailyMetrics", {
 
 export type AiDailyUsage = typeof aiDailyUsage.$inferSelect;
 export type RedisCacheDailyMetric = typeof redisCacheDailyMetrics.$inferSelect;
+
+/**
+ * Signaux de cohorte bêta minimaux. Ils identifient techniquement un compte
+ * uniquement pour calculer les agrégats ; aucune donnée personnelle n’est
+ * retournée dans les rapports administratifs.
+ */
+export const betaCohortMembers = mysqlTable(
+  "betaCohortMembers",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId").notNull(),
+    activatedAt: timestamp("activatedAt").defaultNow().notNull(),
+    latestActivityAt: timestamp("latestActivityAt").defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex("betaCohortMembers_userId_unique").on(table.userId)],
+);
+
+/** Notes bêta agrégées uniquement : aucun commentaire libre n’est envoyé au serveur. */
+export const betaCohortFeedback = mysqlTable("betaCohortFeedback", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  rating: int("rating").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type BetaCohortMember = typeof betaCohortMembers.$inferSelect;
+export type BetaCohortFeedback = typeof betaCohortFeedback.$inferSelect;

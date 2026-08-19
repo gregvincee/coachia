@@ -207,3 +207,15 @@
 - [x] Créer l’écran de feedback accessible depuis les paramètres
 - [x] Enregistrer localement les feedbacks et proposer une copie exportable
 - [x] Tester la validation et la persistance du parcours de feedback
+
+## Phase 27: Coordination du lancement bêta
+- [ ] Confirmer la cible initiale, la promesse et l’offre bêta
+- [ ] Organiser le recrutement, les consentements et le canal de support
+- [ ] Préparer les décisions de publication PWA et de configuration Stripe
+- [ ] Définir les critères de passage entre bêta fermée et lancement public
+
+## Phase 28: Suivi de cohorte bêta
+- [x] Définir les indicateurs d’invitation, activation, rétention et feedback
+- [x] Ajouter les agrégats de cohorte réservés à l’administration
+- [x] Afficher les métriques et seuils de décision dans le dashboard
+- [x] Tester les métriques de cohorte et les autorisations administratives

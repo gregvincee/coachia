@@ -10,11 +10,14 @@ vi.mock("../server/alert-engine", () => ({
 
 vi.mock("../server/db", () => ({
   getAiDailyUsage: vi.fn(),
+  getBetaCohortMetrics: vi.fn(),
   getCommerceMetrics: vi.fn(),
   getUserDailyPromptUsage: vi.fn(),
   getUserPurchaseHistory: vi.fn(),
   getUserWallet: vi.fn(),
   recordAiUsage: vi.fn(),
+  recordBetaCohortActivity: vi.fn(),
+  recordBetaFeedbackRating: vi.fn(),
   recordCommerceEvent: vi.fn(),
 }));
 

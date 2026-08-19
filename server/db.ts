@@ -6,6 +6,8 @@ import {
   InsertUser,
   InsertUserWallet,
   aiDailyUsage,
+  betaCohortFeedback,
+  betaCohortMembers,
   commerceEvents,
   microPurchaseTransactions,
   redisCacheDailyMetrics,
@@ -15,6 +17,7 @@ import {
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 import { buildCommerceMetrics } from "./commerce-metrics";
+import { buildBetaCohortMetrics } from "./beta-cohort-metrics";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -301,6 +304,34 @@ export async function getUserDailyPromptUsage(userId: number, date = new Date())
   if (!db) return 0;
   const [usage] = await db.select().from(userDailyAiUsage).where(and(eq(userDailyAiUsage.userId, userId), eq(userDailyAiUsage.day, getDayKey(date)))).limit(1);
   return usage?.promptRequests ?? 0;
+}
+
+/** Met à jour l’activité de cohorte sans conserver ni conversation ni contenu de coaching. */
+export async function recordBetaCohortActivity(userId: number, occurredAt = new Date()) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(betaCohortMembers).values({ userId, activatedAt: occurredAt, latestActivityAt: occurredAt }).onDuplicateKeyUpdate({
+    set: { latestActivityAt: occurredAt },
+  });
+}
+
+/** Enregistre uniquement la note numérique transmise volontairement par le testeur. */
+export async function recordBetaFeedbackRating(userId: number, rating: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(betaCohortFeedback).values({ userId, rating });
+}
+
+/** Retourne exclusivement des agrégats de cohorte, jamais les identifiants des testeurs. */
+export async function getBetaCohortMetrics(since: Date, now = new Date()) {
+  const db = await getDb();
+  if (!db) return buildBetaCohortMetrics([], [], since, now);
+
+  const [members, feedbacks] = await Promise.all([
+    db.select({ userId: betaCohortMembers.userId, activatedAt: betaCohortMembers.activatedAt, latestActivityAt: betaCohortMembers.latestActivityAt }).from(betaCohortMembers),
+    db.select({ userId: betaCohortFeedback.userId, rating: betaCohortFeedback.rating, createdAt: betaCohortFeedback.createdAt }).from(betaCohortFeedback),
+  ]);
+  return buildBetaCohortMetrics(members, feedbacks, since, now);
 }
 
 export async function recordRedisCacheOutcome(outcome: "hit" | "miss", occurredAt = new Date()) {

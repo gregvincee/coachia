@@ -8,11 +8,14 @@ import { SKILL_PROMPTS } from "../lib/data";
 import { MICRO_PURCHASES_CATALOG } from "../lib/micro-purchases";
 import {
   getAiDailyUsage,
+  getBetaCohortMetrics,
   getCommerceMetrics,
   getUserDailyPromptUsage,
   getUserPurchaseHistory,
   getUserWallet,
   recordAiUsage,
+  recordBetaCohortActivity,
+  recordBetaFeedbackRating,
   recordCommerceEvent,
 } from "./db";
 import { TRPCError } from "@trpc/server";
@@ -133,6 +136,30 @@ export const appRouter = router({
       .input(z.object({ paymentIntentId: z.string().min(3).max(255) }))
       .mutation(async ({ ctx, input }) => {
         return verifyAndFulfilMicroPurchase(ctx.user.id, input.paymentIntentId);
+    }),
+  }),
+
+  /** Signaux bêta anonymisés : activité minimale et notes volontaires, jamais de texte de conversation. */
+  beta: router({
+    recordActivity: protectedProcedure.mutation(async ({ ctx }) => {
+      await recordBetaCohortActivity(ctx.user.id);
+      return { success: true } as const;
+    }),
+
+    recordFeedback: protectedProcedure
+      .input(z.object({ rating: z.number().int().min(1).max(5) }))
+      .mutation(async ({ ctx, input }) => {
+        await recordBetaFeedbackRating(ctx.user.id, input.rating);
+        return { success: true } as const;
+      }),
+
+    metrics: protectedProcedure
+      .input(z.object({ days: z.number().int().min(1).max(90).default(7) }))
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Accès administrateur requis." });
+        const since = new Date();
+        since.setDate(since.getDate() - input.days);
+        return { periodDays: input.days, since, ...(await getBetaCohortMetrics(since)) };
       }),
   }),
 

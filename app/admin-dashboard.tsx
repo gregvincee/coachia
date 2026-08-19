@@ -38,16 +38,18 @@ export default function AdminDashboardScreen() {
   const [expandedAlertIds, setExpandedAlertIds] = useState<string[]>([]);
   const metrics = trpc.commerce.metrics.useQuery({ days }, { enabled: isAuthenticated });
   const alertMetrics = trpc.commerce.alerts.useQuery(undefined, { enabled: isAuthenticated });
+  const cohortMetrics = trpc.beta.metrics.useQuery({ days }, { enabled: isAuthenticated });
 
   const onRefresh = useCallback(async () => {
-    await Promise.all([metrics.refetch(), alertMetrics.refetch()]);
-  }, [alertMetrics, metrics]);
+    await Promise.all([metrics.refetch(), alertMetrics.refetch(), cohortMetrics.refetch()]);
+  }, [alertMetrics, cohortMetrics, metrics]);
 
   const errorCode = (metrics.error as { data?: { code?: string } } | null)?.data?.code;
   const isForbidden = errorCode === "FORBIDDEN" || errorCode === "UNAUTHORIZED";
   const products = metrics.data?.products ?? [];
   const totals = metrics.data?.totals;
   const alerts = alertMetrics.data?.alerts ?? [];
+  const cohort = cohortMetrics.data;
   const confirmedWidth = Math.min(100, Math.round((totals?.conversionRate ?? 0) * 100));
   const toggleAlert = useCallback((alertId: string) => {
     setExpandedAlertIds((current) => current.includes(alertId)
@@ -124,6 +126,8 @@ export default function AdminDashboardScreen() {
             <MetricCard label="Panier moyen" value={formatCurrency(totals.averageOrderValueCents)} />
           </View>
 
+          <CohortSummary cohort={cohort} loading={cohortMetrics.isLoading} />
+
           <View className="rounded-2xl border border-border bg-surface p-4 gap-3">
             <View className="flex-row items-center justify-between">
               <Text className="text-base font-bold text-foreground">Entonnoir de paiement</Text>
@@ -141,7 +145,7 @@ export default function AdminDashboardScreen() {
         </View>
       ) : null}
     </View>
-  ), [alertMetrics.isLoading, alerts, authLoading, confirmedWidth, days, expandedAlertIds, isAuthenticated, isForbidden, metrics.error, metrics.isLoading, router, toggleAlert, totals]);
+  ), [alertMetrics.isLoading, alerts, authLoading, cohort, cohortMetrics.isLoading, confirmedWidth, days, expandedAlertIds, isAuthenticated, isForbidden, metrics.error, metrics.isLoading, router, toggleAlert, totals]);
 
   return (
     <ScreenContainer className="p-0">
@@ -163,10 +167,43 @@ export default function AdminDashboardScreen() {
           </View>
         )}
         ListEmptyComponent={totals && !metrics.isLoading ? <Notice title="Pas encore de ventes" description="Les résultats apparaîtront ici après les premiers checkouts et paiements confirmés." /> : null}
-        refreshControl={<RefreshControl refreshing={metrics.isFetching || alertMetrics.isFetching} onRefresh={onRefresh} />}
+        refreshControl={<RefreshControl refreshing={metrics.isFetching || alertMetrics.isFetching || cohortMetrics.isFetching} onRefresh={onRefresh} />}
         contentContainerStyle={{ paddingBottom: 32 }}
       />
     </ScreenContainer>
+  );
+}
+
+type CohortMetrics = {
+  cohortSize: number;
+  activeUsers: number;
+  activityRate: number;
+  eligibleForRetention: number;
+  retention7dRate: number | null;
+  feedbackCount: number;
+  averageFeedbackRating: number | null;
+  sampleSizeReached: boolean;
+  decision: { title: string; description: string };
+};
+
+function CohortSummary({ cohort, loading }: { cohort?: CohortMetrics; loading: boolean }) {
+  if (loading) return <View className="rounded-2xl border border-border bg-surface p-4"><Text className="text-sm text-muted">Analyse de la cohorte bêta…</Text></View>;
+  if (!cohort) return <View className="rounded-2xl border border-border bg-surface p-4"><Text className="text-sm text-muted">Les données de cohorte seront disponibles après les premières sessions bêta.</Text></View>;
+
+  return (
+    <View className="gap-3 rounded-2xl border border-border bg-surface p-4">
+      <View className="flex-row items-center justify-between gap-3">
+        <View><Text className="text-base font-bold text-foreground">Cohorte bêta</Text><Text className="mt-1 text-xs text-muted">Données agrégées, sans identité personnelle.</Text></View>
+        <Text className="text-sm font-bold text-primary">{cohort.cohortSize} actif{cohort.cohortSize > 1 ? "s" : ""}</Text>
+      </View>
+      <View className="flex-row gap-3">
+        <MiniMetric label="Engagement" value={formatPercent(cohort.activityRate)} />
+        <MiniMetric label="Rétention J7" value={cohort.retention7dRate === null ? "—" : formatPercent(cohort.retention7dRate)} />
+        <MiniMetric label="Retours" value={String(cohort.feedbackCount)} />
+        <MiniMetric label="Note" value={cohort.averageFeedbackRating === null ? "—" : `${cohort.averageFeedbackRating}/5`} />
+      </View>
+      <View className="rounded-xl bg-background p-3"><Text className="text-sm font-bold text-foreground">{cohort.decision.title}</Text><Text className="mt-1 text-sm leading-5 text-muted">{cohort.decision.description}</Text><Text className="mt-2 text-xs text-muted">Seuil de lecture : {cohort.sampleSizeReached ? "atteint" : "en attente de 5 participants activés"} · Éligibles J7 : {cohort.eligibleForRetention}</Text></View>
+    </View>
   );
 }
 

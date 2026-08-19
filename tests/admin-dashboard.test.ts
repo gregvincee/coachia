@@ -1,13 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { TrpcContext } from "../server/_core/context";
 
-const dbMocks = vi.hoisted(() => ({ getCommerceMetrics: vi.fn() }));
+const dbMocks = vi.hoisted(() => ({ getCommerceMetrics: vi.fn(), getBetaCohortMetrics: vi.fn() }));
 
 vi.mock("../server/db", () => ({
   getCommerceMetrics: dbMocks.getCommerceMetrics,
+  getBetaCohortMetrics: dbMocks.getBetaCohortMetrics,
   getUserPurchaseHistory: vi.fn(),
   getUserWallet: vi.fn(),
+  getAiDailyUsage: vi.fn(),
+  getUserDailyPromptUsage: vi.fn(),
+  recordAiUsage: vi.fn(),
   recordCommerceEvent: vi.fn(),
+  recordBetaCohortActivity: vi.fn(),
+  recordBetaFeedbackRating: vi.fn(),
 }));
 
 import { appRouter } from "../server/routers";

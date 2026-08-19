@@ -13,6 +13,7 @@ import {
   validateBetaFeedback,
 } from "@/lib/beta-feedback";
 import { addBetaFeedback, getBetaFeedback } from "@/lib/storage";
+import { trpc } from "@/lib/trpc";
 
 export default function BetaFeedbackScreen() {
   const [rating, setRating] = useState(0);
@@ -20,6 +21,7 @@ export default function BetaFeedbackScreen() {
   const [message, setMessage] = useState("");
   const [feedbacks, setFeedbacks] = useState<BetaFeedback[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const betaFeedbackMutation = trpc.beta.recordFeedback.useMutation();
 
   useEffect(() => {
     void getBetaFeedback().then(setFeedbacks);
@@ -38,6 +40,8 @@ export default function BetaFeedbackScreen() {
       const feedback = createBetaFeedback(draft);
       const updated = await addBetaFeedback(feedback);
       setFeedbacks(updated);
+      // Le commentaire reste local. Seule la note volontaire alimente l’agrégat bêta administrateur.
+      betaFeedbackMutation.mutate({ rating });
       setRating(0);
       setMessage("");
       if (Platform.OS !== "web") void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);

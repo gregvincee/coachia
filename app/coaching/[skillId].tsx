@@ -41,6 +41,7 @@ export default function CoachingScreen() {
   const skill = SKILLS.find((s) => s.id === skillId);
 
   const chatMutation = trpc.ai.chat.useMutation();
+  const betaActivityMutation = trpc.beta.recordActivity.useMutation();
 
   useEffect(() => {
     loadChatHistory();
@@ -139,6 +140,8 @@ export default function CoachingScreen() {
 
       // Mettre à jour l'XP de l'utilisateur
       await updateUserXP(10); // +10 XP par message
+      // Un signal anonyme suffit pour la cohorte : aucun texte de coaching n'est transmis.
+      betaActivityMutation.mutate();
 
       // Scroll vers le bas
       setTimeout(() => {
