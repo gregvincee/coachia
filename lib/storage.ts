@@ -11,6 +11,7 @@ import type {
   AppSettings,
 } from './types';
 import type { BetaFeedback } from './beta-feedback';
+import { DEFAULT_BETA_WELCOME_PROGRESS, normalizeBetaWelcomeProgress, type BetaWelcomeProgress, type BetaWelcomeStepId } from './beta-welcome';
 import { BADGES } from './data';
 
 // Clés de stockage
@@ -22,6 +23,7 @@ const KEYS = {
   CHAT_HISTORY: '@chat_history',
   SETTINGS: '@settings',
   BETA_FEEDBACK: '@beta_feedback',
+  BETA_WELCOME_PROGRESS: '@beta_welcome_progress',
 };
 
 // ===== Onboarding =====
@@ -296,6 +298,34 @@ export async function addBetaFeedback(feedback: BetaFeedback): Promise<BetaFeedb
   const feedbacks = await getBetaFeedback();
   const updated = [feedback, ...feedbacks];
   await saveBetaFeedback(updated);
+  return updated;
+}
+
+// ===== Accueil bêta guidé =====
+
+export async function getBetaWelcomeProgress(): Promise<BetaWelcomeProgress> {
+  try {
+    const value = await AsyncStorage.getItem(KEYS.BETA_WELCOME_PROGRESS);
+    if (!value) return DEFAULT_BETA_WELCOME_PROGRESS;
+    return normalizeBetaWelcomeProgress(JSON.parse(value) as Partial<BetaWelcomeProgress>);
+  } catch (error) {
+    console.error('Error reading beta welcome progress:', error);
+    return DEFAULT_BETA_WELCOME_PROGRESS;
+  }
+}
+
+export async function saveBetaWelcomeProgress(progress: BetaWelcomeProgress): Promise<void> {
+  try {
+    await AsyncStorage.setItem(KEYS.BETA_WELCOME_PROGRESS, JSON.stringify(normalizeBetaWelcomeProgress(progress)));
+  } catch (error) {
+    console.error('Error saving beta welcome progress:', error);
+  }
+}
+
+export async function completeBetaWelcomeStep(step: BetaWelcomeStepId): Promise<BetaWelcomeProgress> {
+  const current = await getBetaWelcomeProgress();
+  const updated = { ...current, [step]: true };
+  await saveBetaWelcomeProgress(updated);
   return updated;
 }
 

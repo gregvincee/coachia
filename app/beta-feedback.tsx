@@ -12,7 +12,7 @@ import {
   type BetaFeedbackCategory,
   validateBetaFeedback,
 } from "@/lib/beta-feedback";
-import { addBetaFeedback, getBetaFeedback } from "@/lib/storage";
+import { addBetaFeedback, completeBetaWelcomeStep, getBetaFeedback } from "@/lib/storage";
 import { trpc } from "@/lib/trpc";
 
 export default function BetaFeedbackScreen() {
@@ -40,6 +40,7 @@ export default function BetaFeedbackScreen() {
       const feedback = createBetaFeedback(draft);
       const updated = await addBetaFeedback(feedback);
       setFeedbacks(updated);
+      await completeBetaWelcomeStep("share_feedback");
       // Le commentaire reste local. Seule la note volontaire alimente l’agrégat bêta administrateur.
       betaFeedbackMutation.mutate({ rating });
       setRating(0);

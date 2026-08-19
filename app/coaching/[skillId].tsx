@@ -23,6 +23,7 @@ import { trpc } from '@/lib/trpc';
 import {
   getChatHistory,
   addChatMessage,
+  completeBetaWelcomeStep,
 } from '@/lib/storage';
 import { addXP, updateStreak } from '@/lib/gamification';
 import type { ChatMessage } from '@/lib/types';
@@ -140,6 +141,7 @@ export default function CoachingScreen() {
 
       // Mettre à jour l'XP de l'utilisateur
       await updateUserXP(10); // +10 XP par message
+      await completeBetaWelcomeStep('first_session');
       // Un signal anonyme suffit pour la cohorte : aucun texte de coaching n'est transmis.
       betaActivityMutation.mutate();
 

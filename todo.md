@@ -219,3 +219,9 @@
 - [x] Ajouter les agrégats de cohorte réservés à l’administration
 - [x] Afficher les métriques et seuils de décision dans le dashboard
 - [x] Tester les métriques de cohorte et les autorisations administratives
+
+## Phase 29: Accueil bêta guidé
+- [x] Définir les étapes de test et les jalons d’activation de la bêta
+- [x] Créer l’écran d’accueil bêta accessible depuis les paramètres
+- [x] Conserver localement la progression des étapes de test
+- [x] Tester le guidage et la persistance de l’accueil bêta

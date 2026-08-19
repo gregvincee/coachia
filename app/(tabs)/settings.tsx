@@ -106,6 +106,8 @@ export default function SettingsScreen() {
               Bêta et administration
             </Text>
             <View className="bg-surface rounded-2xl border border-border overflow-hidden">
+              <SettingRow label="Guide de test bêta" value="›" onPress={() => router.push('/beta-welcome' as never)} />
+              <View className="h-px" style={{ backgroundColor: colors.border }} />
               <SettingRow label="Donner mon avis bêta" value="›" onPress={() => router.push('/beta-feedback')} />
               <View className="h-px" style={{ backgroundColor: colors.border }} />
               <SettingRow label="Tableau de bord du Store" value="›" onPress={() => router.push('/admin-dashboard')} />
