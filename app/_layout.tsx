@@ -20,6 +20,7 @@ import { trpc, createTRPCClient } from "@/lib/trpc";
 import { initManusRuntime, subscribeSafeAreaInsets } from "@/lib/_core/manus-runtime";
 import { isOnboardingCompleted } from "@/lib/storage";
 import { useRouter, useSegments } from "expo-router";
+import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
 
 const DEFAULT_WEB_INSETS: EdgeInsets = { top: 0, right: 0, bottom: 0, left: 0 };
 const DEFAULT_WEB_FRAME: Rect = { x: 0, y: 0, width: 0, height: 0 };
@@ -118,6 +119,7 @@ export default function RootLayout() {
             <Stack.Screen name="onboarding" />
             <Stack.Screen name="oauth/callback" />
           </Stack>
+          <PwaInstallPrompt />
           <StatusBar style="auto" />
         </QueryClientProvider>
       </trpc.Provider>

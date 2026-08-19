@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "CoachIA — Micro-coaching IA",
+  "short_name": "CoachIA",
+  "description": "Votre micro-coaching personnalisé pour développer vos compétences, quelques minutes à la fois.",
+  "lang": "fr-CA",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#6366F1",
+  "categories": ["education", "productivity", "lifestyle"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

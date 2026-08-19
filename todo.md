@@ -195,3 +195,9 @@
 - [ ] Recruter une première cohorte ciblée et recueillir les consentements
 - [ ] Mesurer activation, rétention, checkout, paiement et coût IA par cohorte
 - [ ] Décider les améliorations prioritaires à partir des données du premier mois
+
+## Phase 25: PWA CoachIA
+- [x] Préparer les métadonnées, icônes et le manifeste d’installation
+- [x] Ajouter un service worker avec cache de démarrage et page hors ligne
+- [x] Enregistrer le service worker et informer des mises à jour disponibles
+- [x] Tester le build web et la configuration PWA pour la bêta mobile
