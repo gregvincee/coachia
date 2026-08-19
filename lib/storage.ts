@@ -10,6 +10,7 @@ import type {
   ChatMessage,
   AppSettings,
 } from './types';
+import type { BetaFeedback } from './beta-feedback';
 import { BADGES } from './data';
 
 // Clés de stockage
@@ -20,6 +21,7 @@ const KEYS = {
   BADGES: '@badges',
   CHAT_HISTORY: '@chat_history',
   SETTINGS: '@settings',
+  BETA_FEEDBACK: '@beta_feedback',
 };
 
 // ===== Onboarding =====
@@ -266,6 +268,35 @@ export async function saveSettings(settings: AppSettings): Promise<void> {
   } catch (error) {
     console.error('Error saving settings:', error);
   }
+}
+
+// ===== Bêta feedback =====
+
+export async function getBetaFeedback(): Promise<BetaFeedback[]> {
+  try {
+    const value = await AsyncStorage.getItem(KEYS.BETA_FEEDBACK);
+    if (!value) return [];
+    const feedbacks = JSON.parse(value) as BetaFeedback[];
+    return Array.isArray(feedbacks) ? feedbacks : [];
+  } catch (error) {
+    console.error('Error reading beta feedback:', error);
+    return [];
+  }
+}
+
+export async function saveBetaFeedback(feedbacks: BetaFeedback[]): Promise<void> {
+  try {
+    await AsyncStorage.setItem(KEYS.BETA_FEEDBACK, JSON.stringify(feedbacks));
+  } catch (error) {
+    console.error('Error saving beta feedback:', error);
+  }
+}
+
+export async function addBetaFeedback(feedback: BetaFeedback): Promise<BetaFeedback[]> {
+  const feedbacks = await getBetaFeedback();
+  const updated = [feedback, ...feedbacks];
+  await saveBetaFeedback(updated);
+  return updated;
 }
 
 // ===== Utility Functions =====

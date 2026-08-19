@@ -201,3 +201,9 @@
 - [x] Ajouter un service worker avec cache de démarrage et page hors ligne
 - [x] Enregistrer le service worker et informer des mises à jour disponibles
 - [x] Tester le build web et la configuration PWA pour la bêta mobile
+
+## Phase 26: Feedback bêta
+- [x] Définir le modèle de feedback et les catégories de retour
+- [x] Créer l’écran de feedback accessible depuis les paramètres
+- [x] Enregistrer localement les feedbacks et proposer une copie exportable
+- [x] Tester la validation et la persistance du parcours de feedback

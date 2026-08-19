@@ -103,9 +103,11 @@ export default function SettingsScreen() {
           {/* About Section */}
           <View>
             <Text className="text-lg font-semibold text-foreground mb-3">
-              Administration
+              Bêta et administration
             </Text>
             <View className="bg-surface rounded-2xl border border-border overflow-hidden">
+              <SettingRow label="Donner mon avis bêta" value="›" onPress={() => router.push('/beta-feedback')} />
+              <View className="h-px" style={{ backgroundColor: colors.border }} />
               <SettingRow label="Tableau de bord du Store" value="›" onPress={() => router.push('/admin-dashboard')} />
             </View>
           </View>
