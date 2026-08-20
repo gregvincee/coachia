@@ -253,3 +253,9 @@
 - [x] Recréer le monogramme C∆I avec une finition métallique
 - [x] Recréer le wordmark Coach∆I avec une finition métallique
 - [x] Décliner et vérifier les assets pour mobile et PWA
+
+## Phase 35: Interfaces métalliques
+- [x] Définir les tokens noir, argent et bleu électrique pour les surfaces clés
+- [x] Refonte du tableau de bord administrateur dans le nouveau style
+- [x] Refonte des écrans bêta dans le nouveau style
+- [x] Vérifier les contrastes, le typage et les parcours existants

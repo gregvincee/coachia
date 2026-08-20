@@ -55,10 +55,10 @@ export function BetaStepCelebration({ visible, title, message, onFinished }: Bet
 
 const styles = StyleSheet.create({
   container: { ...StyleSheet.absoluteFillObject, zIndex: 30, alignItems: "center", justifyContent: "center", padding: 24 },
-  card: { width: "100%", maxWidth: 360, flexDirection: "row", alignItems: "center", gap: 12, borderRadius: 20, padding: 18, backgroundColor: "#123A4A", shadowColor: "#000", shadowOpacity: 0.22, shadowRadius: 16, shadowOffset: { width: 0, height: 8 }, elevation: 8 },
-  check: { width: 42, height: 42, alignItems: "center", justifyContent: "center", borderRadius: 21, backgroundColor: "#22C55E" },
+  card: { width: "100%", maxWidth: 360, flexDirection: "row", alignItems: "center", gap: 12, borderRadius: 20, padding: 18, backgroundColor: "#10141D", borderColor: "#2D8CFF", borderWidth: 1, shadowColor: "#000", shadowOpacity: 0.4, shadowRadius: 16, shadowOffset: { width: 0, height: 8 }, elevation: 8 },
+  check: { width: 42, height: 42, alignItems: "center", justifyContent: "center", borderRadius: 21, backgroundColor: "#1875FF" },
   checkText: { color: "#FFFFFF", fontSize: 22, fontWeight: "800" },
   copy: { flex: 1 },
   title: { color: "#FFFFFF", fontSize: 16, fontWeight: "800" },
-  message: { marginTop: 3, color: "#D7EEF4", fontSize: 13, lineHeight: 18 },
+  message: { marginTop: 3, color: "#B0BBC9", fontSize: 13, lineHeight: 18 },
 });
