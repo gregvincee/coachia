@@ -12,6 +12,8 @@ describe("configuration PWA CoachIA", () => {
       short_name: string;
       display: string;
       start_url: string;
+      background_color: string;
+      theme_color: string;
       icons: Array<{ src: string; sizes: string; purpose?: string }>;
     };
 
@@ -20,6 +22,8 @@ describe("configuration PWA CoachIA", () => {
       short_name: "CoachIA",
       display: "standalone",
       start_url: "/",
+      background_color: "#05070A",
+      theme_color: "#05070A",
     });
     expect(manifest.icons).toEqual(expect.arrayContaining([
       expect.objectContaining({ src: "/icon-192.png", sizes: "192x192" }),

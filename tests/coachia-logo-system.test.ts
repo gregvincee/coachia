@@ -11,6 +11,17 @@ describe("système de logo CoachIA", () => {
     expect(existsSync(join(root, "assets/images/icon.png"))).toBe(true);
   });
 
+  it("utilise les assets métalliques locaux au lieu de l’ancienne URL de logo", () => {
+    const appConfig = readFileSync(join(root, "app.config.ts"), "utf8");
+
+    expect(appConfig).toContain('logoUrl: ""');
+    expect(appConfig).not.toContain("ERYFJLFDQzlyXpmC");
+    expect(appConfig).toContain('backgroundColor: "#05070A"');
+    expect(existsSync(join(root, "assets/images/splash-icon.png"))).toBe(true);
+    expect(existsSync(join(root, "assets/images/favicon.png"))).toBe(true);
+    expect(existsSync(join(root, "assets/images/android-icon-foreground.png"))).toBe(true);
+  });
+
   it("fournit un wordmark Coach∆I pour les surfaces de présentation", () => {
     const wordmark = readFileSync(join(root, "assets/images/coachia-wordmark.svg"), "utf8");
     const onboarding = readFileSync(join(root, "app/onboarding.tsx"), "utf8");

@@ -17,12 +17,13 @@ describe("branding CoachIA", () => {
     ].forEach((asset) => expect(existsSync(join(root, asset))).toBe(true));
   });
 
-  it("utilise la palette indigo du logo dans le manifeste PWA et la configuration Expo", () => {
+  it("utilise la palette métallique du logo dans le manifeste PWA et la configuration Expo", () => {
     const manifest = JSON.parse(readFileSync(join(root, "public/manifest.json"), "utf8"));
     const config = readFileSync(join(root, "app.config.ts"), "utf8");
 
-    expect(manifest).toMatchObject({ background_color: "#1B1C65", theme_color: "#5539CE" });
-    expect(config).toContain("logoUrl: \"https://files.manuscdn.com/user_upload_by_module/session_file/310519663334609213/ERYFJLFDQzlyXpmC.png\"");
-    expect(config).toContain('backgroundColor: "#1B1C65"');
+    expect(manifest).toMatchObject({ background_color: "#05070A", theme_color: "#05070A" });
+    expect(config).toContain('logoUrl: ""');
+    expect(config).toContain('backgroundColor: "#05070A"');
+    expect(config).not.toContain("ERYFJLFDQzlyXpmC");
   });
 });

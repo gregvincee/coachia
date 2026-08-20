@@ -259,3 +259,6 @@
 - [x] Refonte du tableau de bord administrateur dans le nouveau style
 - [x] Refonte des écrans bêta dans le nouveau style
 - [x] Vérifier les contrastes, le typage et les parcours existants
+
+## Phase 36: Remplacement global du logo métallique
+- [x] Remplacer toutes les références résiduelles de l’ancien logo par le monogramme C∆I métallique

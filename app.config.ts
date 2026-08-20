@@ -20,7 +20,8 @@ const schemeFromBundleId = `manus${timestamp}`;
 const env = {
   appName: "CoachIA",
   appSlug: "{{project_name}}",
-  logoUrl: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663334609213/ERYFJLFDQzlyXpmC.png",
+  // Le monogramme métallique local C∆I est la source de vérité pour les icônes mobile et web.
+  logoUrl: "",
   scheme: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,
@@ -42,7 +43,7 @@ const config: ExpoConfig = {
   },
   android: {
     adaptiveIcon: {
-      backgroundColor: "#1B1C65",
+      backgroundColor: "#05070A",
       foregroundImage: "./assets/images/android-icon-foreground.png",
       backgroundImage: "./assets/images/android-icon-background.png",
       monochromeImage: "./assets/images/android-icon-monochrome.png",
@@ -62,7 +63,7 @@ const config: ExpoConfig = {
     "expo-router",
     ["expo-audio", { microphonePermission: "Allow $(PRODUCT_NAME) to access your microphone." }],
     ["expo-video", { supportsBackgroundPlayback: true, supportsPictureInPicture: true }],
-    ["expo-splash-screen", { image: "./assets/images/splash-icon.png", imageWidth: 200, resizeMode: "contain", backgroundColor: "#1B1C65", dark: { backgroundColor: "#121343" } }],
+    ["expo-splash-screen", { image: "./assets/images/splash-icon.png", imageWidth: 200, resizeMode: "contain", backgroundColor: "#05070A", dark: { backgroundColor: "#05070A" } }],
     ["expo-build-properties", { android: { buildArchs: ["armeabi-v7a", "arm64-v8a"], minSdkVersion: 24 } }],
   ],
   experiments: { typedRoutes: true, reactCompiler: true },
