@@ -230,3 +230,9 @@
 - [x] Définir une célébration courte compatible avec les préférences d’accessibilité
 - [x] Afficher l’animation et le retour haptique lors d’un nouveau jalon validé
 - [x] Tester la célébration sans perturber la progression persistante
+
+## Phase 31: Logo CoachIA
+- [x] Définir une direction visuelle distinctive pour l’icône CoachIA
+- [x] Générer un logo carré adapté aux stores mobiles
+- [x] Décliner le logo pour l’icône, le splash screen, le favicon et Android
+- [x] Mettre à jour la configuration de branding de l’application
