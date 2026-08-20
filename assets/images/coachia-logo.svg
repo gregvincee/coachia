@@ -1,35 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="CoachIA emblem">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="CoachIA C delta I monogram">
   <defs>
-    <linearGradient id="background" x1="110" y1="82" x2="916" y2="950" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#1B1C65"/>
-      <stop offset="0.5" stop-color="#5539CE"/>
-      <stop offset="1" stop-color="#8A48E8"/>
+    <linearGradient id="bg" x1="110" y1="70" x2="920" y2="960" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#12173E"/>
+      <stop offset="0.5" stop-color="#302077"/>
+      <stop offset="1" stop-color="#632FBA"/>
     </linearGradient>
-    <linearGradient id="path" x1="262" y1="768" x2="744" y2="255" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFFFFF"/>
-      <stop offset="0.58" stop-color="#D7F7FF"/>
-      <stop offset="1" stop-color="#64E9F5"/>
+    <linearGradient id="delta" x1="492" y1="294" x2="604" y2="730" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A8FFF8"/>
+      <stop offset="1" stop-color="#42DAD9"/>
     </linearGradient>
-    <linearGradient id="spark" x1="708" y1="192" x2="830" y2="366" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#B9FFF6"/>
-      <stop offset="1" stop-color="#43DFE6"/>
-    </linearGradient>
-    <filter id="glow" x="-35%" y="-35%" width="170%" height="170%">
-      <feGaussianBlur stdDeviation="18" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
   </defs>
-  <rect width="1024" height="1024" fill="url(#background)"/>
-  <circle cx="512" cy="512" r="364" fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="2"/>
-  <circle cx="512" cy="512" r="294" fill="none" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="2"/>
-  <circle cx="512" cy="512" r="224" fill="none" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="2"/>
-  <path d="M256 747C321 806 416 837 512 837c189 0 342-153 342-342 0-95-39-182-102-244" fill="none" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="34" stroke-linecap="round"/>
-  <path d="M283 701c49 58 130 96 220 96 149 0 270-121 270-270 0-58-18-111-49-155" fill="none" stroke="url(#path)" stroke-width="72" stroke-linecap="round"/>
-  <path d="M338 632c34 48 91 79 155 79 104 0 188-84 188-188 0-35-10-68-28-96" fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linecap="round"/>
-  <path d="M421 622c18 20 44 33 72 33 55 0 100-45 100-100 0-17-4-34-12-48" fill="none" stroke="#65E7F2" stroke-width="22" stroke-linecap="round"/>
-  <circle cx="493" cy="555" r="29" fill="#FFFFFF" filter="url(#glow)"/>
-  <path d="M493 555L722 320" stroke="url(#path)" stroke-width="28" stroke-linecap="round"/>
-  <path d="M719 232l18 58 58 18-58 18-18 58-18-58-58-18 58-18z" fill="url(#spark)" filter="url(#glow)"/>
-  <circle cx="810" cy="438" r="14" fill="#72EFF1"/>
-  <circle cx="750" cy="497" r="9" fill="#C9FFFB"/>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <circle cx="512" cy="512" r="420" fill="none" stroke="#FFFFFF" stroke-opacity="0.06" stroke-width="2"/>
+  <circle cx="512" cy="512" r="365" fill="none" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="2"/>
+  <!-- C : confidence and coaching -->
+  <path d="M392 340C352 304 299 284 240 284c-124 0-224 101-224 226s100 226 224 226c59 0 112-20 152-56" fill="none" stroke="#FFFFFF" stroke-width="84" stroke-linecap="round"/>
+  <!-- ∆ : progress, transformed into the central signature -->
+  <path d="M520 285c14-25 50-25 64 0l155 318c13 27-7 59-37 59H402c-30 0-50-32-37-59z" fill="url(#delta)"/>
+  <path d="M551 401l-74 171h148z" fill="#21205B"/>
+  <rect x="690" y="306" width="92" height="408" rx="46" fill="#FFFFFF"/>
+  <rect x="684" y="274" width="104" height="80" rx="40" fill="#FFFFFF"/>
+  <rect x="684" y="666" width="104" height="80" rx="40" fill="#FFFFFF"/>
+  <circle cx="836" cy="301" r="18" fill="#68ECE7"/>
+  <circle cx="814" cy="746" r="12" fill="#A8FFF8"/>
 </svg>

@@ -102,7 +102,7 @@ export default function OnboardingScreen() {
                   },
                 ]}
               >
-                <Text style={{ fontSize: 80, marginBottom: 32 }}>{slide.emoji}</Text>
+                {index === 0 ? <CoachIAWordmark /> : <Text style={{ fontSize: 80, marginBottom: 32 }}>{slide.emoji}</Text>}
                 <Text className="text-3xl font-bold text-foreground text-center mb-4">
                   {slide.title}
                 </Text>
@@ -154,5 +154,15 @@ export default function OnboardingScreen() {
         </View>
       </View>
     </ScreenContainer>
+  );
+}
+
+function CoachIAWordmark() {
+  return (
+    <View accessibilityRole="image" accessibilityLabel="Coach delta I" className="mb-8 flex-row items-end rounded-2xl px-4 py-2" style={{ backgroundColor: "#090B10", borderColor: "#1976FF", borderWidth: 1 }}>
+      <Text style={{ color: "#F3F6FB", fontSize: 42, fontWeight: "800", letterSpacing: -2, textShadowColor: "#1B75FF", textShadowRadius: 4 }}>Coach</Text>
+      <Text style={{ color: "#F3F6FB", fontSize: 47, fontWeight: "900", lineHeight: 51, textShadowColor: "#1B75FF", textShadowRadius: 7 }}>∆</Text>
+      <Text style={{ color: "#F3F6FB", fontSize: 42, fontWeight: "800", letterSpacing: -2, textShadowColor: "#1B75FF", textShadowRadius: 4 }}>I</Text>
+    </View>
   );
 }

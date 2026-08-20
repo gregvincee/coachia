@@ -236,3 +236,20 @@
 - [x] Générer un logo carré adapté aux stores mobiles
 - [x] Décliner le logo pour l’icône, le splash screen, le favicon et Android
 - [x] Mettre à jour la configuration de branding de l’application
+
+## Phase 32: Monogramme C∆I
+- [x] Concevoir un monogramme minimal avec le triangle comme signe distinctif
+- [x] Décliner le monogramme pour mobile, Android et PWA
+- [x] Vérifier la lisibilité du logo C∆I à petite taille
+- [x] Mettre à jour les références de branding associées
+
+## Phase 33: Wordmark Coach∆I
+- [x] Recomposer le logo avec le mot Coach et la signature ∆I
+- [x] Décliner le wordmark pour l’accueil et les surfaces de présentation
+- [x] Vérifier la lisibilité du nom Coach∆I à petite taille
+
+## Phase 34: Refonte métallique C∆I / Coach∆I
+- [x] Traduire la référence noir, argent et bleu électrique dans le système de marque
+- [x] Recréer le monogramme C∆I avec une finition métallique
+- [x] Recréer le wordmark Coach∆I avec une finition métallique
+- [x] Décliner et vérifier les assets pour mobile et PWA

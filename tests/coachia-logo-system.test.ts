@@ -1,0 +1,23 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { describe, expect, it } from "vitest";
+
+const root = join(__dirname, "..");
+
+describe("système de logo CoachIA", () => {
+  it("conserve le monogramme compact pour les icônes d’application", () => {
+    const monogram = readFileSync(join(root, "assets/images/coachia-logo.svg"), "utf8");
+    expect(monogram).toContain("C delta I monogram");
+    expect(existsSync(join(root, "assets/images/icon.png"))).toBe(true);
+  });
+
+  it("fournit un wordmark Coach∆I pour les surfaces de présentation", () => {
+    const wordmark = readFileSync(join(root, "assets/images/coachia-wordmark.svg"), "utf8");
+    const onboarding = readFileSync(join(root, "app/onboarding.tsx"), "utf8");
+    expect(wordmark).toContain(">Coach</text>");
+    expect(wordmark).toContain("#1875FF");
+    expect(existsSync(join(root, "public/coachia-wordmark.svg"))).toBe(true);
+    expect(onboarding).toContain("CoachIAWordmark");
+    expect(onboarding).toContain('backgroundColor: "#090B10"');
+  });
+});
