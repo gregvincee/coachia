@@ -285,3 +285,7 @@
 
 ## Phase 43: Page publique de lancement
 - [x] Créer une page de lancement CoachIA en style métallique avec un parcours d’inscription bêta
+
+## Phase 44: Inscription bêta volontaire
+- [x] Créer une candidature bêta avec adresse e-mail, consentement explicite et protection contre les doublons
+- [x] Relier le formulaire à la page publique de lancement et confirmer l’inscription au testeur

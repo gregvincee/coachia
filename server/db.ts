@@ -3,11 +3,13 @@ import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertMicroPurchaseTransaction,
   InsertCommerceEvent,
+  InsertBetaWaitlistApplication,
   InsertUser,
   InsertUserWallet,
   aiDailyUsage,
   betaCohortFeedback,
   betaCohortMembers,
+  betaWaitlistApplications,
   commerceEvents,
   microPurchaseTransactions,
   redisCacheDailyMetrics,
@@ -320,6 +322,39 @@ export async function recordBetaFeedbackRating(userId: number, rating: number) {
   const db = await getDb();
   if (!db) return;
   await db.insert(betaCohortFeedback).values({ userId, rating });
+}
+
+/** Enregistre une candidature uniquement si l’adresse n’est pas déjà inscrite. */
+export async function registerBetaWaitlistApplication(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Base de données indisponible pour l’inscription bêta.");
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const [existing] = await db
+    .select()
+    .from(betaWaitlistApplications)
+    .where(eq(betaWaitlistApplications.email, normalizedEmail))
+    .limit(1);
+  if (existing) return { status: "already_registered" as const };
+
+  const values: InsertBetaWaitlistApplication = {
+    email: normalizedEmail,
+    source: "launch",
+    status: "waiting",
+  };
+
+  try {
+    await db.insert(betaWaitlistApplications).values(values);
+    return { status: "created" as const };
+  } catch (error) {
+    const [duplicate] = await db
+      .select()
+      .from(betaWaitlistApplications)
+      .where(eq(betaWaitlistApplications.email, normalizedEmail))
+      .limit(1);
+    if (duplicate) return { status: "already_registered" as const };
+    throw error;
+  }
 }
 
 /** Retourne exclusivement des agrégats de cohorte, jamais les identifiants des testeurs. */

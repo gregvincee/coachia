@@ -17,6 +17,7 @@ import {
   recordBetaCohortActivity,
   recordBetaFeedbackRating,
   recordCommerceEvent,
+  registerBetaWaitlistApplication,
 } from "./db";
 import { TRPCError } from "@trpc/server";
 import {
@@ -29,6 +30,7 @@ import { checkAIBudgetAlert, getCoachIAAlerts } from "./alert-engine";
 import { getEffectiveAiQuota } from "../lib/subscription-limits";
 import { estimateAiCostMilliCents } from "./ai-cost";
 import { createCoachingCacheKey, getCachedCoachingResponse, setCachedCoachingResponse } from "./_core/redis-cache";
+import { notifyOwner } from "./_core/notification";
 
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -141,6 +143,20 @@ export const appRouter = router({
 
   /** Signaux bêta anonymisés : activité minimale et notes volontaires, jamais de texte de conversation. */
   beta: router({
+    /** Inscription publique : une adresse est acceptée seulement avec consentement explicite. */
+    joinWaitlist: publicProcedure
+      .input(z.object({ email: z.string().trim().email().max(320), consent: z.literal(true) }))
+      .mutation(async ({ input }) => {
+        const registration = await registerBetaWaitlistApplication(input.email);
+        if (registration.status === "created") {
+          void notifyOwner({
+            title: "Nouvelle candidature bêta CoachIA",
+            content: `Une candidature volontaire a été reçue pour : ${input.email.trim().toLowerCase()}`,
+          }).catch((error) => console.warn("[BetaWaitlist] Notification propriétaire indisponible:", error));
+        }
+        return registration;
+      }),
+
     recordActivity: protectedProcedure.mutation(async ({ ctx }) => {
       await recordBetaCohortActivity(ctx.user.id);
       return { success: true } as const;

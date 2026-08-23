@@ -1,10 +1,36 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { ScreenContainer } from "@/components/screen-container";
+import { trpc } from "@/lib/trpc";
 
 export default function LaunchScreen() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const joinWaitlist = trpc.beta.joinWaitlist.useMutation();
+
+  async function submitWaitlist() {
+    setNotice(null);
+    if (!consent) {
+      setNotice("Votre consentement est nécessaire pour vous recontacter au sujet de la bêta.");
+      return;
+    }
+
+    try {
+      const result = await joinWaitlist.mutateAsync({ email, consent: true });
+      setNotice(
+        result.status === "created"
+          ? "Votre place est enregistrée. Nous vous contacterons à l’ouverture de la bêta."
+          : "Cette adresse est déjà enregistrée pour la bêta.",
+      );
+      if (result.status === "created") setEmail("");
+    } catch {
+      setNotice("Impossible de valider votre inscription pour le moment. Réessayez un peu plus tard.");
+    }
+  }
 
   return (
     <ScreenContainer className="p-0" containerClassName="bg-[#05070A]">
@@ -53,6 +79,49 @@ export default function LaunchScreen() {
           </TouchableOpacity>
         </View>
 
+        <View className="mx-4 mt-5 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-5">
+          <Text className="text-xs font-bold tracking-widest text-[#72D6FF]">LISTE BÊTA</Text>
+          <Text className="mt-2 text-xl font-bold text-[#F4F7FB]">Recevez votre accès en priorité.</Text>
+          <Text className="mt-2 text-sm leading-5 text-[#B0BBC9]">Laissez votre adresse uniquement si vous souhaitez être recontacté pour tester CoachIA.</Text>
+          <TextInput
+            accessibilityLabel="Adresse e-mail pour l’inscription bêta"
+            autoCapitalize="none"
+            autoComplete="email"
+            keyboardType="email-address"
+            onChangeText={setEmail}
+            placeholder="vous@exemple.com"
+            placeholderTextColor="#788899"
+            returnKeyType="done"
+            style={styles.emailInput}
+            value={email}
+          />
+          <TouchableOpacity
+            accessibilityRole="checkbox"
+            accessibilityLabel="Consentir à être recontacté pour la bêta CoachIA"
+            accessibilityState={{ checked: consent }}
+            activeOpacity={0.75}
+            className="mt-4 flex-row items-start gap-3"
+            onPress={() => setConsent((current) => !current)}
+          >
+            <View className={consent ? "mt-0.5 h-5 w-5 items-center justify-center rounded border border-[#2D8CFF] bg-[#1875FF]" : "mt-0.5 h-5 w-5 rounded border border-[#788899] bg-[#080B11]"}>
+              {consent ? <Text className="text-xs font-bold text-white">✓</Text> : null}
+            </View>
+            <Text className="flex-1 text-xs leading-5 text-[#B0BBC9]">J’accepte que CoachIA conserve mon adresse pour me recontacter uniquement au sujet de cette bêta.</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Rejoindre la liste bêta CoachIA"
+            disabled={joinWaitlist.isPending}
+            onPress={() => void submitWaitlist()}
+            activeOpacity={0.8}
+            className="mt-5 items-center rounded-xl border border-[#2D8CFF] bg-[#1875FF] px-4 py-4"
+            style={joinWaitlist.isPending ? styles.disabledButton : undefined}
+          >
+            <Text className="font-bold text-white">{joinWaitlist.isPending ? "Validation…" : "Rejoindre la liste bêta"}</Text>
+          </TouchableOpacity>
+          {notice ? <Text accessibilityLiveRegion="polite" className="mt-3 text-sm leading-5 text-[#D9E4F3]">{notice}</Text> : null}
+        </View>
+
         <View className="mx-4 mt-5 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4">
           <Text className="text-sm font-bold text-[#F4F7FB]">Vos retours comptent, vos données restent maîtrisées.</Text>
           <Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">Les indicateurs d’usage sont agrégés. Vos commentaires détaillés restent sur votre appareil jusqu’à ce que vous choisissiez de les partager.</Text>
@@ -90,5 +159,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 1.8,
+  },
+  emailInput: {
+    marginTop: 16,
+    minHeight: 52,
+    borderWidth: 1,
+    borderColor: "#2C3B4E",
+    borderRadius: 12,
+    backgroundColor: "#080B11",
+    color: "#F4F7FB",
+    fontSize: 16,
+    paddingHorizontal: 14,
+  },
+  disabledButton: {
+    opacity: 0.65,
   },
 });

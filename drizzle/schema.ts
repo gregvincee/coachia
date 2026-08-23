@@ -149,5 +149,21 @@ export const betaCohortFeedback = mysqlTable("betaCohortFeedback", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
+/** Candidatures publiques : l’adresse est collectée uniquement après consentement explicite. */
+export const betaWaitlistApplications = mysqlTable(
+  "betaWaitlistApplications",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    email: varchar("email", { length: 320 }).notNull(),
+    consentedAt: timestamp("consentedAt").defaultNow().notNull(),
+    source: varchar("source", { length: 40 }).default("launch").notNull(),
+    status: mysqlEnum("status", ["waiting", "invited", "declined"]).default("waiting").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex("betaWaitlistApplications_email_unique").on(table.email)],
+);
+
 export type BetaCohortMember = typeof betaCohortMembers.$inferSelect;
 export type BetaCohortFeedback = typeof betaCohortFeedback.$inferSelect;
+export type BetaWaitlistApplication = typeof betaWaitlistApplications.$inferSelect;
+export type InsertBetaWaitlistApplication = typeof betaWaitlistApplications.$inferInsert;

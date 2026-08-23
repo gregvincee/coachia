@@ -60,8 +60,9 @@ export default function RootLayout() {
     const inTabs = segments[0] === '(tabs)';
     const inOnboarding = segments[0] === 'onboarding';
     const inLaunch = (segments[0] as string | undefined) === 'launch';
+    const inBetaWelcome = segments[0] === 'beta-welcome';
 
-    if (!onboardingComplete && !inOnboarding && !inLaunch) {
+    if (!onboardingComplete && !inOnboarding && !inLaunch && !inBetaWelcome) {
       router.replace('/onboarding');
     } else if (onboardingComplete && inOnboarding) {
       router.replace('/(tabs)');
