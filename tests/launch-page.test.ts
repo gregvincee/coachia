@@ -15,6 +15,7 @@ describe("page publique de lancement CoachIA", () => {
     expect(launch).toContain("Rejoindre la liste bêta");
     expect(launch).toContain("J’accepte que CoachIA conserve mon adresse");
     expect(launch).toContain("trpc.beta.joinWaitlist.useMutation()");
+    expect(launch).toContain('router.push("/privacy")');
     expect(launch).toContain('router.replace("/onboarding")');
     expect(launch).toContain('router.push("/beta-welcome")');
     expect(launch).toContain('containerClassName="bg-[#05070A]"');
@@ -24,7 +25,7 @@ describe("page publique de lancement CoachIA", () => {
     const rootLayout = readFileSync(join(root, "app/_layout.tsx"), "utf8");
 
     expect(rootLayout).toContain("const inLaunch = (segments[0] as string | undefined) === 'launch'");
-    expect(rootLayout).toContain("!inOnboarding && !inLaunch && !inBetaWelcome");
+    expect(rootLayout).toContain("!inOnboarding && !inLaunch && !inBetaWelcome && !inPrivacy");
     expect(rootLayout).toContain('<Stack.Screen name="launch" />');
   });
 
@@ -35,5 +36,13 @@ describe("page publique de lancement CoachIA", () => {
     expect(router).toContain("joinWaitlist: publicProcedure");
     expect(router).toContain("consent: z.literal(true)");
     expect(schema).toContain("betaWaitlistApplications_email_unique");
+  });
+
+  it("propose une page de confidentialité publique et distincte des métriques anonymisées", () => {
+    const privacy = readFileSync(join(root, "app/privacy.tsx"), "utf8");
+
+    expect(privacy).toContain("Votre confidentialité, simplement expliquée.");
+    expect(privacy).toContain("rapports administratifs affichent des tendances de cohorte anonymisées");
+    expect(privacy).toContain("Retour à la page de lancement");
   });
 });

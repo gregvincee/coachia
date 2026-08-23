@@ -119,6 +119,15 @@ export default function LaunchScreen() {
           >
             <Text className="font-bold text-white">{joinWaitlist.isPending ? "Validation…" : "Rejoindre la liste bêta"}</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            accessibilityRole="link"
+            accessibilityLabel="Lire les informations de confidentialité de la bêta"
+            activeOpacity={0.7}
+            className="mt-4 self-start"
+            onPress={() => router.push("/privacy")}
+          >
+            <Text className="text-sm font-semibold text-[#72D6FF] underline">Lire comment vos données sont utilisées</Text>
+          </TouchableOpacity>
           {notice ? <Text accessibilityLiveRegion="polite" className="mt-3 text-sm leading-5 text-[#D9E4F3]">{notice}</Text> : null}
         </View>
 

@@ -289,3 +289,7 @@
 ## Phase 44: Inscription bêta volontaire
 - [x] Créer une candidature bêta avec adresse e-mail, consentement explicite et protection contre les doublons
 - [x] Relier le formulaire à la page publique de lancement et confirmer l’inscription au testeur
+
+## Phase 45: Confidentialité publique
+- [x] Créer une page de confidentialité concise pour l’inscription et le parcours bêta
+- [x] Relier cette page au formulaire de candidature bêta
