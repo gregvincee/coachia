@@ -14,7 +14,7 @@ describe("système de logo CoachIA", () => {
   it("utilise les assets métalliques locaux au lieu de l’ancienne URL de logo", () => {
     const appConfig = readFileSync(join(root, "app.config.ts"), "utf8");
 
-    expect(appConfig).toContain('logoUrl: ""');
+    expect(appConfig).toContain('logoUrl: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663334609213/cpOlsdSDfczJjkTv.png"');
     expect(appConfig).not.toContain("ERYFJLFDQzlyXpmC");
     expect(appConfig).toContain('backgroundColor: "#05070A"');
     expect(existsSync(join(root, "assets/images/splash-icon.png"))).toBe(true);

@@ -20,8 +20,8 @@ const schemeFromBundleId = `manus${timestamp}`;
 const env = {
   appName: "CoachIA",
   appSlug: "{{project_name}}",
-  // Le monogramme métallique local C∆I est la source de vérité pour les icônes mobile et web.
-  logoUrl: "",
+  // Monogramme métallique C∆I utilisé par les surfaces de projet et de prévisualisation.
+  logoUrl: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663334609213/cpOlsdSDfczJjkTv.png",
   scheme: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,

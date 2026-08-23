@@ -276,7 +276,8 @@
 - [x] Afficher le monogramme métallique C∆I dès la première étape de l’onboarding
 
 ## Phase 41: Vérification du pictogramme violet visible
-- [ ] Identifier l’origine du pictogramme violet visible dans le conteneur mobile et remplacer toute référence applicative résiduelle
+- [x] Identifier l’origine du pictogramme violet visible dans le conteneur mobile et remplacer toute référence applicative résiduelle
+- [x] Synchroniser la métadonnée d’icône du projet avec le monogramme métallique C∆I
 
 ## Phase 42: Affichage sombre CoachIA
 - [x] Appliquer un affichage sombre cohérent à l’accueil et à l’onboarding pour valoriser le monogramme C∆I

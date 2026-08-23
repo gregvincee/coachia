@@ -22,7 +22,7 @@ describe("branding CoachIA", () => {
     const config = readFileSync(join(root, "app.config.ts"), "utf8");
 
     expect(manifest).toMatchObject({ background_color: "#05070A", theme_color: "#05070A" });
-    expect(config).toContain('logoUrl: ""');
+    expect(config).toContain('logoUrl: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663334609213/cpOlsdSDfczJjkTv.png"');
     expect(config).toContain('backgroundColor: "#05070A"');
     expect(config).not.toContain("ERYFJLFDQzlyXpmC");
   });
