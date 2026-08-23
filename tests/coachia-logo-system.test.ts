@@ -37,5 +37,8 @@ describe("système de logo CoachIA", () => {
 
     expect(home).toContain("require('@/assets/images/icon.png')");
     expect(home).toContain('accessibilityLabel="Monogramme CoachIA C delta I"');
+    expect(home).toContain('resizeMode="contain"');
+    expect(home).toContain("numberOfLines={2}");
+    expect(home).toContain("width: 48");
   });
 });

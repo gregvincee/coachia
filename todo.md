@@ -268,3 +268,6 @@
 
 ## Phase 38: Logo visible dans l’accueil
 - [x] Intégrer le monogramme métallique C∆I sur l’écran d’accueil CoachIA
+
+## Phase 39: Optimisation mobile de l’en-tête
+- [x] Vérifier et ajuster l’affichage du logo C∆I et de l’en-tête sur les écrans de téléphone

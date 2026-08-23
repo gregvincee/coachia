@@ -52,19 +52,24 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex-1 gap-6">
           {/* Header */}
-          <View className="flex-row items-center gap-3">
-            <Image
-              source={require('@/assets/images/icon.png')}
-              accessibilityRole="image"
-              accessibilityLabel="Monogramme CoachIA C delta I"
-              style={styles.brandLogo}
-            />
-            <View className="flex-1 gap-1">
-              <Text className="text-xs font-bold tracking-widest text-primary">COACHIA</Text>
-              <Text className="text-3xl font-bold text-foreground">
+          <View className="gap-3">
+            <View className="flex-row items-center gap-3">
+              <Image
+                source={require('@/assets/images/icon.png')}
+                accessibilityRole="image"
+                accessibilityLabel="Monogramme CoachIA C delta I"
+                resizeMode="contain"
+                style={styles.brandLogo}
+              />
+              <Text className="flex-1 text-xs font-bold tracking-widest text-primary" numberOfLines={1}>
+                COACHIA
+              </Text>
+            </View>
+            <View className="gap-1">
+              <Text className="text-3xl font-bold text-foreground" numberOfLines={2} style={styles.greeting}>
                 Bonjour, {profile.name} 👋
               </Text>
-              <Text className="text-base text-muted">
+              <Text className="text-base text-muted" style={styles.subtitle}>
                 Quelle compétence voulez-vous développer aujourd'hui ?
               </Text>
             </View>
@@ -119,8 +124,14 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   brandLogo: {
-    width: 56,
-    height: 56,
-    borderRadius: 14,
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+  },
+  greeting: {
+    lineHeight: 36,
+  },
+  subtitle: {
+    lineHeight: 22,
   },
 });
