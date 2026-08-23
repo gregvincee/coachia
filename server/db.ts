@@ -357,6 +357,16 @@ export async function registerBetaWaitlistApplication(email: string) {
   }
 }
 
+/** Supprime l’adresse de la liste bêta sans révéler si elle y était inscrite. */
+export async function withdrawBetaWaitlistApplication(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Base de données indisponible pour le retrait bêta.");
+
+  const normalizedEmail = email.trim().toLowerCase();
+  await db.delete(betaWaitlistApplications).where(eq(betaWaitlistApplications.email, normalizedEmail));
+  return { status: "processed" as const };
+}
+
 /** Retourne exclusivement des agrégats de cohorte, jamais les identifiants des testeurs. */
 export async function getBetaCohortMetrics(since: Date, now = new Date()) {
   const db = await getDb();

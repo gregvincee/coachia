@@ -18,6 +18,7 @@ import {
   recordBetaFeedbackRating,
   recordCommerceEvent,
   registerBetaWaitlistApplication,
+  withdrawBetaWaitlistApplication,
 } from "./db";
 import { TRPCError } from "@trpc/server";
 import {
@@ -156,6 +157,11 @@ export const appRouter = router({
         }
         return registration;
       }),
+
+    /** Retrait public : la réponse reste identique pour ne pas révéler l’état d’une adresse. */
+    withdrawWaitlist: publicProcedure
+      .input(z.object({ email: z.string().trim().email().max(320), confirm: z.literal(true) }))
+      .mutation(({ input }) => withdrawBetaWaitlistApplication(input.email)),
 
     recordActivity: protectedProcedure.mutation(async ({ ctx }) => {
       await recordBetaCohortActivity(ctx.user.id);

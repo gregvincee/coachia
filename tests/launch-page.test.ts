@@ -45,4 +45,16 @@ describe("page publique de lancement CoachIA", () => {
     expect(privacy).toContain("rapports administratifs affichent des tendances de cohorte anonymisées");
     expect(privacy).toContain("Retour à la page de lancement");
   });
+
+  it("permet un retrait de la liste sans révéler si l’adresse était inscrite", () => {
+    const privacy = readFileSync(join(root, "app/privacy.tsx"), "utf8");
+    const router = readFileSync(join(root, "server/routers.ts"), "utf8");
+    const db = readFileSync(join(root, "server/db.ts"), "utf8");
+
+    expect(privacy).toContain("trpc.beta.withdrawWaitlist.useMutation()");
+    expect(privacy).toContain("La réponse ne confirme jamais si elle était présente");
+    expect(router).toContain("withdrawWaitlist: publicProcedure");
+    expect(router).toContain("confirm: z.literal(true)");
+    expect(db).toContain("db.delete(betaWaitlistApplications)");
+  });
 });

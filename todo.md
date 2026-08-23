@@ -293,3 +293,7 @@
 ## Phase 45: Confidentialité publique
 - [x] Créer une page de confidentialité concise pour l’inscription et le parcours bêta
 - [x] Relier cette page au formulaire de candidature bêta
+
+## Phase 46: Retrait de la liste bêta
+- [x] Permettre une demande de retrait vérifiable depuis la page de confidentialité
+- [x] Supprimer l’adresse de la candidature sans exposer son état dans les métriques
