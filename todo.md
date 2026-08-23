@@ -262,3 +262,9 @@
 
 ## Phase 36: Remplacement global du logo métallique
 - [x] Remplacer toutes les références résiduelles de l’ancien logo par le monogramme C∆I métallique
+
+## Phase 37: Store métallique
+- [ ] Refonte visuelle de l’écran Store dans l’identité noir, argent et bleu électrique sans modifier les parcours d’achat
+
+## Phase 38: Logo visible dans l’accueil
+- [x] Intégrer le monogramme métallique C∆I sur l’écran d’accueil CoachIA

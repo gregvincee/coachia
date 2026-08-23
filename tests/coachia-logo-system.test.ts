@@ -31,4 +31,11 @@ describe("système de logo CoachIA", () => {
     expect(onboarding).toContain("CoachIAWordmark");
     expect(onboarding).toContain('backgroundColor: "#090B10"');
   });
+
+  it("affiche le monogramme métallique dans l’en-tête de l’accueil", () => {
+    const home = readFileSync(join(root, "app/(tabs)/index.tsx"), "utf8");
+
+    expect(home).toContain("require('@/assets/images/icon.png')");
+    expect(home).toContain('accessibilityLabel="Monogramme CoachIA C delta I"');
+  });
 });
