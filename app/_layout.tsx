@@ -59,8 +59,9 @@ export default function RootLayout() {
 
     const inTabs = segments[0] === '(tabs)';
     const inOnboarding = segments[0] === 'onboarding';
+    const inLaunch = (segments[0] as string | undefined) === 'launch';
 
-    if (!onboardingComplete && !inOnboarding) {
+    if (!onboardingComplete && !inOnboarding && !inLaunch) {
       router.replace('/onboarding');
     } else if (onboardingComplete && inOnboarding) {
       router.replace('/(tabs)');
@@ -117,6 +118,7 @@ export default function RootLayout() {
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="onboarding" />
+            <Stack.Screen name="launch" />
             <Stack.Screen name="beta-welcome" />
             <Stack.Screen name="oauth/callback" />
           </Stack>

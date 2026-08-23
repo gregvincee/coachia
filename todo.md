@@ -282,3 +282,6 @@
 
 ## Phase 42: Affichage sombre CoachIA
 - [x] Appliquer un affichage sombre cohérent à l’accueil et à l’onboarding pour valoriser le monogramme C∆I
+
+## Phase 43: Page publique de lancement
+- [x] Créer une page de lancement CoachIA en style métallique avec un parcours d’inscription bêta
