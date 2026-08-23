@@ -271,3 +271,12 @@
 
 ## Phase 39: Optimisation mobile de l’en-tête
 - [x] Vérifier et ajuster l’affichage du logo C∆I et de l’en-tête sur les écrans de téléphone
+
+## Phase 40: Logo dès l’onboarding
+- [x] Afficher le monogramme métallique C∆I dès la première étape de l’onboarding
+
+## Phase 41: Vérification du pictogramme violet visible
+- [ ] Identifier l’origine du pictogramme violet visible dans le conteneur mobile et remplacer toute référence applicative résiduelle
+
+## Phase 42: Affichage sombre CoachIA
+- [x] Appliquer un affichage sombre cohérent à l’accueil et à l’onboarding pour valoriser le monogramme C∆I

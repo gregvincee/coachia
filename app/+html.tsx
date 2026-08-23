@@ -13,13 +13,13 @@ export default function RootHtml({ children }: PropsWithChildren) {
         <meta name="description" content="CoachIA : votre micro-coaching personnalisé pour développer vos compétences, quelques minutes à la fois." />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="CoachIA" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <ScrollViewStyleReset />
       </head>
-      <body>{children}</body>
+      <body style={{ backgroundColor: "#05070A" }}>{children}</body>
     </html>
   );
 }

@@ -29,6 +29,9 @@ describe("système de logo CoachIA", () => {
     expect(wordmark).toContain("#1875FF");
     expect(existsSync(join(root, "public/coachia-wordmark.svg"))).toBe(true);
     expect(onboarding).toContain("CoachIAWordmark");
+    expect(onboarding).toContain("require('@/assets/images/icon.png')");
+    expect(onboarding).toContain('accessibilityLabel="Monogramme CoachIA C delta I"');
+    expect(onboarding).toContain("width: 72");
     expect(onboarding).toContain('backgroundColor: "#090B10"');
   });
 

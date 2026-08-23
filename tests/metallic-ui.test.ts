@@ -25,4 +25,17 @@ describe("surfaces métalliques CoachIA", () => {
     expect(betaWelcome).toContain('containerClassName="bg-[#05070A]"');
     expect(betaFeedback).toContain('backgroundColor: "#10141D"');
   });
+
+  it("démarre CoachIA en mode sombre sur mobile et PWA", () => {
+    const themeProvider = readProjectFile("lib/theme-provider.tsx");
+    const rootLayout = readProjectFile("app/_layout.tsx");
+    const appConfig = readProjectFile("app.config.ts");
+    const html = readProjectFile("app/+html.tsx");
+
+    expect(themeProvider).toContain('useState<ColorScheme>("dark")');
+    expect(rootLayout).toContain('<StatusBar style="light" backgroundColor="#05070A" />');
+    expect(appConfig).toContain('userInterfaceStyle: "dark"');
+    expect(html).toContain('content="black-translucent"');
+    expect(html).toContain('backgroundColor: "#05070A"');
+  });
 });
