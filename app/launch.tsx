@@ -38,6 +38,13 @@ export default function LaunchScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <View className="items-center border-b border-[#2C3B4E] px-6 pb-8 pt-7">
           <Image
+            source={{ uri: "/manus-storage/coachia-launch-hero_e49cb82e.jpg" }}
+            accessibilityRole="image"
+            accessibilityLabel="Visuel de lancement CoachIA, smartphone de micro-coaching sur fond métallique"
+            resizeMode="cover"
+            style={styles.heroVisual}
+          />
+          <Image
             source={require("@/assets/images/icon.png")}
             accessibilityRole="image"
             accessibilityLabel="Monogramme CoachIA C delta I"
@@ -157,6 +164,14 @@ function BenefitCard({ number, title, description }: { number: string; title: st
 const styles = StyleSheet.create({
   content: {
     paddingBottom: 36,
+  },
+  heroVisual: {
+    width: "100%",
+    height: 170,
+    borderRadius: 20,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: "#2C3B4E",
   },
   logo: {
     width: 72,

@@ -305,3 +305,6 @@
 ## Phase 48: Message d’invitation bêta
 - [x] Rédiger un message d’invitation personnalisé avec lien, parcours de test et retrait
 - [x] Préparer des variantes courtes pour courriel et message direct
+
+## Phase 49: Visuels de lancement
+- [x] Générer un visuel héros, un visuel social vertical et un visuel carré pour CoachIA

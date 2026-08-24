@@ -9,6 +9,7 @@ describe("page publique de lancement CoachIA", () => {
     const launch = readFileSync(join(root, "app/launch.tsx"), "utf8");
 
     expect(launch).toContain("COHORTE BÊTA PRIVÉE");
+    expect(launch).toContain("coachia-launch-hero_e49cb82e.jpg");
     expect(launch).toContain('color: "#72D6FF"');
     expect(launch).toContain("Commencer gratuitement");
     expect(launch).toContain("Découvrir le parcours bêta");
