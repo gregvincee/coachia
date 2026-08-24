@@ -1,137 +1,88 @@
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { Image, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
 
 import { ScreenContainer } from '@/components/screen-container';
-import { SkillCard } from '@/components/skill-card';
-import { SKILLS } from '@/lib/data';
-import { getUserProfile, createDefaultUserProfile, getSkillsProgress } from '@/lib/storage';
-import type { UserProfile, SkillProgress } from '@/lib/types';
-import { useColors } from '@/hooks/use-colors';
-import { getLevelFromXP, getProgressInLevel } from '@/lib/data';
+import { getUserProfile, getMissionLearningState } from '@/lib/storage';
+import { MISSION_DEFINITIONS, type MissionDefinition, type MissionLearningState } from '@/lib/mission-engine';
+import type { UserProfile } from '@/lib/types';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const colors = useColors();
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [skillsProgress, setSkillsProgress] = useState<Record<string, SkillProgress>>({});
+  const [learning, setLearning] = useState<MissionLearningState | null>(null);
 
-  useEffect(() => {
-    loadData();
+  const loadData = useCallback(async () => {
+    const [userProfile, missionLearning] = await Promise.all([getUserProfile(), getMissionLearningState()]);
+    setProfile(userProfile);
+    setLearning(missionLearning);
   }, []);
 
-  async function loadData() {
-    let userProfile = await getUserProfile();
-    if (!userProfile) {
-      userProfile = await createDefaultUserProfile();
-    }
-    setProfile(userProfile);
+  useFocusEffect(useCallback(() => {
+    void loadData();
+  }, [loadData]));
 
-    const progress = await getSkillsProgress();
-    setSkillsProgress(progress);
+  if (!profile || !learning) {
+    return <ScreenContainer className="p-6"><View className="flex-1 items-center justify-center"><Text className="text-muted">Préparation de votre mission…</Text></View></ScreenContainer>;
   }
 
-  const handleSkillPress = (skillId: string) => {
-    router.push(`/coaching/${skillId}`);
-  };
+  const activeMission = MISSION_DEFINITIONS[learning.activeMissionId];
+  const nextDifficulty = learning.lastDifficulty ?? 'Commencez par une tentative personnelle : l’IA vous aidera ensuite à la rendre plus solide.';
+  const missionData = Object.values(MISSION_DEFINITIONS);
 
-  if (!profile) {
-    return (
-      <ScreenContainer className="p-6">
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-muted">Chargement...</Text>
-        </View>
-      </ScreenContainer>
-    );
+  function openMission(missionId: MissionDefinition['id']) {
+    router.push({ pathname: '/mission/[missionId]', params: { missionId } });
   }
-
-  const progressPercent = getProgressInLevel(profile.xp, profile.level);
 
   return (
-    <ScreenContainer className="p-6">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="flex-1 gap-6">
-          {/* Header */}
-          <View className="gap-3">
+    <ScreenContainer className="p-0" containerClassName="bg-[#05070A]">
+      <FlatList
+        data={missionData}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listContent}
+        ListHeaderComponent={(
+          <View className="gap-5 px-5 pb-5 pt-4">
             <View className="flex-row items-center gap-3">
-              <Image
-                source={require('@/assets/images/icon.png')}
-                accessibilityRole="image"
-                accessibilityLabel="Monogramme CoachIA C delta I"
-                resizeMode="contain"
-                style={styles.brandLogo}
-              />
-              <Text className="flex-1 text-xs font-bold tracking-widest text-primary" numberOfLines={1}>
-                COACHIA
-              </Text>
+              <Image source={require('@/assets/images/icon.png')} accessibilityRole="image" accessibilityLabel="Monogramme CoachIA C delta I" resizeMode="contain" style={styles.brandLogo} />
+              <View className="flex-1"><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">COACHIA · APPRENDRE EN FAISANT</Text><Text className="mt-1 text-sm text-[#B0BBC9]">Bonjour, {profile.name}</Text></View>
             </View>
-            <View className="gap-1">
-              <Text className="text-3xl font-bold text-foreground" numberOfLines={2} style={styles.greeting}>
-                Bonjour, {profile.name} 👋
-              </Text>
-              <Text className="text-base text-muted" style={styles.subtitle}>
-                Quelle compétence voulez-vous développer aujourd'hui ?
-              </Text>
-            </View>
-          </View>
 
-          {/* Progress Bar */}
-          <View className="bg-surface rounded-2xl p-4 border border-border">
-            <View className="flex-row items-center justify-between mb-2">
-              <Text className="text-sm font-semibold text-foreground">
-                Niveau {profile.level}
-              </Text>
-              <Text className="text-xs text-muted">
-                {profile.xp} XP
-              </Text>
+            <View className="rounded-3xl border border-[#2D8CFF] bg-[#10141D] p-5">
+              <Text className="text-xs font-bold tracking-widest text-[#72D6FF]">MA MISSION</Text>
+              <Text className="mt-3 text-2xl font-bold leading-8 text-[#F4F7FB]" numberOfLines={2}>{activeMission.title}</Text>
+              <Text className="mt-2 text-sm leading-6 text-[#B0BBC9]">{activeMission.goal}</Text>
+              <View className="mt-4 rounded-2xl bg-[#080B11] p-3"><Text className="text-xs font-bold uppercase tracking-wide text-[#8290A2]">Dernière difficulté détectée</Text><Text className="mt-1 text-sm leading-5 text-[#D9E4F3]">{nextDifficulty}</Text></View>
+              <TouchableOpacity accessibilityRole="button" accessibilityLabel="Continuer la mission active" onPress={() => openMission(activeMission.id)} activeOpacity={0.8} className="mt-5 items-center rounded-xl bg-[#1875FF] px-4 py-4"><Text className="font-bold text-white">Continuer</Text></TouchableOpacity>
             </View>
-            <View
-              className="h-2 rounded-full"
-              style={{ backgroundColor: colors.border }}
-            >
-              <View
-                className="h-2 rounded-full"
-                style={{
-                  width: `${progressPercent}%`,
-                  backgroundColor: colors.primary,
-                }}
-              />
-            </View>
-          </View>
 
-          {/* Skills Grid */}
-          <View className="gap-4">
-            <Text className="text-lg font-semibold text-foreground">
-              Compétences disponibles
-            </Text>
-            <View className="flex-row flex-wrap gap-3">
-              {SKILLS.map((skill) => (
-                <View key={skill.id} style={{ width: '47%' }}>
-                  <SkillCard
-                    skill={skill}
-                    onPress={() => handleSkillPress(skill.id)}
-                    level={skillsProgress[skill.id]?.level}
-                  />
-                </View>
-              ))}
+            <View className="rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4">
+              <View className="flex-row items-center justify-between"><Text className="text-base font-bold text-[#F4F7FB]">Maîtrise réelle</Text><Text className="text-xs text-[#B0BBC9]">Distincte de vos {profile.xp} XP</Text></View>
+              <View className="mt-4 flex-row justify-between gap-2">
+                <MasterySnapshot label="Prompting" score={learning.mastery.prompting.score} stage={learning.mastery.prompting.stage} />
+                <MasterySnapshot label="Vérifier" score={learning.mastery.verification.score} stage={learning.mastery.verification.stage} />
+                <MasterySnapshot label="Raisonner" score={learning.mastery.reasoning.score} stage={learning.mastery.reasoning.stage} />
+                <MasterySnapshot label="Workflow" score={learning.mastery.automation.score} stage={learning.mastery.automation.stage} />
+              </View>
             </View>
+
+            <View><Text className="text-lg font-bold text-[#F4F7FB]">Choisir une mission</Text><Text className="mt-1 text-sm text-[#B0BBC9]">Chaque mission commence par votre tentative, pas par une réponse toute faite.</Text></View>
           </View>
-        </View>
-      </ScrollView>
+        )}
+        renderItem={({ item }) => <MissionChoice mission={item} active={item.id === activeMission.id} onPress={() => openMission(item.id)} />}
+      />
     </ScreenContainer>
   );
 }
 
+function MasterySnapshot({ label, score, stage }: { label: string; score: number; stage: string }) {
+  return <View className="flex-1 gap-1"><Text className="text-xs text-[#B0BBC9]" numberOfLines={1}>{label}</Text><Text className="text-base font-bold text-[#F4F7FB]">{score}/100</Text><Text className="text-[10px] text-[#72D6FF]" numberOfLines={1}>{stage}</Text></View>;
+}
+
+function MissionChoice({ mission, active, onPress }: { mission: MissionDefinition; active: boolean; onPress: () => void }) {
+  return <TouchableOpacity accessibilityRole="button" accessibilityState={{ selected: active }} accessibilityLabel={`Choisir la mission ${mission.label}`} onPress={onPress} activeOpacity={0.75} className={active ? 'mx-5 mb-3 rounded-2xl border border-[#2D8CFF] bg-[#152849] p-4' : 'mx-5 mb-3 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4'}><View className="flex-row items-start justify-between gap-3"><View className="flex-1"><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">{mission.label.toUpperCase()}</Text><Text className="mt-2 text-lg font-bold text-[#F4F7FB]">{mission.title}</Text><Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">{mission.outcome}</Text></View><Text className="text-xl text-[#2D8CFF]">›</Text></View></TouchableOpacity>;
+}
+
 const styles = StyleSheet.create({
-  brandLogo: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-  },
-  greeting: {
-    lineHeight: 36,
-  },
-  subtitle: {
-    lineHeight: 22,
-  },
+  brandLogo: { width: 48, height: 48, borderRadius: 12 },
+  listContent: { paddingBottom: 32 },
 });

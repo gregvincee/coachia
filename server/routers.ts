@@ -35,6 +35,20 @@ import { estimateAiCostMilliCents } from "./ai-cost";
 import { createCoachingCacheKey, getCachedCoachingResponse, setCachedCoachingResponse } from "./_core/redis-cache";
 import { notifyOwner } from "./_core/notification";
 
+const missionDiagnosisSchema = z.object({
+  overallScore: z.number().int().min(0).max(100),
+  capabilityScores: z.object({
+    prompting: z.number().int().min(0).max(100),
+    verification: z.number().int().min(0).max(100),
+    reasoning: z.number().int().min(0).max(100),
+    automation: z.number().int().min(0).max(100),
+  }).strict(),
+  strength: z.string().min(12).max(360),
+  difficulty: z.string().min(12).max(360),
+  correction: z.string().min(20).max(520),
+  retryPrompt: z.string().min(20).max(520),
+}).strict();
+
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
@@ -208,6 +222,86 @@ export const appRouter = router({
 
   // Chat IA pour le coaching
   ai: router({
+    diagnoseMission: protectedProcedure
+      .input(z.object({
+        missionId: z.enum(["create", "solve", "build"]),
+        request: z.string().trim().min(12).max(3000),
+        result: z.string().trim().min(12).max(3000),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const dailyUsage = await getAiDailyUsage();
+        const currentBudgetAlert = checkAIBudgetAlert(dailyUsage);
+        const quota = getEffectiveAiQuota(ctx.user.subscriptionPlan, currentBudgetAlert?.level ?? null);
+        const usedPrompts = await getUserDailyPromptUsage(ctx.user.id);
+        if (usedPrompts >= quota.dailyPrompts) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: quota.protectionApplied
+              ? "La protection budgétaire limite temporairement les demandes Free. Les abonnés ne sont pas concernés."
+              : "Votre quota quotidien de coaching IA est atteint.",
+          });
+        }
+
+        const response = await invokeLLM({
+          maxTokens: 900,
+          outputSchema: {
+            name: "mission_diagnosis",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                overallScore: { type: "integer", minimum: 0, maximum: 100 },
+                capabilityScores: {
+                  type: "object",
+                  properties: {
+                    prompting: { type: "integer", minimum: 0, maximum: 100 },
+                    verification: { type: "integer", minimum: 0, maximum: 100 },
+                    reasoning: { type: "integer", minimum: 0, maximum: 100 },
+                    automation: { type: "integer", minimum: 0, maximum: 100 },
+                  },
+                  required: ["prompting", "verification", "reasoning", "automation"],
+                  additionalProperties: false,
+                },
+                strength: { type: "string" },
+                difficulty: { type: "string" },
+                correction: { type: "string" },
+                retryPrompt: { type: "string" },
+              },
+              required: ["overallScore", "capabilityScores", "strength", "difficulty", "correction", "retryPrompt"],
+              additionalProperties: false,
+            },
+          },
+          messages: [
+            {
+              role: "system",
+              content: "Tu es CoachIA, un diagnostic pédagogique exigeant et bienveillant. Analyse une tentative réelle d’utilisation de l’IA. Ne fournis jamais directement la réponse parfaite ni un livrable prêt à copier. En français, identifie une force, une difficulté concrète et une correction qui force une nouvelle tentative autonome. Évalue indépendamment prompting, vérification, raisonnement et automatisation. Le score mesure la qualité démontrée dans cette tentative, pas l’effort ni l’XP.",
+            },
+            {
+              role: "user",
+              content: `Type de mission : ${input.missionId}\n\nDemande réellement faite à l’IA :\n${input.request}\n\nRésultat réellement observé :\n${input.result}`,
+            },
+          ],
+        });
+
+        const content = response.choices[0]?.message?.content;
+        const rawDiagnosis = typeof content === "string" ? content : "{}";
+        let diagnosis: z.infer<typeof missionDiagnosisSchema>;
+        try {
+          diagnosis = missionDiagnosisSchema.parse(JSON.parse(rawDiagnosis));
+        } catch {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Le diagnostic pédagogique n’a pas pu être structuré." });
+        }
+
+        await recordAiUsage({
+          userId: ctx.user.id,
+          promptTokens: response.usage?.prompt_tokens ?? 0,
+          completionTokens: response.usage?.completion_tokens ?? 0,
+          estimatedCostMilliCents: estimateAiCostMilliCents(response.usage),
+        });
+
+        return diagnosis;
+      }),
+
     chat: protectedProcedure
       .input(
         z.object({

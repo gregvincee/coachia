@@ -13,6 +13,7 @@ import type {
 import type { BetaFeedback } from './beta-feedback';
 import { DEFAULT_BETA_WELCOME_PROGRESS, normalizeBetaWelcomeProgress, type BetaWelcomeProgress, type BetaWelcomeStepId } from './beta-welcome';
 import { BADGES } from './data';
+import { createMissionLearningState, type MissionLearningState } from './mission-engine';
 
 // Clés de stockage
 const KEYS = {
@@ -24,6 +25,7 @@ const KEYS = {
   SETTINGS: '@settings',
   BETA_FEEDBACK: '@beta_feedback',
   BETA_WELCOME_PROGRESS: '@beta_welcome_progress',
+  MISSION_LEARNING: '@mission_learning',
 };
 
 // ===== Onboarding =====
@@ -84,6 +86,31 @@ export async function createDefaultUserProfile(): Promise<UserProfile> {
   };
   await saveUserProfile(profile);
   return profile;
+}
+
+// ===== Mission Learning =====
+
+export async function getMissionLearningState(): Promise<MissionLearningState> {
+  try {
+    const value = await AsyncStorage.getItem(KEYS.MISSION_LEARNING);
+    if (!value) {
+      const state = createMissionLearningState();
+      await saveMissionLearningState(state);
+      return state;
+    }
+    return JSON.parse(value) as MissionLearningState;
+  } catch (error) {
+    console.error('Error reading mission learning state:', error);
+    return createMissionLearningState();
+  }
+}
+
+export async function saveMissionLearningState(state: MissionLearningState): Promise<void> {
+  try {
+    await AsyncStorage.setItem(KEYS.MISSION_LEARNING, JSON.stringify(state));
+  } catch (error) {
+    console.error('Error saving mission learning state:', error);
+  }
 }
 
 // ===== Skills Progress =====

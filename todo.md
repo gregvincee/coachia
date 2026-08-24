@@ -308,3 +308,8 @@
 
 ## Phase 49: Visuels de lancement
 - [x] Générer un visuel héros, un visuel social vertical et un visuel carré pour CoachIA
+
+## Phase 50: Moteur de missions IA
+- [x] Définir les missions Créer, Résoudre et Construire avec la boucle tentative–diagnostic–correction
+- [x] Séparer la maîtrise réelle de l’XP et afficher une carte de capacités IA
+- [x] Recentrer l’accueil sur la mission active, la difficulté détectée et la prochaine action
