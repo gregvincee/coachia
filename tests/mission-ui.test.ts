@@ -29,5 +29,9 @@ describe("parcours de missions IA", () => {
     expect(mission).toContain("Voir la correction de l’IA");
     expect(mission).toContain("Appliquer les conseils et réessayer");
     expect(mission).toContain("accessibilityRole=\"tab\"");
+    expect(mission).toContain("CORRECTION_EXAMPLES");
+    expect(mission).toContain("Voir un exemple de correction");
+    expect(mission).toContain("EXEMPLE ·");
+    expect(mission).toContain("Un modèle à adapter, jamais à recopier sans contexte.");
   });
 });

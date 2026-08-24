@@ -317,3 +317,7 @@
 ## Phase 51: Diagnostic pédagogique interactif
 - [x] Distinguer visuellement le score, la force, la difficulté, la correction et la prochaine tentative
 - [x] Ajouter des interactions de consultation et d’application des conseils IA
+
+## Phase 52: Exemples de correction par mission
+- [x] Ajouter un exemple de correction applicable pour Créer, Résoudre et Construire
+- [x] Permettre à l’utilisateur de consulter l’exemple avant sa retentative
