@@ -313,3 +313,7 @@
 - [x] Définir les missions Créer, Résoudre et Construire avec la boucle tentative–diagnostic–correction
 - [x] Séparer la maîtrise réelle de l’XP et afficher une carte de capacités IA
 - [x] Recentrer l’accueil sur la mission active, la difficulté détectée et la prochaine action
+
+## Phase 51: Diagnostic pédagogique interactif
+- [x] Distinguer visuellement le score, la force, la difficulté, la correction et la prochaine tentative
+- [x] Ajouter des interactions de consultation et d’application des conseils IA

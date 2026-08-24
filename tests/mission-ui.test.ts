@@ -24,5 +24,10 @@ describe("parcours de missions IA", () => {
     expect(mission).toContain("Pourquoi ?");
     expect(mission).toContain("Montre-moi");
     expect(mission).toContain("trpc.ai.diagnoseMission.useMutation()");
+    expect(mission).toContain("CE QUI EST DÉJÀ SOLIDE");
+    expect(mission).toContain("PRIORITÉ DE PROGRESSION");
+    expect(mission).toContain("Voir la correction de l’IA");
+    expect(mission).toContain("Appliquer les conseils et réessayer");
+    expect(mission).toContain("accessibilityRole=\"tab\"");
   });
 });

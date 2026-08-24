@@ -9,6 +9,7 @@ import {
   diagnoseMissionAttempt,
   recordMissionAttempt,
   type MissionDiagnosis,
+  type MasteryCapabilityId,
   type MissionLearningState,
   type MissionTrackId,
 } from '@/lib/mission-engine';
@@ -105,8 +106,52 @@ function AttemptPanel({ missionHint, request, result, notice, onRequest, onResul
   return <View className="gap-4 rounded-3xl border border-[#2C3B4E] bg-[#10141D] p-5"><View><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">1 · VOTRE TENTATIVE</Text><Text className="mt-2 text-lg font-bold text-[#F4F7FB]">Ne demandez pas la réponse parfaite.</Text><Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">{missionHint}</Text></View><TextInput accessibilityLabel="Demande que vous avez faite à l’intelligence artificielle" value={request} onChangeText={onRequest} placeholder="Copiez ou écrivez votre demande…" placeholderTextColor="#788899" multiline style={styles.input} textAlignVertical="top" /><View><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">2 · RÉSULTAT OBSERVÉ</Text><Text className="mt-2 text-sm leading-5 text-[#B0BBC9]">Qu’a répondu l’IA, et qu’est-ce qui vous semble faible ou incomplet ?</Text></View><TextInput accessibilityLabel="Résultat obtenu avec l’intelligence artificielle" value={result} onChangeText={onResult} placeholder="Décrivez le résultat réel…" placeholderTextColor="#788899" multiline style={styles.input} textAlignVertical="top" /><TouchableOpacity accessibilityRole="button" accessibilityLabel="Diagnostiquer ma tentative" onPress={onAnalyze} activeOpacity={0.8} className="items-center rounded-xl bg-[#1875FF] px-4 py-4" disabled={false}><Text className="font-bold text-white">Diagnostiquer ma tentative</Text></TouchableOpacity>{notice ? <Text accessibilityLiveRegion="polite" className="text-sm leading-5 text-[#D9E4F3]">{notice}</Text> : null}</View>;
 }
 
+const CAPABILITY_DETAILS: Record<MasteryCapabilityId, { label: string; icon: string; action: string }> = {
+  prompting: { label: 'Prompting', icon: '✦', action: 'Ajoutez le contexte, l’audience et un format mesurable.' },
+  verification: { label: 'Vérifier', icon: '✓', action: 'Ajoutez une source, un critère de contrôle ou une preuve attendue.' },
+  reasoning: { label: 'Raisonner', icon: '◆', action: 'Demandez des options, les hypothèses et le pourquoi de la recommandation.' },
+  automation: { label: 'Workflow', icon: '→', action: 'Décrivez le déclencheur, les étapes, le contrôle et le résultat final.' },
+};
+
 function DiagnosisPanel({ diagnosis, learning, onRetry, onOpenCoach }: { diagnosis: MissionDiagnosis; learning: MissionLearningState; onRetry: () => void; onOpenCoach: () => void }) {
-  return <View className="gap-4 rounded-3xl border border-[#2D8CFF] bg-[#10141D] p-5"><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">3 · DIAGNOSTIC</Text><Text className="text-2xl font-bold text-[#F4F7FB]">Maîtrise provisoire : {diagnosis.overallScore}/100</Text><Text className="text-sm leading-6 text-[#D9E4F3]">{diagnosis.strength}</Text><View className="rounded-2xl bg-[#080B11] p-4"><Text className="text-xs font-bold text-[#72D6FF]">DIFFICULTÉ À TRAVAILLER</Text><Text className="mt-1 text-sm leading-5 text-[#F4F7FB]">{diagnosis.difficulty}</Text></View><Text className="text-sm leading-6 text-[#B0BBC9]">{diagnosis.correction}</Text><Text className="text-sm leading-6 text-[#D9E4F3]">{diagnosis.retryPrompt}</Text><View className="rounded-2xl bg-[#171E29] p-4"><Text className="text-sm font-bold text-[#F4F7FB]">Carte de capacités mise à jour</Text><Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">Prompting {learning.mastery.prompting.score}/100 · Vérification {learning.mastery.verification.score}/100 · Raisonnement {learning.mastery.reasoning.score}/100 · Workflow {learning.mastery.automation.score}/100</Text></View><TouchableOpacity accessibilityRole="button" accessibilityLabel="Faire une nouvelle tentative de mission" onPress={onRetry} activeOpacity={0.8} className="items-center rounded-xl bg-[#1875FF] px-4 py-4"><Text className="font-bold text-white">Nouvelle tentative</Text></TouchableOpacity><TouchableOpacity accessibilityRole="button" accessibilityLabel="Ouvrir le coach IA pour améliorer la demande" onPress={onOpenCoach} activeOpacity={0.75} className="items-center rounded-xl border border-[#2C3B4E] bg-[#080B11] px-4 py-4"><Text className="font-semibold text-[#F4F7FB]">Améliorer avec le coach IA</Text></TouchableOpacity></View>;
+  const weakestCapability = (Object.entries(diagnosis.capabilityScores) as Array<[MasteryCapabilityId, number]>).sort(([, left], [, right]) => left - right)[0][0];
+  const [focusedCapability, setFocusedCapability] = useState<MasteryCapabilityId>(weakestCapability);
+  const [showScoreGuide, setShowScoreGuide] = useState(false);
+  const [showCorrection, setShowCorrection] = useState(false);
+  const focusedDetails = CAPABILITY_DETAILS[focusedCapability];
+  const focusedScore = diagnosis.capabilityScores[focusedCapability];
+
+  return (
+    <View className="gap-5 rounded-3xl border border-[#2D8CFF] bg-[#10141D] p-5">
+      <View className="flex-row items-start justify-between gap-4">
+        <View className="flex-1"><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">3 · DIAGNOSTIC PÉDAGOGIQUE</Text><Text className="mt-2 text-2xl font-bold leading-8 text-[#F4F7FB]">Voici ce qui fera progresser votre prochaine tentative.</Text></View>
+        <View className="items-center rounded-2xl border border-[#2D8CFF] bg-[#071B3A] px-3 py-2"><Text className="text-2xl font-bold text-[#72D6FF]">{diagnosis.overallScore}</Text><Text className="text-[10px] font-bold tracking-wide text-[#B0BBC9]">/ 100</Text></View>
+      </View>
+
+      <TouchableOpacity accessibilityRole="button" accessibilityState={{ expanded: showScoreGuide }} accessibilityLabel="Comprendre le score de maîtrise" onPress={() => setShowScoreGuide((value) => !value)} activeOpacity={0.75} className="flex-row items-center justify-between rounded-xl bg-[#080B11] px-4 py-3"><Text className="text-sm font-semibold text-[#D9E4F3]">Comprendre le score de maîtrise</Text><Text className="text-lg text-[#72D6FF]">{showScoreGuide ? '−' : '+'}</Text></TouchableOpacity>
+      {showScoreGuide ? <View className="rounded-2xl border border-[#2C3B4E] bg-[#171E29] p-4"><Text className="text-sm leading-6 text-[#D9E4F3]">Le score mesure ce que votre tentative démontre aujourd’hui. Il ne récompense pas l’effort seul et il ne remplace pas vos XP.</Text></View> : null}
+
+      <View className="rounded-2xl border border-[#3B8069] bg-[#0C2520] p-4"><Text className="text-xs font-bold tracking-widest text-[#6FE0B4]">✓ CE QUI EST DÉJÀ SOLIDE</Text><Text className="mt-2 text-sm leading-6 text-[#E1F8EF]">{diagnosis.strength}</Text></View>
+
+      <View className="rounded-2xl border border-[#C48A33] bg-[#302312] p-4"><Text className="text-xs font-bold tracking-widest text-[#FFD184]">↗ PRIORITÉ DE PROGRESSION</Text><Text className="mt-2 text-base font-semibold leading-6 text-[#FFF1D7]">{diagnosis.difficulty}</Text></View>
+
+      <View className="gap-3"><View className="flex-row items-center justify-between"><Text className="text-base font-bold text-[#F4F7FB]">Vos capacités dans cette tentative</Text><Text className="text-xs text-[#B0BBC9]">Touchez pour explorer</Text></View><View className="flex-row gap-2"><CapabilityTile capabilityId="prompting" score={diagnosis.capabilityScores.prompting} selected={focusedCapability === 'prompting'} onPress={setFocusedCapability} /><CapabilityTile capabilityId="verification" score={diagnosis.capabilityScores.verification} selected={focusedCapability === 'verification'} onPress={setFocusedCapability} /><CapabilityTile capabilityId="reasoning" score={diagnosis.capabilityScores.reasoning} selected={focusedCapability === 'reasoning'} onPress={setFocusedCapability} /><CapabilityTile capabilityId="automation" score={diagnosis.capabilityScores.automation} selected={focusedCapability === 'automation'} onPress={setFocusedCapability} /></View></View>
+
+      <View className="rounded-2xl border border-[#34557F] bg-[#0D1C31] p-4"><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">FOCUS · {focusedDetails.label.toUpperCase()} · {focusedScore}/100</Text><Text className="mt-2 text-sm leading-6 text-[#D9E4F3]">{focusedDetails.action}</Text><Text className="mt-2 text-xs leading-5 text-[#8290A2]">Votre niveau cumulé dans cette capacité : {learning.mastery[focusedCapability].score}/100.</Text></View>
+
+      <TouchableOpacity accessibilityRole="button" accessibilityState={{ expanded: showCorrection }} accessibilityLabel="Voir la correction détaillée de l’intelligence artificielle" onPress={() => setShowCorrection((value) => !value)} activeOpacity={0.75} className="flex-row items-center justify-between rounded-xl border border-[#2C3B4E] bg-[#080B11] px-4 py-4"><View><Text className="font-bold text-[#F4F7FB]">Voir la correction de l’IA</Text><Text className="mt-0.5 text-xs text-[#B0BBC9]">Appliquez-la plutôt que de demander une réponse neuve.</Text></View><Text className="text-lg text-[#72D6FF]">{showCorrection ? '⌃' : '⌄'}</Text></TouchableOpacity>
+      {showCorrection ? <View className="rounded-2xl border border-[#2D8CFF] bg-[#071B3A] p-4"><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">CORRECTION À APPLIQUER</Text><Text className="mt-2 text-sm leading-6 text-[#E0EDFF]">{diagnosis.correction}</Text></View> : null}
+
+      <View className="rounded-2xl bg-[#171E29] p-4"><Text className="text-xs font-bold tracking-widest text-[#B5C7DD]">4 · PLAN DE RETENTATIVE</Text><Text className="mt-2 text-sm leading-6 text-[#F4F7FB]">{diagnosis.retryPrompt}</Text></View>
+      <TouchableOpacity accessibilityRole="button" accessibilityLabel="Appliquer les conseils et faire une nouvelle tentative" onPress={onRetry} activeOpacity={0.8} className="items-center rounded-xl bg-[#1875FF] px-4 py-4"><Text className="font-bold text-white">Appliquer les conseils et réessayer</Text></TouchableOpacity>
+      <TouchableOpacity accessibilityRole="button" accessibilityLabel="Ouvrir le coach IA pour approfondir la correction" onPress={onOpenCoach} activeOpacity={0.75} className="items-center rounded-xl border border-[#2C3B4E] bg-[#080B11] px-4 py-4"><Text className="font-semibold text-[#F4F7FB]">Approfondir avec le coach IA</Text></TouchableOpacity>
+    </View>
+  );
+}
+
+function CapabilityTile({ capabilityId, score, selected, onPress }: { capabilityId: MasteryCapabilityId; score: number; selected: boolean; onPress: (capabilityId: MasteryCapabilityId) => void }) {
+  const details = CAPABILITY_DETAILS[capabilityId];
+  return <TouchableOpacity accessibilityRole="tab" accessibilityState={{ selected }} accessibilityLabel={`${details.label}, score ${score} sur 100`} onPress={() => onPress(capabilityId)} activeOpacity={0.75} className={selected ? 'flex-1 rounded-xl border border-[#2D8CFF] bg-[#17355C] px-2 py-3' : 'flex-1 rounded-xl border border-[#2C3B4E] bg-[#080B11] px-2 py-3'}><Text className="text-center text-base text-[#72D6FF]">{details.icon}</Text><Text className="mt-1 text-center text-[10px] font-semibold text-[#D9E4F3]" numberOfLines={1}>{details.label}</Text><Text className="mt-1 text-center text-sm font-bold text-[#F4F7FB]">{score}</Text></TouchableOpacity>;
 }
 
 const styles = StyleSheet.create({
