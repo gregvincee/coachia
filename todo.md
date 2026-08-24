@@ -301,3 +301,7 @@
 ## Phase 47: Invitation de cohorte bêta
 - [x] Exposer des indicateurs anonymisés de liste d’attente aux administrateurs
 - [x] Ajouter une action d’invitation contrôlée pour la prochaine cohorte
+
+## Phase 48: Message d’invitation bêta
+- [x] Rédiger un message d’invitation personnalisé avec lien, parcours de test et retrait
+- [x] Préparer des variantes courtes pour courriel et message direct
