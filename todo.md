@@ -321,3 +321,7 @@
 ## Phase 52: Exemples de correction par mission
 - [x] Ajouter un exemple de correction applicable pour Créer, Résoudre et Construire
 - [x] Permettre à l’utilisateur de consulter l’exemple avant sa retentative
+
+## Phase 53: Exemples adaptatifs selon la difficulté
+- [x] Définir des variantes d’exemple débutant, intermédiaire et approfondi pour chaque mission
+- [x] Sélectionner et afficher automatiquement l’exemple adapté au diagnostic

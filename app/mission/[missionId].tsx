@@ -4,6 +4,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 
 import { ScreenContainer } from '@/components/screen-container';
 import { addXP } from '@/lib/gamification';
+import { getMissionCorrectionExample } from '@/lib/mission-correction-examples';
 import {
   MISSION_DEFINITIONS,
   diagnoseMissionAttempt,
@@ -20,27 +21,6 @@ const EXAMPLES: Record<MissionTrackId, string> = {
   create: 'Contexte : je présente une offre à des freelances. Objectif : écrire un post LinkedIn. Audience : créateurs indépendants. Format : 120 mots. Contrainte : ton direct, sans promesse exagérée.',
   solve: 'Contexte : un client répond peu à mes propositions. Objectif : choisir la meilleure relance. Propose deux options avec avantages, risques et critère de décision. Vérifie les hypothèses que tu fais.',
   build: 'Déclencheur : chaque nouveau brief client. Étapes : extraire les besoins, créer un brouillon, demander une vérification humaine, envoyer la version validée. Résultat : un workflow répétable et contrôlable.',
-};
-
-const CORRECTION_EXAMPLES: Record<MissionTrackId, { title: string; before: string; after: string; takeaway: string }> = {
-  create: {
-    title: 'Transformer une demande vague en brief exploitable',
-    before: '« Écris un post LinkedIn sur mon offre. »',
-    after: '« Rédige un post LinkedIn de 120 mots pour des freelances créatifs. Objectif : leur faire comprendre que mon offre réduit le temps de préparation client. Utilise un ton direct, une accroche avec un problème concret et termine par une question. N’invente aucun résultat chiffré. »',
-    takeaway: 'Une création devient plus fiable lorsque le contexte, le public, le format, le ton et les limites sont visibles dans la demande.',
-  },
-  solve: {
-    title: 'Passer d’une réponse unique à une décision vérifiable',
-    before: '« Quelle relance dois-je envoyer à ce client ? »',
-    after: '« À partir de ce contexte, propose deux relances distinctes. Pour chacune, indique le bénéfice, le risque et le signe qui me permettra de choisir. Signale les hypothèses que tu fais sur le client avant de conclure. »',
-    takeaway: 'Résoudre avec l’IA consiste à comparer des options, rendre les hypothèses visibles et choisir avec un critère.',
-  },
-  build: {
-    title: 'Rendre un workflow répétable et contrôlable',
-    before: '« Automatise mes briefs clients avec l’IA. »',
-    after: '« Quand un nouveau brief arrive, extrais les besoins dans une fiche, génère un brouillon de réponse, puis bloque l’envoi tant qu’une personne n’a pas validé le ton, le prix et les informations sensibles. Termine par une liste de contrôles à effectuer. »',
-    takeaway: 'Un bon workflow précise le déclencheur, les étapes, le contrôle humain et le résultat attendu.',
-  },
 };
 
 export default function MissionScreen() {
@@ -142,7 +122,7 @@ function DiagnosisPanel({ missionId, diagnosis, learning, onRetry, onOpenCoach }
   const [showConcreteExample, setShowConcreteExample] = useState(false);
   const focusedDetails = CAPABILITY_DETAILS[focusedCapability];
   const focusedScore = diagnosis.capabilityScores[focusedCapability];
-  const correctionExample = CORRECTION_EXAMPLES[missionId];
+  const correctionExample = getMissionCorrectionExample(missionId, diagnosis);
 
   return (
     <View className="gap-5 rounded-3xl border border-[#2D8CFF] bg-[#10141D] p-5">
@@ -165,8 +145,8 @@ function DiagnosisPanel({ missionId, diagnosis, learning, onRetry, onOpenCoach }
       <TouchableOpacity accessibilityRole="button" accessibilityState={{ expanded: showCorrection }} accessibilityLabel="Voir la correction détaillée de l’intelligence artificielle" onPress={() => setShowCorrection((value) => !value)} activeOpacity={0.75} className="flex-row items-center justify-between rounded-xl border border-[#2C3B4E] bg-[#080B11] px-4 py-4"><View><Text className="font-bold text-[#F4F7FB]">Voir la correction de l’IA</Text><Text className="mt-0.5 text-xs text-[#B0BBC9]">Appliquez-la plutôt que de demander une réponse neuve.</Text></View><Text className="text-lg text-[#72D6FF]">{showCorrection ? '⌃' : '⌄'}</Text></TouchableOpacity>
       {showCorrection ? <View className="rounded-2xl border border-[#2D8CFF] bg-[#071B3A] p-4"><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">CORRECTION À APPLIQUER</Text><Text className="mt-2 text-sm leading-6 text-[#E0EDFF]">{diagnosis.correction}</Text></View> : null}
 
-      <TouchableOpacity accessibilityRole="button" accessibilityState={{ expanded: showConcreteExample }} accessibilityLabel="Voir un exemple concret de correction pour cette mission" onPress={() => setShowConcreteExample((value) => !value)} activeOpacity={0.75} className="flex-row items-center justify-between rounded-xl border border-[#5E54B8] bg-[#181530] px-4 py-4"><View><Text className="font-bold text-[#F2EDFF]">Voir un exemple de correction</Text><Text className="mt-0.5 text-xs text-[#C5B9FF]">Un modèle à adapter, jamais à recopier sans contexte.</Text></View><Text className="text-lg text-[#C5B9FF]">{showConcreteExample ? '⌃' : '⌄'}</Text></TouchableOpacity>
-      {showConcreteExample ? <View className="rounded-2xl border border-[#6B5EEB] bg-[#17142D] p-4"><Text className="text-xs font-bold tracking-widest text-[#C5B9FF]">EXEMPLE · {missionId.toUpperCase()}</Text><Text className="mt-2 text-base font-bold leading-6 text-[#F2EDFF]">{correctionExample.title}</Text><View className="mt-4 rounded-xl border border-[#7A4452] bg-[#2C1820] p-3"><Text className="text-xs font-bold tracking-wide text-[#FFADB8]">AVANT</Text><Text className="mt-1 text-sm leading-6 text-[#FFE6EA]">{correctionExample.before}</Text></View><View className="mt-3 rounded-xl border border-[#3B8069] bg-[#0C2520] p-3"><Text className="text-xs font-bold tracking-wide text-[#82E8BE]">APRÈS</Text><Text className="mt-1 text-sm leading-6 text-[#E2FFF1]">{correctionExample.after}</Text></View><Text className="mt-4 text-sm leading-6 text-[#D8D2FF]">{correctionExample.takeaway}</Text></View> : null}
+      <TouchableOpacity accessibilityRole="button" accessibilityState={{ expanded: showConcreteExample }} accessibilityLabel="Voir un exemple de correction adapté à la difficulté détectée" onPress={() => setShowConcreteExample((value) => !value)} activeOpacity={0.75} className="flex-row items-center justify-between rounded-xl border border-[#5E54B8] bg-[#181530] px-4 py-4"><View><Text className="font-bold text-[#F2EDFF]">Voir un exemple adapté</Text><Text className="mt-0.5 text-xs text-[#C5B9FF]">{correctionExample.levelLabel} · un modèle à adapter, jamais à recopier.</Text></View><Text className="text-lg text-[#C5B9FF]">{showConcreteExample ? '⌃' : '⌄'}</Text></TouchableOpacity>
+      {showConcreteExample ? <View className="rounded-2xl border border-[#6B5EEB] bg-[#17142D] p-4"><Text className="text-xs font-bold tracking-widest text-[#C5B9FF]">EXEMPLE ADAPTÉ · {correctionExample.levelLabel.toUpperCase()}</Text><Text className="mt-2 text-xs leading-5 text-[#D8D2FF]">{correctionExample.levelGuidance}</Text><Text className="mt-3 text-base font-bold leading-6 text-[#F2EDFF]">{correctionExample.title}</Text><View className="mt-4 rounded-xl border border-[#7A4452] bg-[#2C1820] p-3"><Text className="text-xs font-bold tracking-wide text-[#FFADB8]">AVANT</Text><Text className="mt-1 text-sm leading-6 text-[#FFE6EA]">{correctionExample.before}</Text></View><View className="mt-3 rounded-xl border border-[#3B8069] bg-[#0C2520] p-3"><Text className="text-xs font-bold tracking-wide text-[#82E8BE]">APRÈS</Text><Text className="mt-1 text-sm leading-6 text-[#E2FFF1]">{correctionExample.after}</Text></View><Text className="mt-4 text-sm leading-6 text-[#D8D2FF]">{correctionExample.takeaway}</Text></View> : null}
 
       <View className="rounded-2xl bg-[#171E29] p-4"><Text className="text-xs font-bold tracking-widest text-[#B5C7DD]">4 · PLAN DE RETENTATIVE</Text><Text className="mt-2 text-sm leading-6 text-[#F4F7FB]">{diagnosis.retryPrompt}</Text></View>
       <TouchableOpacity accessibilityRole="button" accessibilityLabel="Appliquer les conseils et faire une nouvelle tentative" onPress={onRetry} activeOpacity={0.8} className="items-center rounded-xl bg-[#1875FF] px-4 py-4"><Text className="font-bold text-white">Appliquer les conseils et réessayer</Text></TouchableOpacity>
