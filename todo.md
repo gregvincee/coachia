@@ -297,3 +297,7 @@
 ## Phase 46: Retrait de la liste bêta
 - [x] Permettre une demande de retrait vérifiable depuis la page de confidentialité
 - [x] Supprimer l’adresse de la candidature sans exposer son état dans les métriques
+
+## Phase 47: Invitation de cohorte bêta
+- [x] Exposer des indicateurs anonymisés de liste d’attente aux administrateurs
+- [x] Ajouter une action d’invitation contrôlée pour la prochaine cohorte

@@ -367,6 +367,43 @@ export async function withdrawBetaWaitlistApplication(email: string) {
   return { status: "processed" as const };
 }
 
+/** Résumé administrateur sans e-mail ni autre identifiant personnel. */
+export async function getBetaWaitlistSummary() {
+  const db = await getDb();
+  const empty = { total: 0, waiting: 0, invited: 0, declined: 0 };
+  if (!db) return empty;
+
+  const rows = await db
+    .select({ status: betaWaitlistApplications.status, count: sql<number>`COUNT(*)` })
+    .from(betaWaitlistApplications)
+    .groupBy(betaWaitlistApplications.status);
+  const counts = Object.fromEntries(rows.map((row) => [row.status, Number(row.count ?? 0)]));
+  const waiting = counts.waiting ?? 0;
+  const invited = counts.invited ?? 0;
+  const declined = counts.declined ?? 0;
+  return { total: waiting + invited + declined, waiting, invited, declined };
+}
+
+/** Sélectionne une seule candidature en attente pour la prochaine invitation, sans l’exposer au client. */
+export async function prepareNextBetaInvite() {
+  const db = await getDb();
+  if (!db) throw new Error("Base de données indisponible pour la préparation d’invitation.");
+
+  const [candidate] = await db
+    .select({ id: betaWaitlistApplications.id, email: betaWaitlistApplications.email })
+    .from(betaWaitlistApplications)
+    .where(eq(betaWaitlistApplications.status, "waiting"))
+    .orderBy(betaWaitlistApplications.createdAt)
+    .limit(1);
+  if (!candidate) return { status: "empty" as const };
+
+  await db
+    .update(betaWaitlistApplications)
+    .set({ status: "invited" })
+    .where(eq(betaWaitlistApplications.id, candidate.id));
+  return { status: "prepared" as const, email: candidate.email };
+}
+
 /** Retourne exclusivement des agrégats de cohorte, jamais les identifiants des testeurs. */
 export async function getBetaCohortMetrics(since: Date, now = new Date()) {
   const db = await getDb();

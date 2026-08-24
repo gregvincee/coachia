@@ -9,6 +9,7 @@ import { MICRO_PURCHASES_CATALOG } from "../lib/micro-purchases";
 import {
   getAiDailyUsage,
   getBetaCohortMetrics,
+  getBetaWaitlistSummary,
   getCommerceMetrics,
   getUserDailyPromptUsage,
   getUserPurchaseHistory,
@@ -18,6 +19,7 @@ import {
   recordBetaFeedbackRating,
   recordCommerceEvent,
   registerBetaWaitlistApplication,
+  prepareNextBetaInvite,
   withdrawBetaWaitlistApplication,
 } from "./db";
 import { TRPCError } from "@trpc/server";
@@ -144,6 +146,25 @@ export const appRouter = router({
 
   /** Signaux bêta anonymisés : activité minimale et notes volontaires, jamais de texte de conversation. */
   beta: router({
+    /** Vue agrégée réservée à l’administration : aucune adresse e-mail n’est exposée. */
+    waitlistSummary: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Accès administrateur requis." });
+      return getBetaWaitlistSummary();
+    }),
+
+    /** Prépare une seule invitation à la fois et envoie l’adresse au propriétaire hors de l’interface mobile. */
+    prepareNextInvite: protectedProcedure.mutation(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Accès administrateur requis." });
+      const result = await prepareNextBetaInvite();
+      if (result.status === "prepared") {
+        void notifyOwner({
+          title: "Invitation bêta CoachIA à préparer",
+          content: `La prochaine candidature consentie est prête à être invitée : ${result.email}`,
+        }).catch((error) => console.warn("[BetaWaitlist] Notification d’invitation indisponible:", error));
+      }
+      return { status: result.status };
+    }),
+
     /** Inscription publique : une adresse est acceptée seulement avec consentement explicite. */
     joinWaitlist: publicProcedure
       .input(z.object({ email: z.string().trim().email().max(320), consent: z.literal(true) }))

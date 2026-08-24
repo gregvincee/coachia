@@ -39,10 +39,12 @@ export default function AdminDashboardScreen() {
   const metrics = trpc.commerce.metrics.useQuery({ days }, { enabled: isAuthenticated });
   const alertMetrics = trpc.commerce.alerts.useQuery(undefined, { enabled: isAuthenticated });
   const cohortMetrics = trpc.beta.metrics.useQuery({ days }, { enabled: isAuthenticated });
+  const waitlist = trpc.beta.waitlistSummary.useQuery(undefined, { enabled: isAuthenticated });
+  const prepareInvite = trpc.beta.prepareNextInvite.useMutation({ onSuccess: () => void waitlist.refetch() });
 
   const onRefresh = useCallback(async () => {
-    await Promise.all([metrics.refetch(), alertMetrics.refetch(), cohortMetrics.refetch()]);
-  }, [alertMetrics, cohortMetrics, metrics]);
+    await Promise.all([metrics.refetch(), alertMetrics.refetch(), cohortMetrics.refetch(), waitlist.refetch()]);
+  }, [alertMetrics, cohortMetrics, metrics, waitlist]);
 
   const errorCode = (metrics.error as { data?: { code?: string } } | null)?.data?.code;
   const isForbidden = errorCode === "FORBIDDEN" || errorCode === "UNAUTHORIZED";
@@ -127,6 +129,13 @@ export default function AdminDashboardScreen() {
           </View>
 
           <CohortSummary cohort={cohort} loading={cohortMetrics.isLoading} />
+          <WaitlistInviteSummary
+            summary={waitlist.data}
+            loading={waitlist.isLoading}
+            preparing={prepareInvite.isPending}
+            result={prepareInvite.data?.status}
+            onPrepare={() => void prepareInvite.mutateAsync()}
+          />
 
           <View className="gap-3 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4">
             <View className="flex-row items-center justify-between">
@@ -145,7 +154,7 @@ export default function AdminDashboardScreen() {
         </View>
       ) : null}
     </View>
-  ), [alertMetrics.isLoading, alerts, authLoading, cohort, cohortMetrics.isLoading, confirmedWidth, days, expandedAlertIds, isAuthenticated, isForbidden, metrics.error, metrics.isLoading, router, toggleAlert, totals]);
+  ), [alertMetrics.isLoading, alerts, authLoading, cohort, cohortMetrics.isLoading, confirmedWidth, days, expandedAlertIds, isAuthenticated, isForbidden, metrics.error, metrics.isLoading, prepareInvite, router, toggleAlert, totals, waitlist.data, waitlist.isLoading]);
 
   return (
     <ScreenContainer className="bg-[#05070A] p-0" containerClassName="bg-[#05070A]">
@@ -167,7 +176,7 @@ export default function AdminDashboardScreen() {
           </View>
         )}
         ListEmptyComponent={totals && !metrics.isLoading ? <Notice title="Pas encore de ventes" description="Les résultats apparaîtront ici après les premiers checkouts et paiements confirmés." /> : null}
-        refreshControl={<RefreshControl refreshing={metrics.isFetching || alertMetrics.isFetching || cohortMetrics.isFetching} onRefresh={onRefresh} />}
+        refreshControl={<RefreshControl refreshing={metrics.isFetching || alertMetrics.isFetching || cohortMetrics.isFetching || waitlist.isFetching} onRefresh={onRefresh} />}
         contentContainerStyle={{ paddingBottom: 32 }}
       />
     </ScreenContainer>
@@ -203,6 +212,40 @@ function CohortSummary({ cohort, loading }: { cohort?: CohortMetrics; loading: b
         <MiniMetric label="Note" value={cohort.averageFeedbackRating === null ? "—" : `${cohort.averageFeedbackRating}/5`} />
       </View>
       <View className="rounded-xl bg-[#171E29] p-3"><Text className="text-sm font-bold text-[#F4F7FB]">{cohort.decision.title}</Text><Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">{cohort.decision.description}</Text><Text className="mt-2 text-xs text-[#8290A2]">Seuil de lecture : {cohort.sampleSizeReached ? "atteint" : "en attente de 5 participants activés"} · Éligibles J7 : {cohort.eligibleForRetention}</Text></View>
+    </View>
+  );
+}
+
+type WaitlistSummary = { total: number; waiting: number; invited: number; declined: number };
+
+function WaitlistInviteSummary({
+  summary,
+  loading,
+  preparing,
+  result,
+  onPrepare,
+}: {
+  summary?: WaitlistSummary;
+  loading: boolean;
+  preparing: boolean;
+  result?: "prepared" | "empty";
+  onPrepare: () => void;
+}) {
+  if (loading) return <View className="rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4"><Text className="text-sm text-[#B0BBC9]">Lecture de la liste bêta…</Text></View>;
+  if (!summary) return null;
+
+  const resultMessage = result === "prepared"
+    ? "Une invitation a été préparée. L’adresse est transmise au propriétaire, jamais affichée ici."
+    : result === "empty"
+      ? "Aucune candidature en attente à inviter."
+      : null;
+
+  return (
+    <View className="gap-3 rounded-2xl border border-[#2D8CFF] bg-[#10141D] p-4">
+      <View className="flex-row items-center justify-between gap-3"><View className="flex-1"><Text className="text-base font-bold text-[#F4F7FB]">Invitation de cohorte</Text><Text className="mt-1 text-xs leading-5 text-[#B0BBC9]">Vue agrégée : aucune adresse e-mail n’apparaît dans ce tableau.</Text></View><Text className="text-sm font-bold text-[#2D8CFF]">{summary.waiting} en attente</Text></View>
+      <View className="flex-row gap-4"><MiniMetric label="Inscrits" value={String(summary.total)} /><MiniMetric label="Invités" value={String(summary.invited)} /><MiniMetric label="Retraits" value={String(summary.declined)} /></View>
+      <TouchableOpacity accessibilityRole="button" accessibilityLabel="Préparer la prochaine invitation bêta" disabled={preparing} onPress={onPrepare} activeOpacity={0.75} className={preparing ? "items-center rounded-xl bg-[#1875FF] px-4 py-3 opacity-70" : "items-center rounded-xl bg-[#1875FF] px-4 py-3"}><Text className="font-bold text-white">{preparing ? "Préparation…" : "Préparer la prochaine invitation"}</Text></TouchableOpacity>
+      {resultMessage ? <Text accessibilityLiveRegion="polite" className="text-sm leading-5 text-[#D9E4F3]">{resultMessage}</Text> : null}
     </View>
   );
 }
