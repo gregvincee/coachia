@@ -1,298 +1,177 @@
-import { ScrollView, Text, View, FlatList, Pressable } from 'react-native';
-import { useEffect, useState } from 'react';
-import * as Haptics from 'expo-haptics';
-import { ScreenContainer } from '@/components/screen-container';
-import { useColors } from '@/hooks/use-colors';
-import { PREMIUM_PLANS, COACHING_PACKAGES, getPremiumPlan } from '@/lib/premium';
-import type { PremiumPlan, CoachingPackage } from '@/lib/types-premium';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from "react";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import * as Haptics from "expo-haptics";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { ScreenContainer } from "@/components/screen-container";
+import { COACHING_PACKAGES, PREMIUM_PLANS } from "@/lib/premium";
 
 export default function PremiumScreen() {
-  const colors = useColors();
-  const [activeTab, setActiveTab] = useState<'plans' | 'packages'>('plans');
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-  const [currentPlan, setCurrentPlan] = useState<string>('free');
+  const [activeTab, setActiveTab] = useState<"plans" | "packages">("plans");
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+  const [currentPlan, setCurrentPlan] = useState("free");
 
   useEffect(() => {
-    loadCurrentPlan();
+    void loadCurrentPlan();
   }, []);
 
-  const loadCurrentPlan = async () => {
+  async function loadCurrentPlan() {
     try {
-      const stored = await AsyncStorage.getItem('userPlan');
-      if (stored) {
-        setCurrentPlan(stored);
-      }
+      const stored = await AsyncStorage.getItem("userPlan");
+      if (stored) setCurrentPlan(stored);
     } catch (error) {
-      console.error('Erreur lors du chargement du plan:', error);
+      console.error("Erreur lors du chargement du plan:", error);
     }
-  };
+  }
 
-  const handleSelectPlan = async (planId: string) => {
+  async function handleSelectPlan(planId: string) {
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    // Logique de sélection du plan (intégration paiement)
+    // Préparation du paiement : le checkout Stripe sera relié ici après ajout des clés test.
     console.log(`Plan sélectionné: ${planId}`);
-  };
+  }
+
+  function selectTab(tab: "plans" | "packages") {
+    setActiveTab(tab);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  }
 
   return (
-    <ScreenContainer className="flex-1">
+    <ScreenContainer className="p-0" containerClassName="bg-[#05070A]">
       <View className="flex-1">
-        {/* En-tête */}
-        <View className="px-6 pt-4 pb-6">
-          <Text className="text-3xl font-bold text-foreground mb-2">Premium</Text>
-          <Text className="text-base text-muted">Débloquez tout le potentiel de CoachIA</Text>
+        <View className="border-b border-[#2C3B4E] bg-[#10141D] px-5 pb-6 pt-7">
+          <Text className="text-xs font-bold tracking-widest text-[#72D6FF]">COACHIA · PROGRESSION</Text>
+          <Text className="mt-3 text-3xl font-bold text-[#F4F7FB]">Premium</Text>
+          <Text className="mt-2 text-sm leading-5 text-[#B0BBC9]">Des outils supplémentaires pour pratiquer davantage, sans confondre XP et maîtrise.</Text>
         </View>
 
-        {/* Onglets */}
-        <View className="flex-row px-6 mb-6 gap-3">
+        <View className="flex-row gap-3 px-5 py-5">
           <Pressable
-            onPress={() => {
-              setActiveTab('plans');
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            }}
-            style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
-            className="flex-1"
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === "plans" }}
+            accessibilityLabel="Voir les abonnements"
+            onPress={() => selectTab("plans")}
+            style={({ pressed }) => [styles.tabPressable, pressed && styles.pressed]}
           >
-            <View
-              className={`py-3 px-4 rounded-lg border-b-2 ${
-                activeTab === 'plans'
-                  ? 'border-primary bg-primary/10'
-                  : 'border-border bg-surface'
-              }`}
-            >
-              <Text
-                className={`text-center font-semibold ${
-                  activeTab === 'plans' ? 'text-primary' : 'text-muted'
-                }`}
-              >
-                Abonnements
-              </Text>
+            <View className={activeTab === "plans" ? "rounded-xl border border-[#2D8CFF] bg-[#152849] px-4 py-3" : "rounded-xl border border-[#2C3B4E] bg-[#10141D] px-4 py-3"}>
+              <Text className={activeTab === "plans" ? "text-center font-bold text-[#72D6FF]" : "text-center font-bold text-[#B0BBC9]"}>Abonnements</Text>
             </View>
           </Pressable>
-
           <Pressable
-            onPress={() => {
-              setActiveTab('packages');
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            }}
-            style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
-            className="flex-1"
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === "packages" }}
+            accessibilityLabel="Voir les packs de coaching"
+            onPress={() => selectTab("packages")}
+            style={({ pressed }) => [styles.tabPressable, pressed && styles.pressed]}
           >
-            <View
-              className={`py-3 px-4 rounded-lg border-b-2 ${
-                activeTab === 'packages'
-                  ? 'border-primary bg-primary/10'
-                  : 'border-border bg-surface'
-              }`}
-            >
-              <Text
-                className={`text-center font-semibold ${
-                  activeTab === 'packages' ? 'text-primary' : 'text-muted'
-                }`}
-              >
-                Packs
-              </Text>
+            <View className={activeTab === "packages" ? "rounded-xl border border-[#2D8CFF] bg-[#152849] px-4 py-3" : "rounded-xl border border-[#2C3B4E] bg-[#10141D] px-4 py-3"}>
+              <Text className={activeTab === "packages" ? "text-center font-bold text-[#72D6FF]" : "text-center font-bold text-[#B0BBC9]"}>Packs</Text>
             </View>
           </Pressable>
         </View>
 
-        {activeTab === 'plans' && (
+        {activeTab === "plans" ? (
           <>
-            {/* Sélecteur de cycle de facturation */}
-            <View className="px-6 mb-6 flex-row gap-3">
+            <View className="flex-row gap-3 px-5 pb-5">
               <Pressable
-                onPress={() => setBillingCycle('monthly')}
-                style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
-                className="flex-1"
+                accessibilityRole="radio"
+                accessibilityState={{ selected: billingCycle === "monthly" }}
+                onPress={() => setBillingCycle("monthly")}
+                style={({ pressed }) => [styles.cyclePressable, pressed && styles.pressed]}
               >
-                <View
-                  className={`py-2 px-3 rounded-lg border ${
-                    billingCycle === 'monthly'
-                      ? 'border-primary bg-primary/10'
-                      : 'border-border bg-surface'
-                  }`}
-                >
-                  <Text
-                    className={`text-center text-sm font-semibold ${
-                      billingCycle === 'monthly' ? 'text-primary' : 'text-muted'
-                    }`}
-                  >
-                    Mensuel
-                  </Text>
+                <View className={billingCycle === "monthly" ? "rounded-xl border border-[#2D8CFF] bg-[#152849] px-3 py-2" : "rounded-xl border border-[#2C3B4E] bg-[#10141D] px-3 py-2"}>
+                  <Text className={billingCycle === "monthly" ? "text-center text-sm font-bold text-[#72D6FF]" : "text-center text-sm font-bold text-[#B0BBC9]"}>Mensuel</Text>
                 </View>
               </Pressable>
-
               <Pressable
-                onPress={() => setBillingCycle('yearly')}
-                style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
-                className="flex-1"
+                accessibilityRole="radio"
+                accessibilityState={{ selected: billingCycle === "yearly" }}
+                onPress={() => setBillingCycle("yearly")}
+                style={({ pressed }) => [styles.cyclePressable, pressed && styles.pressed]}
               >
-                <View
-                  className={`py-2 px-3 rounded-lg border relative ${
-                    billingCycle === 'yearly'
-                      ? 'border-primary bg-primary/10'
-                      : 'border-border bg-surface'
-                  }`}
-                >
-                  <Text
-                    className={`text-center text-sm font-semibold ${
-                      billingCycle === 'yearly' ? 'text-primary' : 'text-muted'
-                    }`}
-                  >
-                    Annuel
-                  </Text>
-                  <View className="absolute -top-2 -right-2 bg-success px-2 py-1 rounded-full">
-                    <Text className="text-xs font-bold text-background">-17%</Text>
-                  </View>
+                <View className={billingCycle === "yearly" ? "relative rounded-xl border border-[#2D8CFF] bg-[#152849] px-3 py-2" : "relative rounded-xl border border-[#2C3B4E] bg-[#10141D] px-3 py-2"}>
+                  <Text className={billingCycle === "yearly" ? "text-center text-sm font-bold text-[#72D6FF]" : "text-center text-sm font-bold text-[#B0BBC9]"}>Annuel · -17%</Text>
                 </View>
               </Pressable>
             </View>
 
-            {/* Plans */}
             <FlatList
               data={PREMIUM_PLANS}
-              keyExtractor={item => item.id}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContent}
               renderItem={({ item }) => {
                 const price = item.price[billingCycle];
                 const isCurrentPlan = currentPlan === item.id;
-
                 return (
-                  <View className="px-6 mb-4">
-                    <View
-                      className={`rounded-2xl p-6 border ${
-                        isCurrentPlan
-                          ? 'border-primary bg-primary/5'
-                          : 'border-border bg-surface'
-                      }`}
-                    >
-                      {/* En-tête du plan */}
-                      <View className="mb-4">
-                        <View className="flex-row items-center justify-between mb-2">
-                          <Text className="text-2xl font-bold text-foreground">{item.name}</Text>
-                          {isCurrentPlan && (
-                            <View className="bg-primary px-3 py-1 rounded-full">
-                              <Text className="text-xs font-bold text-background">Actif</Text>
-                            </View>
-                          )}
-                        </View>
-                        <Text className="text-sm text-muted">{item.description}</Text>
+                  <View className={isCurrentPlan ? "mx-5 mb-4 rounded-2xl border border-[#2D8CFF] bg-[#152849] p-5" : "mx-5 mb-4 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-5"}>
+                    <View className="flex-row items-start justify-between gap-3">
+                      <View className="flex-1">
+                        <Text className="text-2xl font-bold text-[#F4F7FB]">{item.name}</Text>
+                        <Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">{item.description}</Text>
                       </View>
-
-                      {/* Prix */}
-                      <View className="mb-4 pb-4 border-b border-border">
-                        {price > 0 ? (
-                          <View>
-                            <Text className="text-4xl font-bold text-foreground">
-                              ${price.toFixed(2)}
-                            </Text>
-                            <Text className="text-sm text-muted mt-1">
-                              par {billingCycle === 'monthly' ? 'mois' : 'an'}
-                            </Text>
-                          </View>
-                        ) : (
-                          <Text className="text-3xl font-bold text-foreground">Gratuit</Text>
-                        )}
-                      </View>
-
-                      {/* Fonctionnalités */}
-                      <View className="mb-6">
-                        {item.features.map((feature, idx) => (
-                          <View key={idx} className="flex-row items-start mb-2">
-                            <Text className="text-lg mr-2">✓</Text>
-                            <Text className="text-sm text-foreground flex-1">{feature}</Text>
-                          </View>
-                        ))}
-                      </View>
-
-                      {/* Bouton */}
-                      {!isCurrentPlan && (
-                        <Pressable
-                          onPress={() => handleSelectPlan(item.id)}
-                          style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
-                          className={`py-3 px-4 rounded-lg ${
-                            item.id === 'free'
-                              ? 'bg-muted'
-                              : 'bg-primary'
-                          }`}
-                        >
-                          <Text
-                            className={`text-center font-semibold ${
-                              item.id === 'free'
-                                ? 'text-foreground'
-                                : 'text-background'
-                            }`}
-                          >
-                            {item.id === 'free' ? 'Utiliser' : 'Passer à ' + item.name}
-                          </Text>
-                        </Pressable>
-                      )}
+                      {isCurrentPlan ? <View className="rounded-full bg-[#1875FF] px-3 py-1"><Text className="text-xs font-bold text-white">Actif</Text></View> : null}
                     </View>
+
+                    <View className="mt-4 border-b border-[#2C3B4E] pb-4">
+                      {price > 0 ? <><Text className="text-4xl font-bold text-[#72D6FF]">${price.toFixed(2)}</Text><Text className="mt-1 text-sm text-[#B0BBC9]">par {billingCycle === "monthly" ? "mois" : "an"}</Text></> : <Text className="text-3xl font-bold text-[#F4F7FB]">Gratuit</Text>}
+                    </View>
+
+                    <View className="gap-2 py-5">
+                      {item.features.map((feature) => <View key={feature} className="flex-row items-start gap-2"><Text className="font-bold text-[#72D6FF]">✓</Text><Text className="flex-1 text-sm leading-5 text-[#D9E4F3]">{feature}</Text></View>)}
+                    </View>
+
+                    {!isCurrentPlan ? (
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={item.id === "free" ? "Utiliser le plan gratuit" : `Passer au plan ${item.name}`}
+                        onPress={() => void handleSelectPlan(item.id)}
+                        style={({ pressed }) => [styles.actionPressable, pressed && styles.pressed]}
+                      >
+                        <View className={item.id === "free" ? "items-center rounded-xl border border-[#526176] bg-[#253044] px-4 py-3" : "items-center rounded-xl bg-[#1875FF] px-4 py-3"}>
+                          <Text className={item.id === "free" ? "font-bold text-[#F4F7FB]" : "font-bold text-white"}>{item.id === "free" ? "Utiliser" : `Passer à ${item.name}`}</Text>
+                        </View>
+                      </Pressable>
+                    ) : null}
                   </View>
                 );
               }}
-              contentContainerStyle={{ paddingBottom: 20 }}
-              scrollEnabled={true}
             />
           </>
-        )}
-
-        {activeTab === 'packages' && (
+        ) : (
           <FlatList
             data={COACHING_PACKAGES}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContent}
             renderItem={({ item }) => (
-              <View className="px-6 mb-4">
-                <View className="rounded-2xl p-6 border border-border bg-surface">
-                  <View className="mb-3">
-                    <Text className="text-xl font-bold text-foreground">{item.name}</Text>
-                    <Text className="text-sm text-muted mt-1">{item.description}</Text>
-                  </View>
-
-                  <View className="mb-4 pb-4 border-b border-border">
-                    <View className="flex-row items-baseline gap-1">
-                      <Text className="text-3xl font-bold text-primary">${item.price}</Text>
-                      <Text className="text-sm text-muted">une fois</Text>
-                    </View>
-                  </View>
-
-                  <View className="mb-6 gap-2">
-                    <View className="flex-row items-center">
-                      <Text className="text-lg mr-2">📅</Text>
-                      <Text className="text-sm text-foreground">{item.duration} jours d'accès</Text>
-                    </View>
-                    <View className="flex-row items-center">
-                      <Text className="text-lg mr-2">💬</Text>
-                      <Text className="text-sm text-foreground">{item.sessions} sessions de coaching</Text>
-                    </View>
-                    {item.customization && (
-                      <View className="flex-row items-center">
-                        <Text className="text-lg mr-2">⚙️</Text>
-                        <Text className="text-sm text-foreground">Personnalisation complète</Text>
-                      </View>
-                    )}
-                    {item.bonus && (
-                      <View className="flex-row items-center">
-                        <Text className="text-lg mr-2">🎁</Text>
-                        <Text className="text-sm text-foreground">+{item.bonus.xp} XP bonus</Text>
-                      </View>
-                    )}
-                  </View>
-
-                  <Pressable
-                    onPress={() => handleSelectPlan(item.id)}
-                    style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
-                    className="bg-primary py-3 px-4 rounded-lg"
-                  >
-                    <Text className="text-center font-semibold text-background">Acheter maintenant</Text>
-                  </Pressable>
+              <View className="mx-5 mb-4 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-5">
+                <Text className="text-xl font-bold text-[#F4F7FB]">{item.name}</Text>
+                <Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">{item.description}</Text>
+                <View className="mt-4 border-b border-[#2C3B4E] pb-4"><Text className="text-3xl font-bold text-[#72D6FF]">${item.price.toFixed(2)}</Text><Text className="mt-1 text-sm text-[#B0BBC9]">achat unique</Text></View>
+                <View className="gap-2 py-5">
+                  <Text className="text-sm text-[#D9E4F3]">◷ {item.duration} jours d’accès · {item.sessions} sessions</Text>
+                  {item.customization ? <Text className="text-sm text-[#D9E4F3]">◇ Personnalisation complète</Text> : null}
+                  {item.bonus ? <Text className="text-sm text-[#D9E4F3]">✦ +{item.bonus.xp} XP bonus</Text> : null}
                 </View>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`Acheter ${item.name}`}
+                  onPress={() => void handleSelectPlan(item.id)}
+                  style={({ pressed }) => [styles.actionPressable, pressed && styles.pressed]}
+                >
+                  <View className="items-center rounded-xl bg-[#1875FF] px-4 py-3"><Text className="font-bold text-white">Préparer cet achat</Text></View>
+                </Pressable>
               </View>
             )}
-            contentContainerStyle={{ paddingBottom: 20 }}
-            scrollEnabled={true}
           />
         )}
       </View>
     </ScreenContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  actionPressable: { minHeight: 48 },
+  cyclePressable: { flex: 1 },
+  listContent: { paddingBottom: 32 },
+  pressed: { opacity: 0.72 },
+  tabPressable: { flex: 1 },
+});

@@ -26,6 +26,7 @@ import { TRPCError } from "@trpc/server";
 import {
   createMicroPurchaseCheckout,
   createMicroPurchaseIntent,
+  getStripeConfiguration,
   isStripeConfigured,
   verifyAndFulfilMicroPurchase,
 } from "./micro-purchase-service";
@@ -68,6 +69,7 @@ export const appRouter = router({
     catalog: publicProcedure.query(() => ({
       products: Object.values(MICRO_PURCHASES_CATALOG),
       stripeEnabled: isStripeConfigured(),
+      stripe: getStripeConfiguration(),
     })),
 
     /** Les crédits sont liés au compte authentifié, jamais à un identifiant client fourni. */

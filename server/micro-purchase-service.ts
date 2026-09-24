@@ -32,6 +32,14 @@ export type PurchaseFulfilment = {
   alreadyFulfilled: boolean;
 };
 
+export type StripeMode = "not_configured" | "test" | "live" | "invalid";
+
+export type StripeConfiguration = {
+  configured: boolean;
+  mode: StripeMode;
+  webhookConfigured: boolean;
+};
+
 function getStripeSecretKey() {
   return process.env.COACHIA_STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY || "";
 }
@@ -40,14 +48,35 @@ function getWebhookSecret() {
   return process.env.COACHIA_STRIPE_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET || "";
 }
 
+function getStripeMode(secretKey: string): StripeMode {
+  if (!secretKey) return "not_configured";
+  if (secretKey.startsWith("sk_test_") || secretKey.startsWith("rk_test_")) return "test";
+  if (secretKey.startsWith("sk_live_") || secretKey.startsWith("rk_live_")) return "live";
+  return "invalid";
+}
+
+/** Stat sans secret pour que l'interface puisse distinguer préparation, test et production. */
+export function getStripeConfiguration(): StripeConfiguration {
+  const mode = getStripeMode(getStripeSecretKey());
+  return {
+    configured: mode === "test" || mode === "live",
+    mode,
+    webhookConfigured: Boolean(getWebhookSecret()),
+  };
+}
+
 export function isStripeConfigured() {
-  return Boolean(getStripeSecretKey());
+  return getStripeConfiguration().configured;
 }
 
 function getStripeClient() {
   const secretKey = getStripeSecretKey();
-  if (!secretKey) {
-    throw new Error("Stripe is not configured. Add COACHIA_STRIPE_SECRET_KEY to enable real payments.");
+  const configuration = getStripeConfiguration();
+  if (!configuration.configured) {
+    if (configuration.mode === "invalid") {
+      throw new Error("La clé Stripe doit commencer par sk_test_, sk_live_, rk_test_ ou rk_live_.");
+    }
+    throw new Error("Stripe n’est pas configuré. Ajoutez COACHIA_STRIPE_SECRET_KEY pour activer les paiements.");
   }
   return new Stripe(secretKey);
 }

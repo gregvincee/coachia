@@ -325,3 +325,18 @@
 ## Phase 53: Exemples adaptatifs selon la difficulté
 - [x] Définir des variantes d’exemple débutant, intermédiaire et approfondi pour chaque mission
 - [x] Sélectionner et afficher automatiquement l’exemple adapté au diagnostic
+
+## Phase 54: Préparation Stripe sans clés live
+- [x] Détecter explicitement les états non configuré, test, live et invalide sans exposer de secret
+- [x] Afficher l’état de préparation dans le Store et documenter le parcours de test
+- [x] Conserver la vérification serveur du prix, de l’utilisateur, du webhook signé et l’idempotence
+
+## Phase 55: Profil de maîtrise
+- [x] Afficher le score global de maîtrise séparément de l’XP
+- [x] Visualiser les quatre capacités, leur niveau, leurs tentatives et leur progression
+- [x] Rafraîchir la progression au retour sur l’écran Profil
+
+## Phase 56: Uniformité des écrans secondaires
+- [x] Appliquer la palette métallique à Premium
+- [x] Renforcer les états tactiles et l’accessibilité des actions Premium
+- [x] Vérifier le Store, Premium et Profil en typage strict et tests automatisés

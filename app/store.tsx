@@ -34,6 +34,15 @@ export default function StoreScreen() {
     return filter === "all" ? entries : entries.filter((product) => product.category === filter);
   }, [catalog.data?.products, filter]);
 
+  const stripeStatus = catalog.data?.stripe;
+  const paymentStatus = stripeStatus?.mode === "test"
+    ? "Mode test Stripe : aucun débit réel."
+    : stripeStatus?.mode === "live"
+      ? "Paiements sécurisés activés."
+      : stripeStatus?.mode === "invalid"
+        ? "Configuration Stripe à corriger côté serveur."
+        : "Paiements en préparation : les clés Stripe test ne sont pas encore renseignées.";
+
   async function handlePurchase(productId: string) {
     if (!isAuthenticated) {
       Alert.alert("Connexion requise", "Connectez-vous pour associer cet achat à votre compte CoachIA.");
@@ -129,8 +138,14 @@ export default function StoreScreen() {
         </View>
 
         <View className="mx-4 mt-5 rounded-xl border border-[#2C3B4E] bg-[#10141D] p-4">
-          <Text className="text-sm font-semibold text-[#F4F7FB]">Paiements responsables</Text>
-          <Text className="mt-1 text-xs leading-5 text-[#B0BBC9]">Les prix et droits sont vérifiés côté serveur. Aucun bonus n’est attribué avant confirmation du paiement.</Text>
+          <View className="flex-row items-center justify-between gap-3">
+            <Text className="flex-1 text-sm font-semibold text-[#F4F7FB]">Paiements responsables</Text>
+            <View className={stripeStatus?.mode === "live" ? "rounded-full bg-[#163C2B] px-2 py-1" : "rounded-full bg-[#172B48] px-2 py-1"}>
+              <Text className="text-[10px] font-bold uppercase tracking-wide text-[#72D6FF]">{stripeStatus?.mode === "live" ? "Actif" : "Préparation"}</Text>
+            </View>
+          </View>
+          <Text className="mt-2 text-xs font-semibold leading-5 text-[#72D6FF]">{paymentStatus}</Text>
+          <Text className="mt-1 text-xs leading-5 text-[#B0BBC9]">Les prix et droits sont vérifiés côté serveur. Aucun bonus n’est attribué avant confirmation du paiement et du webhook.</Text>
         </View>
       </ScrollView>
     </ScreenContainer>
