@@ -340,3 +340,9 @@
 - [x] Appliquer la palette métallique à Premium
 - [x] Renforcer les états tactiles et l’accessibilité des actions Premium
 - [x] Vérifier le Store, Premium et Profil en typage strict et tests automatisés
+
+## Phase 57: Préparation du dépôt et de la publication Web
+- [x] Aligner la page de lancement sur l’apprentissage par missions
+- [x] Ajouter le workflow GitHub Actions pour construire et publier l’export statique
+- [x] Documenter la séparation entre GitHub Pages, backend CoachIA, secrets et domaine personnalisé
+- [x] Valider l’export `dist` avec le service worker PWA

@@ -53,13 +53,13 @@ export default function LaunchScreen() {
           />
           <Text className="mt-4" style={styles.eyebrow}>COHORTE BÊTA PRIVÉE</Text>
           <Text className="mt-3 text-center text-4xl font-bold leading-tight text-[#F4F7FB]">Progressez sur ce qui fait vraiment avancer votre travail.</Text>
-          <Text className="mt-4 text-center text-base leading-6 text-[#B0BBC9]">CoachIA transforme vos défis de communication en micro-sessions personnalisées, en dix minutes par jour.</Text>
+          <Text className="mt-4 text-center text-base leading-6 text-[#B0BBC9]">CoachIA vous apprend l’IA par des missions concrètes : vous tentez, recevez un diagnostic et recommencez avec une méthode plus solide.</Text>
         </View>
 
         <View className="gap-3 px-4 pt-6">
-          <BenefitCard number="01" title="Un défi précis" description="Préparez un pitch, un message client ou une décision difficile sans vous perdre dans un cours interminable." />
-          <BenefitCard number="02" title="Un coach qui répond" description="Recevez une réponse adaptée à votre objectif, avec des pistes concrètes à appliquer immédiatement." />
-          <BenefitCard number="03" title="Une progression visible" description="Gagnez de l’expérience, complétez vos défis et voyez votre niveau évoluer à chaque micro-victoire." />
+          <BenefitCard number="01" title="Une mission réelle" description="Créez, résolvez ou construisez quelque chose d’utile au lieu de suivre un cours interminable." />
+          <BenefitCard number="02" title="Un diagnostic actionnable" description="Comprenez ce qui est solide, ce qui manque et quelle correction appliquer à votre prochaine tentative." />
+          <BenefitCard number="03" title="Une maîtrise mesurée" description="Suivez vos capacités de prompting, vérification, raisonnement et workflow séparément de vos XP." />
         </View>
 
         <View className="mx-4 mt-6 rounded-2xl border border-[#2D8CFF] bg-[#10141D] p-5">
