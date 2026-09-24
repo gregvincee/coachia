@@ -7,9 +7,9 @@ import { trpc } from "@/lib/trpc";
 
 function PrivacySection({ title, children }: { title: string; children: string }) {
   return (
-    <View className="mt-5 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-5">
-      <Text className="text-base font-bold text-[#F4F7FB]">{title}</Text>
-      <Text className="mt-2 text-sm leading-6 text-[#B0BBC9]">{children}</Text>
+    <View className="mt-5 rounded-2xl border border-[#343947] bg-[#151820] p-5">
+      <Text className="text-base font-bold text-[#F5F1E8]">{title}</Text>
+      <Text className="mt-2 text-sm leading-6 text-[#AEB4C0]">{children}</Text>
     </View>
   );
 }
@@ -39,12 +39,12 @@ export default function PrivacyScreen() {
   }
 
   return (
-    <ScreenContainer className="p-0" containerClassName="bg-[#05070A]">
+    <ScreenContainer className="p-0" containerClassName="bg-[#07080C]">
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 28, paddingBottom: 36 }}>
-        <Text className="text-xs font-bold tracking-widest text-[#72D6FF]">TRANSPARENCE BÊTA</Text>
-        <Text className="mt-3 text-3xl font-bold leading-10 text-[#F4F7FB]">Votre confidentialité, simplement expliquée.</Text>
-        <Text className="mt-3 text-sm leading-6 text-[#B0BBC9]">Cette page décrit le traitement des données dans la bêta CoachIA. Il s’agit d’un brouillon de transparence produit à faire valider avant un lancement public élargi.</Text>
+        <Text className="text-xs font-bold tracking-widest text-[#E8C98A]">TRANSPARENCE BÊTA</Text>
+        <Text className="mt-3 text-3xl font-bold leading-10 text-[#F5F1E8]">Votre confidentialité, simplement expliquée.</Text>
+        <Text className="mt-3 text-sm leading-6 text-[#AEB4C0]">Cette page décrit le traitement des données dans la bêta CoachIA. Il s’agit d’un brouillon de transparence produit à faire valider avant un lancement public élargi.</Text>
 
         <PrivacySection
           title="Ce que nous collectons"
@@ -67,10 +67,10 @@ export default function PrivacyScreen() {
           L’adresse est conservée pendant la préparation et le déroulement de la bêta, ou jusqu’à votre demande de retrait. Le formulaire ci-dessous supprime l’adresse de la liste d’attente et ne renvoie pas son statut, afin de ne pas exposer l’inscription d’une autre personne.
         </PrivacySection>
 
-        <View className="mt-5 rounded-2xl border border-[#2D8CFF] bg-[#10141D] p-5">
-          <Text className="text-xs font-bold tracking-widest text-[#72D6FF]">RETRAIT DE LA BÊTA</Text>
-          <Text className="mt-2 text-xl font-bold text-[#F4F7FB]">Retirer mon adresse de la liste</Text>
-          <Text className="mt-2 text-sm leading-6 text-[#B0BBC9]">Saisissez l’adresse utilisée pour l’inscription. La réponse ne confirme jamais si elle était présente dans la liste.</Text>
+        <View className="mt-5 rounded-2xl border border-[#C89D56] bg-[#151820] p-5">
+          <Text className="text-xs font-bold tracking-widest text-[#E8C98A]">RETRAIT DE LA BÊTA</Text>
+          <Text className="mt-2 text-xl font-bold text-[#F5F1E8]">Retirer mon adresse de la liste</Text>
+          <Text className="mt-2 text-sm leading-6 text-[#AEB4C0]">Saisissez l’adresse utilisée pour l’inscription. La réponse ne confirme jamais si elle était présente dans la liste.</Text>
           <TextInput
             accessibilityLabel="Adresse e-mail à retirer de la liste bêta"
             autoCapitalize="none"
@@ -91,23 +91,23 @@ export default function PrivacyScreen() {
             className="mt-4 flex-row items-start gap-3"
             onPress={() => setConfirmed((current) => !current)}
           >
-            <View className={confirmed ? "mt-0.5 h-5 w-5 items-center justify-center rounded border border-[#2D8CFF] bg-[#1875FF]" : "mt-0.5 h-5 w-5 rounded border border-[#788899] bg-[#080B11]"}>
+            <View className={confirmed ? "mt-0.5 h-5 w-5 items-center justify-center rounded border border-[#C89D56] bg-[#D6B36A]" : "mt-0.5 h-5 w-5 rounded border border-[#788899] bg-[#0B0D12]"}>
               {confirmed ? <Text className="text-xs font-bold text-white">✓</Text> : null}
             </View>
-            <Text className="flex-1 text-xs leading-5 text-[#B0BBC9]">Je confirme vouloir retirer cette adresse de la liste d’attente bêta.</Text>
+            <Text className="flex-1 text-xs leading-5 text-[#AEB4C0]">Je confirme vouloir retirer cette adresse de la liste d’attente bêta.</Text>
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityRole="button"
             accessibilityLabel="Confirmer le retrait de la liste bêta"
             activeOpacity={0.8}
-            className="mt-5 items-center rounded-xl border border-[#2D8CFF] bg-[#1875FF] px-4 py-4"
+            className="mt-5 items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-4"
             disabled={withdrawWaitlist.isPending}
             onPress={() => void submitWithdrawal()}
             style={withdrawWaitlist.isPending ? styles.disabledButton : undefined}
           >
             <Text className="font-bold text-white">{withdrawWaitlist.isPending ? "Traitement…" : "Retirer mon adresse"}</Text>
           </TouchableOpacity>
-          {notice ? <Text accessibilityLiveRegion="polite" className="mt-3 text-sm leading-5 text-[#D9E4F3]">{notice}</Text> : null}
+          {notice ? <Text accessibilityLiveRegion="polite" className="mt-3 text-sm leading-5 text-[#E5DFD2]">{notice}</Text> : null}
         </View>
 
         <Text className="mt-6 text-xs leading-5 text-[#788899]">Version bêta — 23 août 2026</Text>
@@ -115,7 +115,7 @@ export default function PrivacyScreen() {
           accessibilityRole="button"
           accessibilityLabel="Retourner à la page de lancement CoachIA"
           activeOpacity={0.8}
-          className="mt-5 items-center rounded-xl border border-[#2D8CFF] bg-[#1875FF] px-4 py-4"
+          className="mt-5 items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-4"
           onPress={() => router.replace("/launch")}
         >
           <Text className="font-bold text-white">Retour à la page de lancement</Text>
@@ -130,10 +130,10 @@ const styles = StyleSheet.create({
     marginTop: 16,
     minHeight: 52,
     borderWidth: 1,
-    borderColor: "#2C3B4E",
+    borderColor: "#343947",
     borderRadius: 12,
-    backgroundColor: "#080B11",
-    color: "#F4F7FB",
+    backgroundColor: "#0B0D12",
+    color: "#F5F1E8",
     fontSize: 16,
     paddingHorizontal: 14,
   },

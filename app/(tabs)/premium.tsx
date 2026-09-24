@@ -36,12 +36,12 @@ export default function PremiumScreen() {
   }
 
   return (
-    <ScreenContainer className="p-0" containerClassName="bg-[#05070A]">
+    <ScreenContainer className="p-0" containerClassName="bg-[#07080C]">
       <View className="flex-1">
-        <View className="border-b border-[#2C3B4E] bg-[#10141D] px-5 pb-6 pt-7">
-          <Text className="text-xs font-bold tracking-widest text-[#72D6FF]">COACHIA · PROGRESSION</Text>
-          <Text className="mt-3 text-3xl font-bold text-[#F4F7FB]">Premium</Text>
-          <Text className="mt-2 text-sm leading-5 text-[#B0BBC9]">Des outils supplémentaires pour pratiquer davantage, sans confondre XP et maîtrise.</Text>
+        <View className="border-b border-[#343947] bg-[#151820] px-5 pb-6 pt-7">
+          <Text className="text-xs font-bold tracking-widest text-[#E8C98A]">COACHIA · PROGRESSION</Text>
+          <Text className="mt-3 text-3xl font-bold text-[#F5F1E8]">Premium</Text>
+          <Text className="mt-2 text-sm leading-5 text-[#AEB4C0]">Des outils supplémentaires pour pratiquer davantage, sans confondre XP et maîtrise.</Text>
         </View>
 
         <View className="flex-row gap-3 px-5 py-5">
@@ -52,8 +52,8 @@ export default function PremiumScreen() {
             onPress={() => selectTab("plans")}
             style={({ pressed }) => [styles.tabPressable, pressed && styles.pressed]}
           >
-            <View className={activeTab === "plans" ? "rounded-xl border border-[#2D8CFF] bg-[#152849] px-4 py-3" : "rounded-xl border border-[#2C3B4E] bg-[#10141D] px-4 py-3"}>
-              <Text className={activeTab === "plans" ? "text-center font-bold text-[#72D6FF]" : "text-center font-bold text-[#B0BBC9]"}>Abonnements</Text>
+            <View className={activeTab === "plans" ? "rounded-xl border border-[#C89D56] bg-[#242B3A] px-4 py-3" : "rounded-xl border border-[#343947] bg-[#151820] px-4 py-3"}>
+              <Text className={activeTab === "plans" ? "text-center font-bold text-[#E8C98A]" : "text-center font-bold text-[#AEB4C0]"}>Abonnements</Text>
             </View>
           </Pressable>
           <Pressable
@@ -63,8 +63,8 @@ export default function PremiumScreen() {
             onPress={() => selectTab("packages")}
             style={({ pressed }) => [styles.tabPressable, pressed && styles.pressed]}
           >
-            <View className={activeTab === "packages" ? "rounded-xl border border-[#2D8CFF] bg-[#152849] px-4 py-3" : "rounded-xl border border-[#2C3B4E] bg-[#10141D] px-4 py-3"}>
-              <Text className={activeTab === "packages" ? "text-center font-bold text-[#72D6FF]" : "text-center font-bold text-[#B0BBC9]"}>Packs</Text>
+            <View className={activeTab === "packages" ? "rounded-xl border border-[#C89D56] bg-[#242B3A] px-4 py-3" : "rounded-xl border border-[#343947] bg-[#151820] px-4 py-3"}>
+              <Text className={activeTab === "packages" ? "text-center font-bold text-[#E8C98A]" : "text-center font-bold text-[#AEB4C0]"}>Packs</Text>
             </View>
           </Pressable>
         </View>
@@ -78,8 +78,8 @@ export default function PremiumScreen() {
                 onPress={() => setBillingCycle("monthly")}
                 style={({ pressed }) => [styles.cyclePressable, pressed && styles.pressed]}
               >
-                <View className={billingCycle === "monthly" ? "rounded-xl border border-[#2D8CFF] bg-[#152849] px-3 py-2" : "rounded-xl border border-[#2C3B4E] bg-[#10141D] px-3 py-2"}>
-                  <Text className={billingCycle === "monthly" ? "text-center text-sm font-bold text-[#72D6FF]" : "text-center text-sm font-bold text-[#B0BBC9]"}>Mensuel</Text>
+                <View className={billingCycle === "monthly" ? "rounded-xl border border-[#C89D56] bg-[#242B3A] px-3 py-2" : "rounded-xl border border-[#343947] bg-[#151820] px-3 py-2"}>
+                  <Text className={billingCycle === "monthly" ? "text-center text-sm font-bold text-[#E8C98A]" : "text-center text-sm font-bold text-[#AEB4C0]"}>Mensuel</Text>
                 </View>
               </Pressable>
               <Pressable
@@ -88,8 +88,8 @@ export default function PremiumScreen() {
                 onPress={() => setBillingCycle("yearly")}
                 style={({ pressed }) => [styles.cyclePressable, pressed && styles.pressed]}
               >
-                <View className={billingCycle === "yearly" ? "relative rounded-xl border border-[#2D8CFF] bg-[#152849] px-3 py-2" : "relative rounded-xl border border-[#2C3B4E] bg-[#10141D] px-3 py-2"}>
-                  <Text className={billingCycle === "yearly" ? "text-center text-sm font-bold text-[#72D6FF]" : "text-center text-sm font-bold text-[#B0BBC9]"}>Annuel · -17%</Text>
+                <View className={billingCycle === "yearly" ? "relative rounded-xl border border-[#C89D56] bg-[#242B3A] px-3 py-2" : "relative rounded-xl border border-[#343947] bg-[#151820] px-3 py-2"}>
+                  <Text className={billingCycle === "yearly" ? "text-center text-sm font-bold text-[#E8C98A]" : "text-center text-sm font-bold text-[#AEB4C0]"}>Annuel · -17%</Text>
                 </View>
               </Pressable>
             </View>
@@ -102,21 +102,21 @@ export default function PremiumScreen() {
                 const price = item.price[billingCycle];
                 const isCurrentPlan = currentPlan === item.id;
                 return (
-                  <View className={isCurrentPlan ? "mx-5 mb-4 rounded-2xl border border-[#2D8CFF] bg-[#152849] p-5" : "mx-5 mb-4 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-5"}>
+                  <View className={isCurrentPlan ? "mx-5 mb-4 rounded-2xl border border-[#C89D56] bg-[#242B3A] p-5" : "mx-5 mb-4 rounded-2xl border border-[#343947] bg-[#151820] p-5"}>
                     <View className="flex-row items-start justify-between gap-3">
                       <View className="flex-1">
-                        <Text className="text-2xl font-bold text-[#F4F7FB]">{item.name}</Text>
-                        <Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">{item.description}</Text>
+                        <Text className="text-2xl font-bold text-[#F5F1E8]">{item.name}</Text>
+                        <Text className="mt-1 text-sm leading-5 text-[#AEB4C0]">{item.description}</Text>
                       </View>
-                      {isCurrentPlan ? <View className="rounded-full bg-[#1875FF] px-3 py-1"><Text className="text-xs font-bold text-white">Actif</Text></View> : null}
+                      {isCurrentPlan ? <View className="rounded-full bg-[#D6B36A] px-3 py-1"><Text className="text-xs font-bold text-white">Actif</Text></View> : null}
                     </View>
 
-                    <View className="mt-4 border-b border-[#2C3B4E] pb-4">
-                      {price > 0 ? <><Text className="text-4xl font-bold text-[#72D6FF]">${price.toFixed(2)}</Text><Text className="mt-1 text-sm text-[#B0BBC9]">par {billingCycle === "monthly" ? "mois" : "an"}</Text></> : <Text className="text-3xl font-bold text-[#F4F7FB]">Gratuit</Text>}
+                    <View className="mt-4 border-b border-[#343947] pb-4">
+                      {price > 0 ? <><Text className="text-4xl font-bold text-[#E8C98A]">${price.toFixed(2)}</Text><Text className="mt-1 text-sm text-[#AEB4C0]">par {billingCycle === "monthly" ? "mois" : "an"}</Text></> : <Text className="text-3xl font-bold text-[#F5F1E8]">Gratuit</Text>}
                     </View>
 
                     <View className="gap-2 py-5">
-                      {item.features.map((feature) => <View key={feature} className="flex-row items-start gap-2"><Text className="font-bold text-[#72D6FF]">✓</Text><Text className="flex-1 text-sm leading-5 text-[#D9E4F3]">{feature}</Text></View>)}
+                      {item.features.map((feature) => <View key={feature} className="flex-row items-start gap-2"><Text className="font-bold text-[#E8C98A]">✓</Text><Text className="flex-1 text-sm leading-5 text-[#E5DFD2]">{feature}</Text></View>)}
                     </View>
 
                     {!isCurrentPlan ? (
@@ -126,8 +126,8 @@ export default function PremiumScreen() {
                         onPress={() => void handleSelectPlan(item.id)}
                         style={({ pressed }) => [styles.actionPressable, pressed && styles.pressed]}
                       >
-                        <View className={item.id === "free" ? "items-center rounded-xl border border-[#526176] bg-[#253044] px-4 py-3" : "items-center rounded-xl bg-[#1875FF] px-4 py-3"}>
-                          <Text className={item.id === "free" ? "font-bold text-[#F4F7FB]" : "font-bold text-white"}>{item.id === "free" ? "Utiliser" : `Passer à ${item.name}`}</Text>
+                        <View className={item.id === "free" ? "items-center rounded-xl border border-[#526176] bg-[#253044] px-4 py-3" : "items-center rounded-xl bg-[#D6B36A] px-4 py-3"}>
+                          <Text className={item.id === "free" ? "font-bold text-[#F5F1E8]" : "font-bold text-white"}>{item.id === "free" ? "Utiliser" : `Passer à ${item.name}`}</Text>
                         </View>
                       </Pressable>
                     ) : null}
@@ -142,14 +142,14 @@ export default function PremiumScreen() {
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.listContent}
             renderItem={({ item }) => (
-              <View className="mx-5 mb-4 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-5">
-                <Text className="text-xl font-bold text-[#F4F7FB]">{item.name}</Text>
-                <Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">{item.description}</Text>
-                <View className="mt-4 border-b border-[#2C3B4E] pb-4"><Text className="text-3xl font-bold text-[#72D6FF]">${item.price.toFixed(2)}</Text><Text className="mt-1 text-sm text-[#B0BBC9]">achat unique</Text></View>
+              <View className="mx-5 mb-4 rounded-2xl border border-[#343947] bg-[#151820] p-5">
+                <Text className="text-xl font-bold text-[#F5F1E8]">{item.name}</Text>
+                <Text className="mt-1 text-sm leading-5 text-[#AEB4C0]">{item.description}</Text>
+                <View className="mt-4 border-b border-[#343947] pb-4"><Text className="text-3xl font-bold text-[#E8C98A]">${item.price.toFixed(2)}</Text><Text className="mt-1 text-sm text-[#AEB4C0]">achat unique</Text></View>
                 <View className="gap-2 py-5">
-                  <Text className="text-sm text-[#D9E4F3]">◷ {item.duration} jours d’accès · {item.sessions} sessions</Text>
-                  {item.customization ? <Text className="text-sm text-[#D9E4F3]">◇ Personnalisation complète</Text> : null}
-                  {item.bonus ? <Text className="text-sm text-[#D9E4F3]">✦ +{item.bonus.xp} XP bonus</Text> : null}
+                  <Text className="text-sm text-[#E5DFD2]">◷ {item.duration} jours d’accès · {item.sessions} sessions</Text>
+                  {item.customization ? <Text className="text-sm text-[#E5DFD2]">◇ Personnalisation complète</Text> : null}
+                  {item.bonus ? <Text className="text-sm text-[#E5DFD2]">✦ +{item.bonus.xp} XP bonus</Text> : null}
                 </View>
                 <Pressable
                   accessibilityRole="button"
@@ -157,7 +157,7 @@ export default function PremiumScreen() {
                   onPress={() => void handleSelectPlan(item.id)}
                   style={({ pressed }) => [styles.actionPressable, pressed && styles.pressed]}
                 >
-                  <View className="items-center rounded-xl bg-[#1875FF] px-4 py-3"><Text className="font-bold text-white">Préparer cet achat</Text></View>
+                  <View className="items-center rounded-xl bg-[#D6B36A] px-4 py-3"><Text className="font-bold text-white">Préparer cet achat</Text></View>
                 </Pressable>
               </View>
             )}

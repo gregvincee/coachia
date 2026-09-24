@@ -43,7 +43,7 @@ const config: ExpoConfig = {
   },
   android: {
     adaptiveIcon: {
-      backgroundColor: "#05070A",
+      backgroundColor: "#07080C",
       foregroundImage: "./assets/images/android-icon-foreground.png",
       backgroundImage: "./assets/images/android-icon-background.png",
       monochromeImage: "./assets/images/android-icon-monochrome.png",
@@ -63,7 +63,7 @@ const config: ExpoConfig = {
     "expo-router",
     ["expo-audio", { microphonePermission: "Allow $(PRODUCT_NAME) to access your microphone." }],
     ["expo-video", { supportsBackgroundPlayback: true, supportsPictureInPicture: true }],
-    ["expo-splash-screen", { image: "./assets/images/splash-icon.png", imageWidth: 200, resizeMode: "contain", backgroundColor: "#05070A", dark: { backgroundColor: "#05070A" } }],
+    ["expo-splash-screen", { image: "./assets/images/splash-icon.png", imageWidth: 200, resizeMode: "contain", backgroundColor: "#07080C", dark: { backgroundColor: "#07080C" } }],
     ["expo-build-properties", { android: { buildArchs: ["armeabi-v7a", "arm64-v8a"], minSdkVersion: 24 } }],
   ],
   experiments: { typedRoutes: true, reactCompiler: true },

@@ -10,9 +10,9 @@ describe("surfaces métalliques CoachIA", () => {
     const theme = readProjectFile("theme.config.js");
     const html = readProjectFile("app/+html.tsx");
 
-    expect(theme).toContain("#1875FF");
-    expect(theme).toContain("#05070A");
-    expect(html).toContain('content="#05070A"');
+    expect(theme).toContain("#D6B36A");
+    expect(theme).toContain("#07080C");
+    expect(html).toContain('content="#07080C"');
   });
 
   it("applique le fond métallique aux surfaces administratives et bêta", () => {
@@ -20,10 +20,10 @@ describe("surfaces métalliques CoachIA", () => {
     const betaWelcome = readProjectFile("app/beta-welcome.tsx");
     const betaFeedback = readProjectFile("app/beta-feedback.tsx");
 
-    expect(dashboard).toContain('containerClassName="bg-[#05070A]"');
-    expect(dashboard).toContain("bg-[#10141D]");
-    expect(betaWelcome).toContain('containerClassName="bg-[#05070A]"');
-    expect(betaFeedback).toContain('backgroundColor: "#10141D"');
+    expect(dashboard).toContain('containerClassName="bg-[#07080C]"');
+    expect(dashboard).toContain("bg-[#151820]");
+    expect(betaWelcome).toContain('containerClassName="bg-[#07080C]"');
+    expect(betaFeedback).toContain('backgroundColor: "#151820"');
   });
 
   it("démarre CoachIA en mode sombre sur mobile et PWA", () => {
@@ -33,9 +33,9 @@ describe("surfaces métalliques CoachIA", () => {
     const html = readProjectFile("app/+html.tsx");
 
     expect(themeProvider).toContain('useState<ColorScheme>("dark")');
-    expect(rootLayout).toContain('<StatusBar style="light" backgroundColor="#05070A" />');
+    expect(rootLayout).toContain('<StatusBar style="light" backgroundColor="#07080C" />');
     expect(appConfig).toContain('userInterfaceStyle: "dark"');
     expect(html).toContain('content="black-translucent"');
-    expect(html).toContain('backgroundColor: "#05070A"');
+    expect(html).toContain('backgroundColor: "#07080C"');
   });
 });

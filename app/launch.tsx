@@ -33,10 +33,10 @@ export default function LaunchScreen() {
   }
 
   return (
-    <ScreenContainer className="p-0" containerClassName="bg-[#05070A]">
+    <ScreenContainer className="p-0" containerClassName="bg-[#07080C]">
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView contentContainerStyle={styles.content}>
-        <View className="items-center border-b border-[#2C3B4E] px-6 pb-8 pt-7">
+        <View className="items-center border-b border-[#343947] px-6 pb-8 pt-7">
           <Image
             source={{ uri: "/manus-storage/coachia-launch-hero_e49cb82e.jpg" }}
             accessibilityRole="image"
@@ -52,8 +52,8 @@ export default function LaunchScreen() {
             style={styles.logo}
           />
           <Text className="mt-4" style={styles.eyebrow}>COHORTE BÊTA PRIVÉE</Text>
-          <Text className="mt-3 text-center text-4xl font-bold leading-tight text-[#F4F7FB]">Progressez sur ce qui fait vraiment avancer votre travail.</Text>
-          <Text className="mt-4 text-center text-base leading-6 text-[#B0BBC9]">CoachIA vous apprend l’IA par des missions concrètes : vous tentez, recevez un diagnostic et recommencez avec une méthode plus solide.</Text>
+          <Text className="mt-3 text-center text-4xl font-bold leading-tight text-[#F5F1E8]">Progressez sur ce qui fait vraiment avancer votre travail.</Text>
+          <Text className="mt-4 text-center text-base leading-6 text-[#AEB4C0]">CoachIA vous apprend l’IA par des missions concrètes : vous tentez, recevez un diagnostic et recommencez avec une méthode plus solide.</Text>
         </View>
 
         <View className="gap-3 px-4 pt-6">
@@ -62,16 +62,16 @@ export default function LaunchScreen() {
           <BenefitCard number="03" title="Une maîtrise mesurée" description="Suivez vos capacités de prompting, vérification, raisonnement et workflow séparément de vos XP." />
         </View>
 
-        <View className="mx-4 mt-6 rounded-2xl border border-[#2D8CFF] bg-[#10141D] p-5">
-          <Text className="text-xs font-bold tracking-widest text-[#72D6FF]">BÊTA LIMITÉE</Text>
-          <Text className="mt-2 text-2xl font-bold text-[#F4F7FB]">30 testeurs. 10 jours pour faire la différence.</Text>
-          <Text className="mt-2 text-sm leading-5 text-[#B0BBC9]">Accès Free prioritaire, parcours guidé et possibilité de façonner les prochaines améliorations de CoachIA.</Text>
+        <View className="mx-4 mt-6 rounded-2xl border border-[#C89D56] bg-[#151820] p-5">
+          <Text className="text-xs font-bold tracking-widest text-[#E8C98A]">BÊTA LIMITÉE</Text>
+          <Text className="mt-2 text-2xl font-bold text-[#F5F1E8]">30 testeurs. 10 jours pour faire la différence.</Text>
+          <Text className="mt-2 text-sm leading-5 text-[#AEB4C0]">Accès Free prioritaire, parcours guidé et possibilité de façonner les prochaines améliorations de CoachIA.</Text>
           <TouchableOpacity
             accessibilityRole="button"
             accessibilityLabel="Commencer gratuitement avec CoachIA"
             onPress={() => router.replace("/onboarding")}
             activeOpacity={0.8}
-            className="mt-5 items-center rounded-xl border border-[#2D8CFF] bg-[#1875FF] px-4 py-4"
+            className="mt-5 items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-4"
           >
             <Text className="font-bold text-white">Commencer gratuitement</Text>
           </TouchableOpacity>
@@ -80,16 +80,16 @@ export default function LaunchScreen() {
             accessibilityLabel="Découvrir le parcours bêta"
             onPress={() => router.push("/beta-welcome")}
             activeOpacity={0.75}
-            className="mt-3 items-center rounded-xl border border-[#2C3B4E] bg-[#080B11] px-4 py-4"
+            className="mt-3 items-center rounded-xl border border-[#343947] bg-[#0B0D12] px-4 py-4"
           >
-            <Text className="font-semibold text-[#F4F7FB]">Découvrir le parcours bêta</Text>
+            <Text className="font-semibold text-[#F5F1E8]">Découvrir le parcours bêta</Text>
           </TouchableOpacity>
         </View>
 
-        <View className="mx-4 mt-5 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-5">
-          <Text className="text-xs font-bold tracking-widest text-[#72D6FF]">LISTE BÊTA</Text>
-          <Text className="mt-2 text-xl font-bold text-[#F4F7FB]">Recevez votre accès en priorité.</Text>
-          <Text className="mt-2 text-sm leading-5 text-[#B0BBC9]">Laissez votre adresse uniquement si vous souhaitez être recontacté pour tester CoachIA.</Text>
+        <View className="mx-4 mt-5 rounded-2xl border border-[#343947] bg-[#151820] p-5">
+          <Text className="text-xs font-bold tracking-widest text-[#E8C98A]">LISTE BÊTA</Text>
+          <Text className="mt-2 text-xl font-bold text-[#F5F1E8]">Recevez votre accès en priorité.</Text>
+          <Text className="mt-2 text-sm leading-5 text-[#AEB4C0]">Laissez votre adresse uniquement si vous souhaitez être recontacté pour tester CoachIA.</Text>
           <TextInput
             accessibilityLabel="Adresse e-mail pour l’inscription bêta"
             autoCapitalize="none"
@@ -110,10 +110,10 @@ export default function LaunchScreen() {
             className="mt-4 flex-row items-start gap-3"
             onPress={() => setConsent((current) => !current)}
           >
-            <View className={consent ? "mt-0.5 h-5 w-5 items-center justify-center rounded border border-[#2D8CFF] bg-[#1875FF]" : "mt-0.5 h-5 w-5 rounded border border-[#788899] bg-[#080B11]"}>
+            <View className={consent ? "mt-0.5 h-5 w-5 items-center justify-center rounded border border-[#C89D56] bg-[#D6B36A]" : "mt-0.5 h-5 w-5 rounded border border-[#788899] bg-[#0B0D12]"}>
               {consent ? <Text className="text-xs font-bold text-white">✓</Text> : null}
             </View>
-            <Text className="flex-1 text-xs leading-5 text-[#B0BBC9]">J’accepte que CoachIA conserve mon adresse pour me recontacter uniquement au sujet de cette bêta.</Text>
+            <Text className="flex-1 text-xs leading-5 text-[#AEB4C0]">J’accepte que CoachIA conserve mon adresse pour me recontacter uniquement au sujet de cette bêta.</Text>
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityRole="button"
@@ -121,7 +121,7 @@ export default function LaunchScreen() {
             disabled={joinWaitlist.isPending}
             onPress={() => void submitWaitlist()}
             activeOpacity={0.8}
-            className="mt-5 items-center rounded-xl border border-[#2D8CFF] bg-[#1875FF] px-4 py-4"
+            className="mt-5 items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-4"
             style={joinWaitlist.isPending ? styles.disabledButton : undefined}
           >
             <Text className="font-bold text-white">{joinWaitlist.isPending ? "Validation…" : "Rejoindre la liste bêta"}</Text>
@@ -133,14 +133,14 @@ export default function LaunchScreen() {
             className="mt-4 self-start"
             onPress={() => router.push("/privacy")}
           >
-            <Text className="text-sm font-semibold text-[#72D6FF] underline">Lire comment vos données sont utilisées</Text>
+            <Text className="text-sm font-semibold text-[#E8C98A] underline">Lire comment vos données sont utilisées</Text>
           </TouchableOpacity>
-          {notice ? <Text accessibilityLiveRegion="polite" className="mt-3 text-sm leading-5 text-[#D9E4F3]">{notice}</Text> : null}
+          {notice ? <Text accessibilityLiveRegion="polite" className="mt-3 text-sm leading-5 text-[#E5DFD2]">{notice}</Text> : null}
         </View>
 
-        <View className="mx-4 mt-5 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4">
-          <Text className="text-sm font-bold text-[#F4F7FB]">Vos retours comptent, vos données restent maîtrisées.</Text>
-          <Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">Les indicateurs d’usage sont agrégés. Vos commentaires détaillés restent sur votre appareil jusqu’à ce que vous choisissiez de les partager.</Text>
+        <View className="mx-4 mt-5 rounded-2xl border border-[#343947] bg-[#151820] p-4">
+          <Text className="text-sm font-bold text-[#F5F1E8]">Vos retours comptent, vos données restent maîtrisées.</Text>
+          <Text className="mt-1 text-sm leading-5 text-[#AEB4C0]">Les indicateurs d’usage sont agrégés. Vos commentaires détaillés restent sur votre appareil jusqu’à ce que vous choisissiez de les partager.</Text>
         </View>
       </ScrollView>
     </ScreenContainer>
@@ -149,13 +149,13 @@ export default function LaunchScreen() {
 
 function BenefitCard({ number, title, description }: { number: string; title: string; description: string }) {
   return (
-    <View className="flex-row gap-4 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4">
-      <View className="h-9 w-9 items-center justify-center rounded-full border border-[#2D8CFF] bg-[#0B1727]">
-        <Text className="text-xs font-bold text-[#72D6FF]">{number}</Text>
+    <View className="flex-row gap-4 rounded-2xl border border-[#343947] bg-[#151820] p-4">
+      <View className="h-9 w-9 items-center justify-center rounded-full border border-[#C89D56] bg-[#0B1727]">
+        <Text className="text-xs font-bold text-[#E8C98A]">{number}</Text>
       </View>
       <View className="flex-1">
-        <Text className="text-lg font-bold text-[#F4F7FB]">{title}</Text>
-        <Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">{description}</Text>
+        <Text className="text-lg font-bold text-[#F5F1E8]">{title}</Text>
+        <Text className="mt-1 text-sm leading-5 text-[#AEB4C0]">{description}</Text>
       </View>
     </View>
   );
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: "#2C3B4E",
+    borderColor: "#343947",
   },
   logo: {
     width: 72,
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   eyebrow: {
-    color: "#72D6FF",
+    color: "#E8C98A",
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 1.8,
@@ -188,10 +188,10 @@ const styles = StyleSheet.create({
     marginTop: 16,
     minHeight: 52,
     borderWidth: 1,
-    borderColor: "#2C3B4E",
+    borderColor: "#343947",
     borderRadius: 12,
-    backgroundColor: "#080B11",
-    color: "#F4F7FB",
+    backgroundColor: "#0B0D12",
+    color: "#F5F1E8",
     fontSize: 16,
     paddingHorizontal: 14,
   },

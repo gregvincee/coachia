@@ -9,7 +9,7 @@ export default function RootHtml({ children }: PropsWithChildren) {
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
-        <meta name="theme-color" content="#05070A" />
+        <meta name="theme-color" content="#07080C" />
         <meta name="description" content="CoachIA : votre micro-coaching personnalisé pour développer vos compétences, quelques minutes à la fois." />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -19,7 +19,7 @@ export default function RootHtml({ children }: PropsWithChildren) {
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <ScrollViewStyleReset />
       </head>
-      <body style={{ backgroundColor: "#05070A" }}>{children}</body>
+      <body style={{ backgroundColor: "#07080C" }}>{children}</body>
     </html>
   );
 }

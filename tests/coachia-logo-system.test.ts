@@ -16,7 +16,7 @@ describe("système de logo CoachIA", () => {
 
     expect(appConfig).toContain('logoUrl: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663334609213/cpOlsdSDfczJjkTv.png"');
     expect(appConfig).not.toContain("ERYFJLFDQzlyXpmC");
-    expect(appConfig).toContain('backgroundColor: "#05070A"');
+    expect(appConfig).toContain('backgroundColor: "#07080C"');
     expect(existsSync(join(root, "assets/images/splash-icon.png"))).toBe(true);
     expect(existsSync(join(root, "assets/images/favicon.png"))).toBe(true);
     expect(existsSync(join(root, "assets/images/android-icon-foreground.png"))).toBe(true);
@@ -26,7 +26,7 @@ describe("système de logo CoachIA", () => {
     const wordmark = readFileSync(join(root, "assets/images/coachia-wordmark.svg"), "utf8");
     const onboarding = readFileSync(join(root, "app/onboarding.tsx"), "utf8");
     expect(wordmark).toContain(">Coach</text>");
-    expect(wordmark).toContain("#1875FF");
+    expect(wordmark).toContain("#D6B36A");
     expect(existsSync(join(root, "public/coachia-wordmark.svg"))).toBe(true);
     expect(onboarding).toContain("CoachIAWordmark");
     expect(onboarding).toContain("require('@/assets/images/icon.png')");

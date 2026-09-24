@@ -61,13 +61,13 @@ export default function AdminDashboardScreen() {
 
   const header = useMemo(() => (
     <View className="gap-5 pb-5">
-      <View className="gap-3 border-b border-[#1875FF] bg-[#080B11] px-5 pb-6 pt-4">
+      <View className="gap-3 border-b border-[#D6B36A] bg-[#0B0D12] px-5 pb-6 pt-4">
         <TouchableOpacity accessibilityRole="button" accessibilityLabel="Retour" onPress={() => router.back()} activeOpacity={0.75}>
-          <Text className="text-sm font-semibold text-[#D9E4F3]">‹ Retour</Text>
+          <Text className="text-sm font-semibold text-[#E5DFD2]">‹ Retour</Text>
         </TouchableOpacity>
         <View>
           <Text className="text-3xl font-bold text-white">Pilotage du Store</Text>
-          <Text className="mt-1 text-sm text-[#B0BBC9]">Ventes, revenus et conversion par micro-achat.</Text>
+          <Text className="mt-1 text-sm text-[#AEB4C0]">Ventes, revenus et conversion par micro-achat.</Text>
         </View>
       </View>
 
@@ -81,7 +81,7 @@ export default function AdminDashboardScreen() {
               accessibilityState={{ selected }}
               onPress={() => setDays(period.days)}
               activeOpacity={0.75}
-              className={selected ? "rounded-full bg-[#1875FF] px-4 py-2" : "rounded-full border border-[#2C3B4E] bg-[#10141D] px-4 py-2"}
+              className={selected ? "rounded-full bg-[#D6B36A] px-4 py-2" : "rounded-full border border-[#343947] bg-[#151820] px-4 py-2"}
             >
               <Text className={selected ? "font-bold text-white" : "font-semibold text-[#DCE5F0]"}>{period.label}</Text>
             </TouchableOpacity>
@@ -101,13 +101,13 @@ export default function AdminDashboardScreen() {
         <View className="px-4 gap-4">
           <View className="gap-3">
             <View className="flex-row items-center justify-between">
-              <Text className="text-lg font-bold text-[#F4F7FB]">Alertes opérationnelles</Text>
-              <Text className="text-sm font-semibold text-[#B0BBC9]">{alerts.length} active{alerts.length > 1 ? "s" : ""}</Text>
+              <Text className="text-lg font-bold text-[#F5F1E8]">Alertes opérationnelles</Text>
+              <Text className="text-sm font-semibold text-[#AEB4C0]">{alerts.length} active{alerts.length > 1 ? "s" : ""}</Text>
             </View>
             {alertMetrics.isLoading ? (
-              <View className="rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4"><Text className="text-sm text-[#B0BBC9]">Analyse des alertes…</Text></View>
+              <View className="rounded-2xl border border-[#343947] bg-[#151820] p-4"><Text className="text-sm text-[#AEB4C0]">Analyse des alertes…</Text></View>
             ) : alerts.length === 0 ? (
-              <View className="rounded-2xl border border-success/40 bg-[#10141D] p-4"><Text className="text-sm font-semibold text-success">Aucune alerte active</Text><Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">Les seuils opérationnels surveillés sont actuellement dans leur plage attendue.</Text></View>
+              <View className="rounded-2xl border border-success/40 bg-[#151820] p-4"><Text className="text-sm font-semibold text-success">Aucune alerte active</Text><Text className="mt-1 text-sm leading-5 text-[#AEB4C0]">Les seuils opérationnels surveillés sont actuellement dans leur plage attendue.</Text></View>
             ) : alerts.map((alert) => (
               <AlertCard
                 key={alert.id}
@@ -137,38 +137,38 @@ export default function AdminDashboardScreen() {
             onPrepare={() => void prepareInvite.mutateAsync()}
           />
 
-          <View className="gap-3 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4">
+          <View className="gap-3 rounded-2xl border border-[#343947] bg-[#151820] p-4">
             <View className="flex-row items-center justify-between">
-              <Text className="text-base font-bold text-[#F4F7FB]">Entonnoir de paiement</Text>
-              <Text className="text-sm font-semibold text-[#2D8CFF]">{totals.checkoutStarts} démarrages</Text>
+              <Text className="text-base font-bold text-[#F5F1E8]">Entonnoir de paiement</Text>
+              <Text className="text-sm font-semibold text-[#C89D56]">{totals.checkoutStarts} démarrages</Text>
             </View>
             <View className="gap-2">
-              <View className="h-3 overflow-hidden rounded-full bg-[#263545]"><View className="h-full rounded-full bg-[#1875FF]" style={{ width: "100%" }} /></View>
-              <View className="flex-row items-center justify-between"><Text className="text-xs text-[#B0BBC9]">Checkout lancé</Text><Text className="text-xs font-semibold text-[#F4F7FB]">{totals.checkoutStarts}</Text></View>
-              <View className="h-3 overflow-hidden rounded-full bg-[#263545]"><View className="h-full rounded-full bg-success" style={{ width: `${confirmedWidth}%` }} /></View>
-              <View className="flex-row items-center justify-between"><Text className="text-xs text-[#B0BBC9]">Paiement confirmé</Text><Text className="text-xs font-semibold text-[#F4F7FB]">{totals.totalConfirmedEvents}</Text></View>
+              <View className="h-3 overflow-hidden rounded-full bg-[#343947]"><View className="h-full rounded-full bg-[#D6B36A]" style={{ width: "100%" }} /></View>
+              <View className="flex-row items-center justify-between"><Text className="text-xs text-[#AEB4C0]">Checkout lancé</Text><Text className="text-xs font-semibold text-[#F5F1E8]">{totals.checkoutStarts}</Text></View>
+              <View className="h-3 overflow-hidden rounded-full bg-[#343947]"><View className="h-full rounded-full bg-success" style={{ width: `${confirmedWidth}%` }} /></View>
+              <View className="flex-row items-center justify-between"><Text className="text-xs text-[#AEB4C0]">Paiement confirmé</Text><Text className="text-xs font-semibold text-[#F5F1E8]">{totals.totalConfirmedEvents}</Text></View>
             </View>
           </View>
 
-          <Text className="text-lg font-bold text-[#F4F7FB]">Performance par produit</Text>
+          <Text className="text-lg font-bold text-[#F5F1E8]">Performance par produit</Text>
         </View>
       ) : null}
     </View>
   ), [alertMetrics.isLoading, alerts, authLoading, cohort, cohortMetrics.isLoading, confirmedWidth, days, expandedAlertIds, isAuthenticated, isForbidden, metrics.error, metrics.isLoading, prepareInvite, router, toggleAlert, totals, waitlist.data, waitlist.isLoading]);
 
   return (
-    <ScreenContainer className="bg-[#05070A] p-0" containerClassName="bg-[#05070A]">
+    <ScreenContainer className="bg-[#07080C] p-0" containerClassName="bg-[#07080C]">
       <FlatList
         data={totals ? products : []}
         keyExtractor={(item) => item.productId}
         ListHeaderComponent={header}
         renderItem={({ item }) => (
-          <View className="mx-4 mb-3 gap-3 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4">
+          <View className="mx-4 mb-3 gap-3 rounded-2xl border border-[#343947] bg-[#151820] p-4">
             <View className="flex-row items-start justify-between gap-3">
-              <View className="flex-1"><Text className="text-base font-bold text-[#F4F7FB]">{item.name}</Text><Text className="mt-1 text-xs text-[#B0BBC9]">{item.category}</Text></View>
-              <Text className="text-base font-bold text-[#2D8CFF]">{formatCurrency(item.revenueCents)}</Text>
+              <View className="flex-1"><Text className="text-base font-bold text-[#F5F1E8]">{item.name}</Text><Text className="mt-1 text-xs text-[#AEB4C0]">{item.category}</Text></View>
+              <Text className="text-base font-bold text-[#C89D56]">{formatCurrency(item.revenueCents)}</Text>
             </View>
-            <View className="flex-row justify-between border-t border-[#2C3B4E] pt-3">
+            <View className="flex-row justify-between border-t border-[#343947] pt-3">
               <MiniMetric label="Ventes" value={String(item.paidOrders)} />
               <MiniMetric label="Conversion" value={formatPercent(item.conversionRate)} />
               <MiniMetric label="Checkout" value={String(item.checkoutStarts)} />
@@ -196,14 +196,14 @@ type CohortMetrics = {
 };
 
 function CohortSummary({ cohort, loading }: { cohort?: CohortMetrics; loading: boolean }) {
-  if (loading) return <View className="rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4"><Text className="text-sm text-[#B0BBC9]">Analyse de la cohorte bêta…</Text></View>;
-  if (!cohort) return <View className="rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4"><Text className="text-sm text-[#B0BBC9]">Les données de cohorte seront disponibles après les premières sessions bêta.</Text></View>;
+  if (loading) return <View className="rounded-2xl border border-[#343947] bg-[#151820] p-4"><Text className="text-sm text-[#AEB4C0]">Analyse de la cohorte bêta…</Text></View>;
+  if (!cohort) return <View className="rounded-2xl border border-[#343947] bg-[#151820] p-4"><Text className="text-sm text-[#AEB4C0]">Les données de cohorte seront disponibles après les premières sessions bêta.</Text></View>;
 
   return (
-    <View className="gap-3 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4">
+    <View className="gap-3 rounded-2xl border border-[#343947] bg-[#151820] p-4">
       <View className="flex-row items-center justify-between gap-3">
-        <View><Text className="text-base font-bold text-[#F4F7FB]">Cohorte bêta</Text><Text className="mt-1 text-xs text-[#B0BBC9]">Données agrégées, sans identité personnelle.</Text></View>
-        <Text className="text-sm font-bold text-[#2D8CFF]">{cohort.cohortSize} actif{cohort.cohortSize > 1 ? "s" : ""}</Text>
+        <View><Text className="text-base font-bold text-[#F5F1E8]">Cohorte bêta</Text><Text className="mt-1 text-xs text-[#AEB4C0]">Données agrégées, sans identité personnelle.</Text></View>
+        <Text className="text-sm font-bold text-[#C89D56]">{cohort.cohortSize} actif{cohort.cohortSize > 1 ? "s" : ""}</Text>
       </View>
       <View className="flex-row gap-3">
         <MiniMetric label="Engagement" value={formatPercent(cohort.activityRate)} />
@@ -211,7 +211,7 @@ function CohortSummary({ cohort, loading }: { cohort?: CohortMetrics; loading: b
         <MiniMetric label="Retours" value={String(cohort.feedbackCount)} />
         <MiniMetric label="Note" value={cohort.averageFeedbackRating === null ? "—" : `${cohort.averageFeedbackRating}/5`} />
       </View>
-      <View className="rounded-xl bg-[#171E29] p-3"><Text className="text-sm font-bold text-[#F4F7FB]">{cohort.decision.title}</Text><Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">{cohort.decision.description}</Text><Text className="mt-2 text-xs text-[#8290A2]">Seuil de lecture : {cohort.sampleSizeReached ? "atteint" : "en attente de 5 participants activés"} · Éligibles J7 : {cohort.eligibleForRetention}</Text></View>
+      <View className="rounded-xl bg-[#1D2029] p-3"><Text className="text-sm font-bold text-[#F5F1E8]">{cohort.decision.title}</Text><Text className="mt-1 text-sm leading-5 text-[#AEB4C0]">{cohort.decision.description}</Text><Text className="mt-2 text-xs text-[#8F96A4]">Seuil de lecture : {cohort.sampleSizeReached ? "atteint" : "en attente de 5 participants activés"} · Éligibles J7 : {cohort.eligibleForRetention}</Text></View>
     </View>
   );
 }
@@ -231,7 +231,7 @@ function WaitlistInviteSummary({
   result?: "prepared" | "empty";
   onPrepare: () => void;
 }) {
-  if (loading) return <View className="rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4"><Text className="text-sm text-[#B0BBC9]">Lecture de la liste bêta…</Text></View>;
+  if (loading) return <View className="rounded-2xl border border-[#343947] bg-[#151820] p-4"><Text className="text-sm text-[#AEB4C0]">Lecture de la liste bêta…</Text></View>;
   if (!summary) return null;
 
   const resultMessage = result === "prepared"
@@ -241,21 +241,21 @@ function WaitlistInviteSummary({
       : null;
 
   return (
-    <View className="gap-3 rounded-2xl border border-[#2D8CFF] bg-[#10141D] p-4">
-      <View className="flex-row items-center justify-between gap-3"><View className="flex-1"><Text className="text-base font-bold text-[#F4F7FB]">Invitation de cohorte</Text><Text className="mt-1 text-xs leading-5 text-[#B0BBC9]">Vue agrégée : aucune adresse e-mail n’apparaît dans ce tableau.</Text></View><Text className="text-sm font-bold text-[#2D8CFF]">{summary.waiting} en attente</Text></View>
+    <View className="gap-3 rounded-2xl border border-[#C89D56] bg-[#151820] p-4">
+      <View className="flex-row items-center justify-between gap-3"><View className="flex-1"><Text className="text-base font-bold text-[#F5F1E8]">Invitation de cohorte</Text><Text className="mt-1 text-xs leading-5 text-[#AEB4C0]">Vue agrégée : aucune adresse e-mail n’apparaît dans ce tableau.</Text></View><Text className="text-sm font-bold text-[#C89D56]">{summary.waiting} en attente</Text></View>
       <View className="flex-row gap-4"><MiniMetric label="Inscrits" value={String(summary.total)} /><MiniMetric label="Invités" value={String(summary.invited)} /><MiniMetric label="Retraits" value={String(summary.declined)} /></View>
-      <TouchableOpacity accessibilityRole="button" accessibilityLabel="Préparer la prochaine invitation bêta" disabled={preparing} onPress={onPrepare} activeOpacity={0.75} className={preparing ? "items-center rounded-xl bg-[#1875FF] px-4 py-3 opacity-70" : "items-center rounded-xl bg-[#1875FF] px-4 py-3"}><Text className="font-bold text-white">{preparing ? "Préparation…" : "Préparer la prochaine invitation"}</Text></TouchableOpacity>
-      {resultMessage ? <Text accessibilityLiveRegion="polite" className="text-sm leading-5 text-[#D9E4F3]">{resultMessage}</Text> : null}
+      <TouchableOpacity accessibilityRole="button" accessibilityLabel="Préparer la prochaine invitation bêta" disabled={preparing} onPress={onPrepare} activeOpacity={0.75} className={preparing ? "items-center rounded-xl bg-[#D6B36A] px-4 py-3 opacity-70" : "items-center rounded-xl bg-[#D6B36A] px-4 py-3"}><Text className="font-bold text-white">{preparing ? "Préparation…" : "Préparer la prochaine invitation"}</Text></TouchableOpacity>
+      {resultMessage ? <Text accessibilityLiveRegion="polite" className="text-sm leading-5 text-[#E5DFD2]">{resultMessage}</Text> : null}
     </View>
   );
 }
 
 function MetricCard({ label, value, emphasis = false }: { label: string; value: string; emphasis?: boolean }) {
-  return <View className={emphasis ? "flex-1 rounded-2xl border border-[#2D8CFF] bg-[#152849] p-4" : "flex-1 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4"}><Text className={emphasis ? "text-xs font-semibold text-[#CFE2FF]" : "text-xs font-semibold text-[#B0BBC9]"}>{label}</Text><Text className="mt-2 text-xl font-bold text-[#F4F7FB]">{value}</Text></View>;
+  return <View className={emphasis ? "flex-1 rounded-2xl border border-[#C89D56] bg-[#242B3A] p-4" : "flex-1 rounded-2xl border border-[#343947] bg-[#151820] p-4"}><Text className={emphasis ? "text-xs font-semibold text-[#F3DCA8]" : "text-xs font-semibold text-[#AEB4C0]"}>{label}</Text><Text className="mt-2 text-xl font-bold text-[#F5F1E8]">{value}</Text></View>;
 }
 
 function MiniMetric({ label, value }: { label: string; value: string }) {
-  return <View className="gap-1"><Text className="text-xs text-[#B0BBC9]">{label}</Text><Text className="text-sm font-bold text-[#F4F7FB]">{value}</Text></View>;
+  return <View className="gap-1"><Text className="text-xs text-[#AEB4C0]">{label}</Text><Text className="text-sm font-bold text-[#F5F1E8]">{value}</Text></View>;
 }
 
 function AlertCard({
@@ -282,25 +282,25 @@ function AlertCard({
     : formatPercent(alert.seuil);
 
   return (
-    <View className={`rounded-2xl border bg-[#10141D] p-4 ${styles.border}`}>
+    <View className={`rounded-2xl border bg-[#151820] p-4 ${styles.border}`}>
       <TouchableOpacity accessibilityRole="button" accessibilityState={{ expanded }} accessibilityLabel={`Alerte ${styles.label}: ${alert.problème}`} onPress={onPress} activeOpacity={0.75}>
         <View className="flex-row items-start gap-3">
           <View className={`mt-1 h-3 w-3 rounded-full ${styles.badge}`} />
           <View className="flex-1 gap-1">
-            <View className="flex-row items-center justify-between gap-2"><Text className={`text-xs font-bold uppercase ${styles.value}`}>{styles.label}</Text><Text className="text-xs text-[#B0BBC9]">{alert.période}</Text></View>
-            <Text className="text-base font-bold text-[#F4F7FB]">{alert.problème}</Text>
-            <Text className="text-sm leading-5 text-[#B0BBC9]">{alert.métrique} : <Text className="font-bold text-[#F4F7FB]">{value}</Text> · Seuil : {threshold}</Text>
+            <View className="flex-row items-center justify-between gap-2"><Text className={`text-xs font-bold uppercase ${styles.value}`}>{styles.label}</Text><Text className="text-xs text-[#AEB4C0]">{alert.période}</Text></View>
+            <Text className="text-base font-bold text-[#F5F1E8]">{alert.problème}</Text>
+            <Text className="text-sm leading-5 text-[#AEB4C0]">{alert.métrique} : <Text className="font-bold text-[#F5F1E8]">{value}</Text> · Seuil : {threshold}</Text>
           </View>
         </View>
       </TouchableOpacity>
 
       {expanded ? (
-        <View className="mt-4 gap-3 border-t border-[#2C3B4E] pt-4">
-          <Text className="text-sm leading-5 text-[#B0BBC9]"><Text className="font-bold text-[#F4F7FB]">Impact estimé. </Text>{alert.impactEstimé}</Text>
-          <Text className="text-sm leading-5 text-[#B0BBC9]"><Text className="font-bold text-[#F4F7FB]">Décision recommandée. </Text>{alert.actionRecommandée}</Text>
-          {alert.comparaisonPériodePrécédente ? <Text className="text-sm text-[#B0BBC9]">Période précédente : {formatPercent(alert.comparaisonPériodePrécédente.valeur)}{alert.comparaisonPériodePrécédente.évolution !== null ? ` · Évolution : ${formatPercent(alert.comparaisonPériodePrécédente.évolution)}` : ""}</Text> : null}
-          <Text className="text-xs text-[#8290A2]">Volume minimal : {alert.volumeMinimalAtteint ? "atteint" : "non atteint"} · Action automatique : {alert.actionAutomatiqueAppliquée ? "appliquée" : "non appliquée"}</Text>
-          {onOpenStripe ? <TouchableOpacity accessibilityRole="link" accessibilityLabel="Ouvrir le diagnostic Stripe" onPress={onOpenStripe} activeOpacity={0.75} className="self-start rounded-full bg-[#1875FF] px-4 py-2"><Text className="font-bold text-white">Ouvrir Stripe et les paiements</Text></TouchableOpacity> : null}
+        <View className="mt-4 gap-3 border-t border-[#343947] pt-4">
+          <Text className="text-sm leading-5 text-[#AEB4C0]"><Text className="font-bold text-[#F5F1E8]">Impact estimé. </Text>{alert.impactEstimé}</Text>
+          <Text className="text-sm leading-5 text-[#AEB4C0]"><Text className="font-bold text-[#F5F1E8]">Décision recommandée. </Text>{alert.actionRecommandée}</Text>
+          {alert.comparaisonPériodePrécédente ? <Text className="text-sm text-[#AEB4C0]">Période précédente : {formatPercent(alert.comparaisonPériodePrécédente.valeur)}{alert.comparaisonPériodePrécédente.évolution !== null ? ` · Évolution : ${formatPercent(alert.comparaisonPériodePrécédente.évolution)}` : ""}</Text> : null}
+          <Text className="text-xs text-[#8F96A4]">Volume minimal : {alert.volumeMinimalAtteint ? "atteint" : "non atteint"} · Action automatique : {alert.actionAutomatiqueAppliquée ? "appliquée" : "non appliquée"}</Text>
+          {onOpenStripe ? <TouchableOpacity accessibilityRole="link" accessibilityLabel="Ouvrir le diagnostic Stripe" onPress={onOpenStripe} activeOpacity={0.75} className="self-start rounded-full bg-[#D6B36A] px-4 py-2"><Text className="font-bold text-white">Ouvrir Stripe et les paiements</Text></TouchableOpacity> : null}
         </View>
       ) : null}
     </View>
@@ -308,5 +308,5 @@ function AlertCard({
 }
 
 function Notice({ title, description }: { title: string; description: string }) {
-  return <View className="mx-4 items-center rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-6"><Text className="text-base font-bold text-[#F4F7FB]">{title}</Text><Text className="mt-2 text-center text-sm leading-5 text-[#B0BBC9]">{description}</Text></View>;
+  return <View className="mx-4 items-center rounded-2xl border border-[#343947] bg-[#151820] p-6"><Text className="text-base font-bold text-[#F5F1E8]">{title}</Text><Text className="mt-2 text-center text-sm leading-5 text-[#AEB4C0]">{description}</Text></View>;
 }

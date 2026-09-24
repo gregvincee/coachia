@@ -75,9 +75,9 @@ export default function StoreScreen() {
   }
 
   return (
-    <ScreenContainer className="p-0" containerClassName="bg-[#05070A]">
+    <ScreenContainer className="p-0" containerClassName="bg-[#07080C]">
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
-        <View className="border-b border-[#2C3B4E] bg-[#10141D] px-5 pb-6 pt-7">
+        <View className="border-b border-[#343947] bg-[#151820] px-5 pb-6 pt-7">
           <View className="flex-row items-center gap-3">
             <Image
               source={require("@/assets/images/icon.png")}
@@ -86,10 +86,10 @@ export default function StoreScreen() {
               resizeMode="contain"
               style={styles.storeLogo}
             />
-            <Text className="text-xs font-bold tracking-widest text-[#72D6FF]">ACHATS À LA CARTE</Text>
+            <Text className="text-xs font-bold tracking-widest text-[#E8C98A]">ACHATS À LA CARTE</Text>
           </View>
-          <Text className="mt-4 text-3xl font-bold text-[#F4F7FB]">Store CoachIA</Text>
-          <Text className="mt-2 text-sm leading-5 text-[#B0BBC9]">Choisissez les bonus utiles à votre progression, sans abonnement imposé.</Text>
+          <Text className="mt-4 text-3xl font-bold text-[#F5F1E8]">Store CoachIA</Text>
+          <Text className="mt-2 text-sm leading-5 text-[#AEB4C0]">Choisissez les bonus utiles à votre progression, sans abonnement imposé.</Text>
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, padding: 16 }}>
@@ -102,9 +102,9 @@ export default function StoreScreen() {
                 accessibilityState={{ selected }}
                 onPress={() => setFilter(item.id)}
                 activeOpacity={0.75}
-                className={selected ? "rounded-full border border-[#2D8CFF] bg-[#1875FF] px-4 py-2" : "rounded-full border border-[#2C3B4E] bg-[#10141D] px-4 py-2"}
+                className={selected ? "rounded-full border border-[#C89D56] bg-[#D6B36A] px-4 py-2" : "rounded-full border border-[#343947] bg-[#151820] px-4 py-2"}
               >
-                <Text className={selected ? "font-semibold text-white" : "font-semibold text-[#F4F7FB]"}>{item.label}</Text>
+                <Text className={selected ? "font-semibold text-white" : "font-semibold text-[#F5F1E8]"}>{item.label}</Text>
               </TouchableOpacity>
             );
           })}
@@ -112,16 +112,16 @@ export default function StoreScreen() {
 
         <View className="px-4 gap-3">
           {catalog.isLoading ? (
-            <Text className="py-10 text-center text-[#B0BBC9]">Chargement du catalogue…</Text>
+            <Text className="py-10 text-center text-[#AEB4C0]">Chargement du catalogue…</Text>
           ) : products.map((product) => (
-            <View key={product.id} className="rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4 gap-3">
+            <View key={product.id} className="rounded-2xl border border-[#343947] bg-[#151820] p-4 gap-3">
               <View className="flex-row items-start justify-between gap-4">
                 <View className="flex-1 gap-1">
-                  <Text className="text-xl font-bold text-[#F4F7FB]">{product.icon} {product.name}</Text>
-                  <Text className="text-sm leading-5 text-[#B0BBC9]">{product.description}</Text>
-                  {"popular" in product && product.popular ? <Text className="mt-1 text-xs font-bold text-[#72D6FF]">CHOIX POPULAIRE</Text> : null}
+                  <Text className="text-xl font-bold text-[#F5F1E8]">{product.icon} {product.name}</Text>
+                  <Text className="text-sm leading-5 text-[#AEB4C0]">{product.description}</Text>
+                  {"popular" in product && product.popular ? <Text className="mt-1 text-xs font-bold text-[#E8C98A]">CHOIX POPULAIRE</Text> : null}
                 </View>
-                <Text className="text-2xl font-bold text-[#72D6FF]">${product.price.toFixed(2)}</Text>
+                <Text className="text-2xl font-bold text-[#E8C98A]">${product.price.toFixed(2)}</Text>
               </View>
               <TouchableOpacity
                 accessibilityRole="button"
@@ -129,7 +129,7 @@ export default function StoreScreen() {
                 disabled={checkout.isPending}
                 onPress={() => handlePurchase(product.id)}
                 activeOpacity={0.8}
-                className="items-center rounded-xl border border-[#2D8CFF] bg-[#1875FF] px-4 py-3"
+                className="items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-3"
               >
                 <Text className="font-bold text-white">{checkout.isPending ? "Préparation…" : "Choisir ce bonus"}</Text>
               </TouchableOpacity>
@@ -137,15 +137,15 @@ export default function StoreScreen() {
           ))}
         </View>
 
-        <View className="mx-4 mt-5 rounded-xl border border-[#2C3B4E] bg-[#10141D] p-4">
+        <View className="mx-4 mt-5 rounded-xl border border-[#343947] bg-[#151820] p-4">
           <View className="flex-row items-center justify-between gap-3">
-            <Text className="flex-1 text-sm font-semibold text-[#F4F7FB]">Paiements responsables</Text>
+            <Text className="flex-1 text-sm font-semibold text-[#F5F1E8]">Paiements responsables</Text>
             <View className={stripeStatus?.mode === "live" ? "rounded-full bg-[#163C2B] px-2 py-1" : "rounded-full bg-[#172B48] px-2 py-1"}>
-              <Text className="text-[10px] font-bold uppercase tracking-wide text-[#72D6FF]">{stripeStatus?.mode === "live" ? "Actif" : "Préparation"}</Text>
+              <Text className="text-[10px] font-bold uppercase tracking-wide text-[#E8C98A]">{stripeStatus?.mode === "live" ? "Actif" : "Préparation"}</Text>
             </View>
           </View>
-          <Text className="mt-2 text-xs font-semibold leading-5 text-[#72D6FF]">{paymentStatus}</Text>
-          <Text className="mt-1 text-xs leading-5 text-[#B0BBC9]">Les prix et droits sont vérifiés côté serveur. Aucun bonus n’est attribué avant confirmation du paiement et du webhook.</Text>
+          <Text className="mt-2 text-xs font-semibold leading-5 text-[#E8C98A]">{paymentStatus}</Text>
+          <Text className="mt-1 text-xs leading-5 text-[#AEB4C0]">Les prix et droits sont vérifiés côté serveur. Aucun bonus n’est attribué avant confirmation du paiement et du webhook.</Text>
         </View>
       </ScrollView>
     </ScreenContainer>

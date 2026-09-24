@@ -56,9 +56,9 @@ describe("progression visible de CoachIA", () => {
 
   it("applique l'identité métallique à Premium sans className fragile sur Pressable", () => {
     const premium = readFileSync(join(root, "app/(tabs)/premium.tsx"), "utf8");
-    expect(premium).toContain('containerClassName="bg-[#05070A]"');
-    expect(premium).toContain("bg-[#10141D]");
-    expect(premium).toContain("border-[#2C3B4E]");
+    expect(premium).toContain('containerClassName="bg-[#07080C]"');
+    expect(premium).toContain("bg-[#151820]");
+    expect(premium).toContain("border-[#343947]");
     expect(premium).toContain("Préparer cet achat");
     expect(premium).not.toMatch(/<Pressable[^>]*className=/s);
   });

@@ -10,7 +10,7 @@ describe("page publique de lancement CoachIA", () => {
 
     expect(launch).toContain("COHORTE BÊTA PRIVÉE");
     expect(launch).toContain("coachia-launch-hero_e49cb82e.jpg");
-    expect(launch).toContain('color: "#72D6FF"');
+    expect(launch).toContain('color: "#E8C98A"');
     expect(launch).toContain("Commencer gratuitement");
     expect(launch).toContain("Découvrir le parcours bêta");
     expect(launch).toContain("Rejoindre la liste bêta");
@@ -19,7 +19,7 @@ describe("page publique de lancement CoachIA", () => {
     expect(launch).toContain('router.push("/privacy")');
     expect(launch).toContain('router.replace("/onboarding")');
     expect(launch).toContain('router.push("/beta-welcome")');
-    expect(launch).toContain('containerClassName="bg-[#05070A]"');
+    expect(launch).toContain('containerClassName="bg-[#07080C]"');
   });
 
   it("reste accessible avant la fin de l’onboarding", () => {

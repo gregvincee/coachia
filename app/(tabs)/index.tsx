@@ -35,7 +35,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScreenContainer className="p-0" containerClassName="bg-[#05070A]">
+    <ScreenContainer className="p-0" containerClassName="bg-[#07080C]">
       <FlatList
         data={missionData}
         keyExtractor={(item) => item.id}
@@ -44,19 +44,19 @@ export default function HomeScreen() {
           <View className="gap-5 px-5 pb-5 pt-4">
             <View className="flex-row items-center gap-3">
               <Image source={require('@/assets/images/icon.png')} accessibilityRole="image" accessibilityLabel="Monogramme CoachIA C delta I" resizeMode="contain" style={styles.brandLogo} />
-              <View className="flex-1"><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">COACHIA · APPRENDRE EN FAISANT</Text><Text className="mt-1 text-sm text-[#B0BBC9]">Bonjour, {profile.name}</Text></View>
+              <View className="flex-1"><Text className="text-xs font-bold tracking-widest text-[#E8C98A]">COACHIA · APPRENDRE EN FAISANT</Text><Text className="mt-1 text-sm text-[#AEB4C0]">Bonjour, {profile.name}</Text></View>
             </View>
 
-            <View className="rounded-3xl border border-[#2D8CFF] bg-[#10141D] p-5">
-              <Text className="text-xs font-bold tracking-widest text-[#72D6FF]">MA MISSION</Text>
-              <Text className="mt-3 text-2xl font-bold leading-8 text-[#F4F7FB]" numberOfLines={2}>{activeMission.title}</Text>
-              <Text className="mt-2 text-sm leading-6 text-[#B0BBC9]">{activeMission.goal}</Text>
-              <View className="mt-4 rounded-2xl bg-[#080B11] p-3"><Text className="text-xs font-bold uppercase tracking-wide text-[#8290A2]">Dernière difficulté détectée</Text><Text className="mt-1 text-sm leading-5 text-[#D9E4F3]">{nextDifficulty}</Text></View>
-              <TouchableOpacity accessibilityRole="button" accessibilityLabel="Continuer la mission active" onPress={() => openMission(activeMission.id)} activeOpacity={0.8} className="mt-5 items-center rounded-xl bg-[#1875FF] px-4 py-4"><Text className="font-bold text-white">Continuer</Text></TouchableOpacity>
+            <View className="rounded-3xl border border-[#C89D56] bg-[#151820] p-5">
+              <Text className="text-xs font-bold tracking-widest text-[#E8C98A]">MA MISSION</Text>
+              <Text className="mt-3 text-2xl font-bold leading-8 text-[#F5F1E8]" numberOfLines={2}>{activeMission.title}</Text>
+              <Text className="mt-2 text-sm leading-6 text-[#AEB4C0]">{activeMission.goal}</Text>
+              <View className="mt-4 rounded-2xl bg-[#0B0D12] p-3"><Text className="text-xs font-bold uppercase tracking-wide text-[#8F96A4]">Dernière difficulté détectée</Text><Text className="mt-1 text-sm leading-5 text-[#E5DFD2]">{nextDifficulty}</Text></View>
+              <TouchableOpacity accessibilityRole="button" accessibilityLabel="Continuer la mission active" onPress={() => openMission(activeMission.id)} activeOpacity={0.8} className="mt-5 items-center rounded-xl bg-[#D6B36A] px-4 py-4"><Text className="font-bold text-white">Continuer</Text></TouchableOpacity>
             </View>
 
-            <View className="rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4">
-              <View className="flex-row items-center justify-between"><Text className="text-base font-bold text-[#F4F7FB]">Maîtrise réelle</Text><Text className="text-xs text-[#B0BBC9]">Distincte de vos {profile.xp} XP</Text></View>
+            <View className="rounded-2xl border border-[#343947] bg-[#151820] p-4">
+              <View className="flex-row items-center justify-between"><Text className="text-base font-bold text-[#F5F1E8]">Maîtrise réelle</Text><Text className="text-xs text-[#AEB4C0]">Distincte de vos {profile.xp} XP</Text></View>
               <View className="mt-4 flex-row justify-between gap-2">
                 <MasterySnapshot label="Prompting" score={learning.mastery.prompting.score} stage={learning.mastery.prompting.stage} />
                 <MasterySnapshot label="Vérifier" score={learning.mastery.verification.score} stage={learning.mastery.verification.stage} />
@@ -65,7 +65,7 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            <View><Text className="text-lg font-bold text-[#F4F7FB]">Choisir une mission</Text><Text className="mt-1 text-sm text-[#B0BBC9]">Chaque mission commence par votre tentative, pas par une réponse toute faite.</Text></View>
+            <View><Text className="text-lg font-bold text-[#F5F1E8]">Choisir une mission</Text><Text className="mt-1 text-sm text-[#AEB4C0]">Chaque mission commence par votre tentative, pas par une réponse toute faite.</Text></View>
           </View>
         )}
         renderItem={({ item }) => <MissionChoice mission={item} active={item.id === activeMission.id} onPress={() => openMission(item.id)} />}
@@ -75,11 +75,11 @@ export default function HomeScreen() {
 }
 
 function MasterySnapshot({ label, score, stage }: { label: string; score: number; stage: string }) {
-  return <View className="flex-1 gap-1"><Text className="text-xs text-[#B0BBC9]" numberOfLines={1}>{label}</Text><Text className="text-base font-bold text-[#F4F7FB]">{score}/100</Text><Text className="text-[10px] text-[#72D6FF]" numberOfLines={1}>{stage}</Text></View>;
+  return <View className="flex-1 gap-1"><Text className="text-xs text-[#AEB4C0]" numberOfLines={1}>{label}</Text><Text className="text-base font-bold text-[#F5F1E8]">{score}/100</Text><Text className="text-[10px] text-[#E8C98A]" numberOfLines={1}>{stage}</Text></View>;
 }
 
 function MissionChoice({ mission, active, onPress }: { mission: MissionDefinition; active: boolean; onPress: () => void }) {
-  return <TouchableOpacity accessibilityRole="button" accessibilityState={{ selected: active }} accessibilityLabel={`Choisir la mission ${mission.label}`} onPress={onPress} activeOpacity={0.75} className={active ? 'mx-5 mb-3 rounded-2xl border border-[#2D8CFF] bg-[#152849] p-4' : 'mx-5 mb-3 rounded-2xl border border-[#2C3B4E] bg-[#10141D] p-4'}><View className="flex-row items-start justify-between gap-3"><View className="flex-1"><Text className="text-xs font-bold tracking-widest text-[#72D6FF]">{mission.label.toUpperCase()}</Text><Text className="mt-2 text-lg font-bold text-[#F4F7FB]">{mission.title}</Text><Text className="mt-1 text-sm leading-5 text-[#B0BBC9]">{mission.outcome}</Text></View><Text className="text-xl text-[#2D8CFF]">›</Text></View></TouchableOpacity>;
+  return <TouchableOpacity accessibilityRole="button" accessibilityState={{ selected: active }} accessibilityLabel={`Choisir la mission ${mission.label}`} onPress={onPress} activeOpacity={0.75} className={active ? 'mx-5 mb-3 rounded-2xl border border-[#C89D56] bg-[#242B3A] p-4' : 'mx-5 mb-3 rounded-2xl border border-[#343947] bg-[#151820] p-4'}><View className="flex-row items-start justify-between gap-3"><View className="flex-1"><Text className="text-xs font-bold tracking-widest text-[#E8C98A]">{mission.label.toUpperCase()}</Text><Text className="mt-2 text-lg font-bold text-[#F5F1E8]">{mission.title}</Text><Text className="mt-1 text-sm leading-5 text-[#AEB4C0]">{mission.outcome}</Text></View><Text className="text-xl text-[#C89D56]">›</Text></View></TouchableOpacity>;
 }
 
 const styles = StyleSheet.create({

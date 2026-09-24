@@ -8,10 +8,10 @@ describe("Store métallique CoachIA", () => {
   it("applique les surfaces noir, argent et bleu électrique", () => {
     const store = readFileSync(join(root, "app/store.tsx"), "utf8");
 
-    expect(store).toContain('containerClassName="bg-[#05070A]"');
-    expect(store).toContain('bg-[#10141D]');
-    expect(store).toContain('border-[#2C3B4E]');
-    expect(store).toContain('text-[#72D6FF]');
+    expect(store).toContain('containerClassName="bg-[#07080C]"');
+    expect(store).toContain('bg-[#151820]');
+    expect(store).toContain('border-[#343947]');
+    expect(store).toContain('text-[#E8C98A]');
     expect(store).toContain('require("@/assets/images/icon.png")');
   });
 

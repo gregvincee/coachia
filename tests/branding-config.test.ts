@@ -21,9 +21,9 @@ describe("branding CoachIA", () => {
     const manifest = JSON.parse(readFileSync(join(root, "public/manifest.json"), "utf8"));
     const config = readFileSync(join(root, "app.config.ts"), "utf8");
 
-    expect(manifest).toMatchObject({ background_color: "#05070A", theme_color: "#05070A" });
+    expect(manifest).toMatchObject({ background_color: "#07080C", theme_color: "#07080C" });
     expect(config).toContain('logoUrl: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663334609213/cpOlsdSDfczJjkTv.png"');
-    expect(config).toContain('backgroundColor: "#05070A"');
+    expect(config).toContain('backgroundColor: "#07080C"');
     expect(config).not.toContain("ERYFJLFDQzlyXpmC");
   });
 });

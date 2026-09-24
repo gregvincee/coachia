@@ -126,7 +126,7 @@ export default function RootLayout() {
             <Stack.Screen name="oauth/callback" />
           </Stack>
           <PwaInstallPrompt />
-          <StatusBar style="light" backgroundColor="#05070A" />
+          <StatusBar style="light" backgroundColor="#07080C" />
         </QueryClientProvider>
       </trpc.Provider>
     </GestureHandlerRootView>
