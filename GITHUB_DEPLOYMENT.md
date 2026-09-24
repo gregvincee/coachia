@@ -34,9 +34,9 @@ Avant publication, le propriétaire doit fournir :
 
 Le fichier `CNAME` ne doit pas être inventé à l’avance : il sera ajouté avec le domaine confirmé. La configuration du domaine dans GitHub Pages reste obligatoire même si un fichier `CNAME` est présent.
 
-## DNS à préparer après confirmation du domaine
+## DNS à préparer pour CoachIA
 
-Pour un sous-domaine comme `app.exemple.com`, créer généralement un enregistrement `CNAME` vers `<nom-utilisateur>.github.io`. Pour un domaine racine, utiliser les enregistrements recommandés par GitHub Pages pour le dépôt concerné, puis activer HTTPS dans les réglages Pages. Les valeurs exactes dépendent du domaine et du registrar.
+Pour CoachIA, créer chez le registrar un enregistrement `CNAME` pour `coachia.vragelab.com` vers `gregvincee.github.io`, puis activer HTTPS dans les réglages Pages. Le domaine racine `vragelab.com` reste ainsi disponible pour le site VrageLab existant.
 
 ## Limite importante
 
