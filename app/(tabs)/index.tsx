@@ -52,7 +52,7 @@ export default function HomeScreen() {
               <Text className="mt-3 text-2xl font-bold leading-8 text-[#F5F1E8]" numberOfLines={2}>{activeMission.title}</Text>
               <Text className="mt-2 text-sm leading-6 text-[#AEB4C0]">{activeMission.goal}</Text>
               <View className="mt-4 rounded-2xl bg-[#0B0D12] p-3"><Text className="text-xs font-bold uppercase tracking-wide text-[#8F96A4]">Dernière difficulté détectée</Text><Text className="mt-1 text-sm leading-5 text-[#E5DFD2]">{nextDifficulty}</Text></View>
-              <TouchableOpacity accessibilityRole="button" accessibilityLabel="Continuer la mission active" onPress={() => openMission(activeMission.id)} activeOpacity={0.8} className="mt-5 items-center rounded-xl bg-[#D6B36A] px-4 py-4"><Text className="font-bold text-white">Continuer</Text></TouchableOpacity>
+              <TouchableOpacity accessibilityRole="button" accessibilityLabel="Continuer la mission active" onPress={() => openMission(activeMission.id)} activeOpacity={0.8} className="mt-5 items-center rounded-xl bg-[#D6B36A] px-4 py-4"><Text className="font-bold text-[#07080C]">Continuer</Text></TouchableOpacity>
             </View>
 
             <View className="rounded-2xl border border-[#343947] bg-[#151820] p-4">

@@ -244,7 +244,7 @@ function WaitlistInviteSummary({
     <View className="gap-3 rounded-2xl border border-[#C89D56] bg-[#151820] p-4">
       <View className="flex-row items-center justify-between gap-3"><View className="flex-1"><Text className="text-base font-bold text-[#F5F1E8]">Invitation de cohorte</Text><Text className="mt-1 text-xs leading-5 text-[#AEB4C0]">Vue agrégée : aucune adresse e-mail n’apparaît dans ce tableau.</Text></View><Text className="text-sm font-bold text-[#C89D56]">{summary.waiting} en attente</Text></View>
       <View className="flex-row gap-4"><MiniMetric label="Inscrits" value={String(summary.total)} /><MiniMetric label="Invités" value={String(summary.invited)} /><MiniMetric label="Retraits" value={String(summary.declined)} /></View>
-      <TouchableOpacity accessibilityRole="button" accessibilityLabel="Préparer la prochaine invitation bêta" disabled={preparing} onPress={onPrepare} activeOpacity={0.75} className={preparing ? "items-center rounded-xl bg-[#D6B36A] px-4 py-3 opacity-70" : "items-center rounded-xl bg-[#D6B36A] px-4 py-3"}><Text className="font-bold text-white">{preparing ? "Préparation…" : "Préparer la prochaine invitation"}</Text></TouchableOpacity>
+      <TouchableOpacity accessibilityRole="button" accessibilityLabel="Préparer la prochaine invitation bêta" disabled={preparing} onPress={onPrepare} activeOpacity={0.75} className={preparing ? "items-center rounded-xl bg-[#D6B36A] px-4 py-3 opacity-70" : "items-center rounded-xl bg-[#D6B36A] px-4 py-3"}><Text className="font-bold text-[#07080C]">{preparing ? "Préparation…" : "Préparer la prochaine invitation"}</Text></TouchableOpacity>
       {resultMessage ? <Text accessibilityLiveRegion="polite" className="text-sm leading-5 text-[#E5DFD2]">{resultMessage}</Text> : null}
     </View>
   );
@@ -300,7 +300,7 @@ function AlertCard({
           <Text className="text-sm leading-5 text-[#AEB4C0]"><Text className="font-bold text-[#F5F1E8]">Décision recommandée. </Text>{alert.actionRecommandée}</Text>
           {alert.comparaisonPériodePrécédente ? <Text className="text-sm text-[#AEB4C0]">Période précédente : {formatPercent(alert.comparaisonPériodePrécédente.valeur)}{alert.comparaisonPériodePrécédente.évolution !== null ? ` · Évolution : ${formatPercent(alert.comparaisonPériodePrécédente.évolution)}` : ""}</Text> : null}
           <Text className="text-xs text-[#8F96A4]">Volume minimal : {alert.volumeMinimalAtteint ? "atteint" : "non atteint"} · Action automatique : {alert.actionAutomatiqueAppliquée ? "appliquée" : "non appliquée"}</Text>
-          {onOpenStripe ? <TouchableOpacity accessibilityRole="link" accessibilityLabel="Ouvrir le diagnostic Stripe" onPress={onOpenStripe} activeOpacity={0.75} className="self-start rounded-full bg-[#D6B36A] px-4 py-2"><Text className="font-bold text-white">Ouvrir Stripe et les paiements</Text></TouchableOpacity> : null}
+          {onOpenStripe ? <TouchableOpacity accessibilityRole="link" accessibilityLabel="Ouvrir le diagnostic Stripe" onPress={onOpenStripe} activeOpacity={0.75} className="self-start rounded-full bg-[#D6B36A] px-4 py-2"><Text className="font-bold text-[#07080C]">Ouvrir Stripe et les paiements</Text></TouchableOpacity> : null}
         </View>
       ) : null}
     </View>

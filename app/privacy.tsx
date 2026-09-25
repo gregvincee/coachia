@@ -66,6 +66,16 @@ export default function PrivacyScreen() {
         >
           L’adresse est conservée pendant la préparation et le déroulement de la bêta, ou jusqu’à votre demande de retrait. Le formulaire ci-dessous supprime l’adresse de la liste d’attente et ne renvoie pas son statut, afin de ne pas exposer l’inscription d’une autre personne.
         </PrivacySection>
+        <PrivacySection
+          title="Vos droits et limites actuelles"
+        >
+          Vous pouvez demander des informations sur les données de la liste bêta, demander une correction ou utiliser le retrait ci-dessous. Dans cette version, le retrait de la liste d’attente est automatisé ; l’export et la suppression complète d’un compte utilisateur doivent encore être ajoutés avant un lancement public. La personne ou l’entreprise responsable du traitement, son adresse légale et le canal de réclamation doivent être renseignés avant la mise en production.
+        </PrivacySection>
+        <PrivacySection
+          title="Âge et équité"
+        >
+          La bêta est destinée aux personnes de 18 ans et plus. CoachIA ne doit pas être utilisé pour évaluer ou prendre une décision importante sur une personne. Les limites, les accommodations d’accessibilité et les garanties d’équité sont expliquées dans la page IA responsable.
+        </PrivacySection>
 
         <View className="mt-5 rounded-2xl border border-[#C89D56] bg-[#151820] p-5">
           <Text className="text-xs font-bold tracking-widest text-[#E8C98A]">RETRAIT DE LA BÊTA</Text>
@@ -111,6 +121,9 @@ export default function PrivacyScreen() {
         </View>
 
         <Text className="mt-6 text-xs leading-5 text-[#788899]">Version bêta — 23 août 2026</Text>
+        <TouchableOpacity accessibilityRole="link" accessibilityLabel="Lire les engagements d’équité et d’IA responsable" activeOpacity={0.7} className="mt-4 self-start" onPress={() => router.push("/responsible-ai")}>
+          <Text className="text-sm font-semibold text-[#E8C98A] underline">Lire les engagements d’IA responsable</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           accessibilityRole="button"
           accessibilityLabel="Retourner à la page de lancement CoachIA"

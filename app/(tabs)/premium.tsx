@@ -108,7 +108,7 @@ export default function PremiumScreen() {
                         <Text className="text-2xl font-bold text-[#F5F1E8]">{item.name}</Text>
                         <Text className="mt-1 text-sm leading-5 text-[#AEB4C0]">{item.description}</Text>
                       </View>
-                      {isCurrentPlan ? <View className="rounded-full bg-[#D6B36A] px-3 py-1"><Text className="text-xs font-bold text-white">Actif</Text></View> : null}
+                      {isCurrentPlan ? <View className="rounded-full bg-[#D6B36A] px-3 py-1"><Text className="text-xs font-bold text-[#07080C]">Actif</Text></View> : null}
                     </View>
 
                     <View className="mt-4 border-b border-[#343947] pb-4">
@@ -157,7 +157,7 @@ export default function PremiumScreen() {
                   onPress={() => void handleSelectPlan(item.id)}
                   style={({ pressed }) => [styles.actionPressable, pressed && styles.pressed]}
                 >
-                  <View className="items-center rounded-xl bg-[#D6B36A] px-4 py-3"><Text className="font-bold text-white">Préparer cet achat</Text></View>
+                  <View className="items-center rounded-xl bg-[#D6B36A] px-4 py-3"><Text className="font-bold text-[#07080C]">Préparer cet achat</Text></View>
                 </Pressable>
               </View>
             )}

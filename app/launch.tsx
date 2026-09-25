@@ -135,6 +135,14 @@ export default function LaunchScreen() {
           >
             <Text className="text-sm font-semibold text-[#E8C98A] underline">Lire comment vos données sont utilisées</Text>
           </TouchableOpacity>
+          <View className="mt-4 flex-row flex-wrap gap-x-4 gap-y-2">
+            <TouchableOpacity accessibilityRole="link" accessibilityLabel="Lire les conditions d’utilisation de CoachIA" onPress={() => router.push("/terms")} activeOpacity={0.7}>
+              <Text className="text-sm font-semibold text-[#E8C98A] underline">Conditions d’utilisation</Text>
+            </TouchableOpacity>
+            <TouchableOpacity accessibilityRole="link" accessibilityLabel="Lire les engagements d’équité et d’IA responsable" onPress={() => router.push("/responsible-ai")} activeOpacity={0.7}>
+              <Text className="text-sm font-semibold text-[#E8C98A] underline">IA responsable et équité</Text>
+            </TouchableOpacity>
+          </View>
           {notice ? <Text accessibilityLiveRegion="polite" className="mt-3 text-sm leading-5 text-[#E5DFD2]">{notice}</Text> : null}
         </View>
 
