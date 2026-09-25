@@ -102,7 +102,7 @@ export default function PrivacyScreen() {
             onPress={() => setConfirmed((current) => !current)}
           >
             <View className={confirmed ? "mt-0.5 h-5 w-5 items-center justify-center rounded border border-[#C89D56] bg-[#D6B36A]" : "mt-0.5 h-5 w-5 rounded border border-[#788899] bg-[#0B0D12]"}>
-              {confirmed ? <Text className="text-xs font-bold text-white">✓</Text> : null}
+              {confirmed ? <Text className="text-xs font-bold text-[#07080C]">✓</Text> : null}
             </View>
             <Text className="flex-1 text-xs leading-5 text-[#AEB4C0]">Je confirme vouloir retirer cette adresse de la liste d’attente bêta.</Text>
           </TouchableOpacity>
@@ -115,7 +115,7 @@ export default function PrivacyScreen() {
             onPress={() => void submitWithdrawal()}
             style={withdrawWaitlist.isPending ? styles.disabledButton : undefined}
           >
-            <Text className="font-bold text-white">{withdrawWaitlist.isPending ? "Traitement…" : "Retirer mon adresse"}</Text>
+            <Text className="font-bold text-[#07080C]">{withdrawWaitlist.isPending ? "Traitement…" : "Retirer mon adresse"}</Text>
           </TouchableOpacity>
           {notice ? <Text accessibilityLiveRegion="polite" className="mt-3 text-sm leading-5 text-[#E5DFD2]">{notice}</Text> : null}
         </View>
@@ -131,7 +131,7 @@ export default function PrivacyScreen() {
           className="mt-5 items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-4"
           onPress={() => router.replace("/launch")}
         >
-          <Text className="font-bold text-white">Retour à la page de lancement</Text>
+          <Text className="font-bold text-[#07080C]">Retour à la page de lancement</Text>
         </TouchableOpacity>
       </ScrollView>
     </ScreenContainer>

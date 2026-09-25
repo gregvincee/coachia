@@ -127,7 +127,7 @@ export default function PremiumScreen() {
                         style={({ pressed }) => [styles.actionPressable, pressed && styles.pressed]}
                       >
                         <View className={item.id === "free" ? "items-center rounded-xl border border-[#526176] bg-[#253044] px-4 py-3" : "items-center rounded-xl bg-[#D6B36A] px-4 py-3"}>
-                          <Text className={item.id === "free" ? "font-bold text-[#F5F1E8]" : "font-bold text-white"}>{item.id === "free" ? "Utiliser" : `Passer à ${item.name}`}</Text>
+                          <Text className={item.id === "free" ? "font-bold text-[#F5F1E8]" : "font-bold text-[#07080C]"}>{item.id === "free" ? "Utiliser" : `Passer à ${item.name}`}</Text>
                         </View>
                       </Pressable>
                     ) : null}

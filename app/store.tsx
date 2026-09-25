@@ -104,7 +104,7 @@ export default function StoreScreen() {
                 activeOpacity={0.75}
                 className={selected ? "rounded-full border border-[#C89D56] bg-[#D6B36A] px-4 py-2" : "rounded-full border border-[#343947] bg-[#151820] px-4 py-2"}
               >
-                <Text className={selected ? "font-semibold text-white" : "font-semibold text-[#F5F1E8]"}>{item.label}</Text>
+                <Text className={selected ? "font-semibold text-[#07080C]" : "font-semibold text-[#F5F1E8]"}>{item.label}</Text>
               </TouchableOpacity>
             );
           })}
@@ -131,7 +131,7 @@ export default function StoreScreen() {
                 activeOpacity={0.8}
                 className="items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-3"
               >
-                <Text className="font-bold text-white">{checkout.isPending ? "Préparation…" : "Choisir ce bonus"}</Text>
+                <Text className="font-bold text-[#07080C]">{checkout.isPending ? "Préparation…" : "Choisir ce bonus"}</Text>
               </TouchableOpacity>
             </View>
           ))}

@@ -9,7 +9,7 @@ describe("page publique de lancement CoachIA", () => {
     const launch = readFileSync(join(root, "app/launch.tsx"), "utf8");
 
     expect(launch).toContain("COHORTE BÊTA PRIVÉE");
-    expect(launch).toContain("coachia-launch-hero_e49cb82e.jpg");
+    expect(launch).toContain("MISSION · TENTATIVE · DIAGNOSTIC · MAÎTRISE");
     expect(launch).toContain('color: "#E8C98A"');
     expect(launch).toContain("Commencer gratuitement");
     expect(launch).toContain("Découvrir le parcours bêta");
@@ -26,8 +26,10 @@ describe("page publique de lancement CoachIA", () => {
     const rootLayout = readFileSync(join(root, "app/_layout.tsx"), "utf8");
 
     expect(rootLayout).toContain("const inLaunch = (segments[0] as string | undefined) === 'launch'");
-    expect(rootLayout).toContain("!inOnboarding && !inLaunch && !inBetaWelcome && !inPrivacy");
+    expect(rootLayout).toContain("!inOnboarding && !inLaunch && !inBetaWelcome && !inPrivacy && !inTerms && !inResponsibleAi");
     expect(rootLayout).toContain('<Stack.Screen name="launch" />');
+    expect(rootLayout).toContain('<Stack.Screen name="terms" />');
+    expect(rootLayout).toContain('<Stack.Screen name="responsible-ai" />');
   });
 
   it("n’envoie une candidature bêta qu’avec un consentement explicite", () => {

@@ -37,13 +37,11 @@ export default function LaunchScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView contentContainerStyle={styles.content}>
         <View className="items-center border-b border-[#343947] px-6 pb-8 pt-7">
-          <Image
-            source={{ uri: "/manus-storage/coachia-launch-hero_e49cb82e.jpg" }}
-            accessibilityRole="image"
-            accessibilityLabel="Visuel de lancement CoachIA, smartphone de micro-coaching sur fond métallique"
-            resizeMode="cover"
-            style={styles.heroVisual}
-          />
+          <View accessibilityRole="image" accessibilityLabel="Schéma du parcours CoachIA : mission, tentative, diagnostic et maîtrise" className="w-full rounded-2xl border border-[#C89D56] bg-[#151820] px-5 py-6">
+            <Text className="text-center text-xs font-bold tracking-widest text-[#E8C98A]">MISSION · TENTATIVE · DIAGNOSTIC · MAÎTRISE</Text>
+            <Text className="mt-3 text-center text-2xl font-bold text-[#F5F1E8]">Apprendre en faisant.</Text>
+            <Text className="mt-2 text-center text-sm leading-5 text-[#AEB4C0]">Une boucle courte pour transformer chaque essai en compétence réutilisable.</Text>
+          </View>
           <Image
             source={require("@/assets/images/icon.png")}
             accessibilityRole="image"
@@ -73,7 +71,7 @@ export default function LaunchScreen() {
             activeOpacity={0.8}
             className="mt-5 items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-4"
           >
-            <Text className="font-bold text-white">Commencer gratuitement</Text>
+            <Text className="font-bold text-[#07080C]">Commencer gratuitement</Text>
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityRole="button"
@@ -111,7 +109,7 @@ export default function LaunchScreen() {
             onPress={() => setConsent((current) => !current)}
           >
             <View className={consent ? "mt-0.5 h-5 w-5 items-center justify-center rounded border border-[#C89D56] bg-[#D6B36A]" : "mt-0.5 h-5 w-5 rounded border border-[#788899] bg-[#0B0D12]"}>
-              {consent ? <Text className="text-xs font-bold text-white">✓</Text> : null}
+              {consent ? <Text className="text-xs font-bold text-[#07080C]">✓</Text> : null}
             </View>
             <Text className="flex-1 text-xs leading-5 text-[#AEB4C0]">J’accepte que CoachIA conserve mon adresse pour me recontacter uniquement au sujet de cette bêta.</Text>
           </TouchableOpacity>
@@ -124,7 +122,7 @@ export default function LaunchScreen() {
             className="mt-5 items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-4"
             style={joinWaitlist.isPending ? styles.disabledButton : undefined}
           >
-            <Text className="font-bold text-white">{joinWaitlist.isPending ? "Validation…" : "Rejoindre la liste bêta"}</Text>
+            <Text className="font-bold text-[#07080C]">{joinWaitlist.isPending ? "Validation…" : "Rejoindre la liste bêta"}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityRole="link"
@@ -172,14 +170,6 @@ function BenefitCard({ number, title, description }: { number: string; title: st
 const styles = StyleSheet.create({
   content: {
     paddingBottom: 36,
-  },
-  heroVisual: {
-    width: "100%",
-    height: 170,
-    borderRadius: 20,
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: "#343947",
   },
   logo: {
     width: 72,
