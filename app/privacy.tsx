@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { ScreenContainer } from "@/components/screen-container";
 import { trpc } from "@/lib/trpc";
 
-function PrivacySection({ title, children }: { title: string; children: string }) {
+function PrivacySection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <View className="mt-5 rounded-2xl border border-[#343947] bg-[#151820] p-5">
       <Text className="text-base font-bold text-[#F5F1E8]">{title}</Text>
@@ -69,7 +69,7 @@ export default function PrivacyScreen() {
         <PrivacySection
           title="Vos droits et limites actuelles"
         >
-          Vous pouvez demander des informations sur les données de la liste bêta, demander une correction ou utiliser le retrait ci-dessous. Dans cette version, le retrait de la liste d’attente est automatisé ; l’export et la suppression complète d’un compte utilisateur doivent encore être ajoutés avant un lancement public. La personne ou l’entreprise responsable du traitement, son adresse légale et le canal de réclamation doivent être renseignés avant la mise en production.
+          Vous pouvez demander des informations sur les données de la liste bêta, demander une correction ou utiliser le retrait ci-dessous. Pour toute question de confidentialité ou de support, écrivez à <Text className="font-semibold text-[#E8C98A]">vragelab@gmail.com</Text>. Dans cette version, le retrait de la liste d’attente est automatisé ; l’export et la suppression complète d’un compte utilisateur doivent encore être ajoutés avant un lancement public. La personne ou l’entreprise responsable du traitement, son adresse légale et le canal de réclamation doivent être renseignés avant la mise en production.
         </PrivacySection>
         <PrivacySection
           title="Âge et équité"

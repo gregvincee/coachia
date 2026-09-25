@@ -1,9 +1,10 @@
+import type { ReactNode } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { ScreenContainer } from "@/components/screen-container";
 
-function Principle({ title, children }: { title: string; children: string }) {
+function Principle({ title, children }: { title: string; children: ReactNode }) {
   return (
     <View className="mt-5 rounded-2xl border border-[#343947] bg-[#151820] p-5">
       <Text className="text-base font-bold text-[#F5F1E8]">{title}</Text>
@@ -25,7 +26,7 @@ export default function ResponsibleAiScreen() {
         <Principle title="Limites connues">La qualité d’un diagnostic peut varier selon la langue, l’orthographe, le style, la longueur, les outils d’assistance et le contexte fourni. Les scores ne mesurent ni l’intelligence, ni la personnalité, ni la valeur professionnelle. Une formulation atypique ne doit pas être interprétée comme une incapacité.</Principle>
         <Principle title="Droit à la reprise">Chaque diagnostic affiche une difficulté et une correction actionnable. L’utilisateur peut modifier sa tentative, refaire la mission et progresser. Une erreur de l’IA ne doit pas devenir une sanction permanente.</Principle>
         <Principle title="Accessibilité et accommodations">Les utilisateurs peuvent rédiger avec leurs outils d’assistance et expliquer un besoin dans leur tentative. Les missions ne doivent pas exiger une vitesse, une orthographe, une vision, une audition ou une motricité particulières. Les contrôles doivent rester utilisables au clavier et avec un lecteur d’écran sur le web.</Principle>
-        <Principle title="Vérification humaine">Ne prenez pas une décision importante à partir d’un score CoachIA. Pour signaler un diagnostic incohérent, conservez la mission et la tentative localement, puis utilisez le canal de support légal qui sera publié avant le lancement public.</Principle>
+        <Principle title="Vérification humaine">Ne prenez pas une décision importante à partir d’un score CoachIA. Pour signaler un diagnostic incohérent, conservez la mission et la tentative localement, puis écrivez à <Text className="font-semibold text-[#E8C98A]">vragelab@gmail.com</Text>.</Principle>
         <TouchableOpacity accessibilityRole="button" accessibilityLabel="Retourner à la page de lancement CoachIA" onPress={() => router.replace("/launch")} activeOpacity={0.8} className="mt-6 items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-4">
           <Text className="font-bold text-[#07080C]">Retour à la page de lancement</Text>
         </TouchableOpacity>

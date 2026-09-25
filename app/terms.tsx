@@ -1,9 +1,10 @@
+import type { ReactNode } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { ScreenContainer } from "@/components/screen-container";
 
-function LegalSection({ title, children }: { title: string; children: string }) {
+function LegalSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <View className="mt-5 rounded-2xl border border-[#343947] bg-[#151820] p-5">
       <Text className="text-base font-bold text-[#F5F1E8]">{title}</Text>
@@ -26,7 +27,7 @@ export default function TermsScreen() {
         <LegalSection title="Contenu envoyé">N’envoyez pas de mots de passe, de données de santé, de données financières, de secrets commerciaux ou de renseignements concernant une autre personne. Vous devez disposer des droits nécessaires sur tout contenu soumis. Le contenu local de la bêta reste sur l’appareil jusqu’à un partage volontaire, selon les limites décrites dans la page Confidentialité.</LegalSection>
         <LegalSection title="Accès équitable">CoachIA est conçu pour être utilisé sans discrimination fondée sur l’origine, la couleur, le sexe, l’identité ou l’expression de genre, l’orientation sexuelle, la religion, l’âge, le handicap, la langue ou la situation socioéconomique. Un score ne doit jamais servir seul à prendre une décision concernant une personne.</LegalSection>
         <LegalSection title="Disponibilité et paiements">La bêta peut être interrompue, limitée ou modifiée. Aucun achat n’est requis pour participer à la bêta actuelle. Les prix, crédits, remboursements et conditions commerciales devront être publiés séparément avant l’activation de paiements réels.</LegalSection>
-        <LegalSection title="Âge et signalement">La bêta actuelle est destinée aux personnes de 18 ans et plus. Si un problème d’accessibilité, de discrimination, de confidentialité ou de sécurité est rencontré, cessez d’utiliser la fonction concernée et signalez-le à l’exploitant avant le lancement public. L’identité et l’adresse de contact légales de l’exploitant restent à renseigner dans la configuration de production.</LegalSection>
+        <LegalSection title="Âge et signalement">La bêta actuelle est destinée aux personnes de 18 ans et plus. Si un problème d’accessibilité, de discrimination, de confidentialité ou de sécurité est rencontré, cessez d’utiliser la fonction concernée et signalez-le à <Text className="font-semibold text-[#E8C98A]">vragelab@gmail.com</Text>. Le nom légal et la juridiction de l’exploitant restent à renseigner dans la configuration de production.</LegalSection>
         <TouchableOpacity accessibilityRole="button" accessibilityLabel="Retourner à la page de lancement CoachIA" onPress={() => router.replace("/launch")} activeOpacity={0.8} className="mt-6 items-center rounded-xl border border-[#C89D56] bg-[#D6B36A] px-4 py-4">
           <Text className="font-bold text-[#07080C]">Retour à la page de lancement</Text>
         </TouchableOpacity>

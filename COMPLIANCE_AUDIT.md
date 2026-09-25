@@ -20,7 +20,7 @@ Il serait toutefois inexact de déclarer CoachIA **parfaitement conforme ou juri
 | Conditions d’utilisation | Ajouté | Nouvelle page `/terms` : limites de l’IA, contenu interdit, âge cible, paiements futurs, disponibilité, équité et responsabilité. Elle doit être relue par un juriste avant publication commerciale. |
 | Équité et IA responsable | Ajouté | Nouvelle page `/responsible-ai` : non-discrimination, limites linguistiques et de style, droit à la reprise, accommodations et interdiction d’utiliser un score seul pour une décision importante. |
 | Protection des comptes | Non complet | Le retrait de la liste d’attente est automatisé. L’export et la suppression complète d’un compte utilisateur ne sont pas encore disponibles. |
-| Identité légale | Non complet | Le nom légal de l’exploitant, son adresse de contact, le canal de réclamation et les responsables des traitements doivent être renseignés. |
+| Identité légale | Partiellement renseigné | L’adresse de confidentialité et de support fournie est **vragelab@gmail.com**. Le nom légal de l’exploitant, la juridiction, l’adresse postale, le canal de réclamation formel et les responsables des traitements doivent encore être renseignés. |
 | Paiements | Non actif | Stripe est préparé mais aucun paiement réel ne doit être activé avant la publication des prix, taxes, remboursements, conditions de vente et support. |
 | Évaluation d’équité | Non complet | Les garanties sont documentées, mais il manque encore des tests avec des utilisateurs présentant des niveaux de langue, d’accessibilité et de contexte différents. |
 
@@ -48,7 +48,7 @@ Avant le lancement, il faut constituer un petit jeu de tests non identifiants co
 
 ## Actions obligatoires avant lancement public
 
-1. Renseigner l’identité légale de l’exploitant, le contact de confidentialité, le contact de support et le canal de réclamation.
+1. Renseigner l’identité légale de l’exploitant, la juridiction, l’adresse postale et le canal de réclamation ; le contact confidentialité/support `vragelab@gmail.com` est maintenant publié.
 2. Ajouter l’export et la suppression du compte, puis tester la suppression des données associées et des journaux nécessaires.
 3. Fixer les durées de conservation et documenter les fournisseurs de base de données, cache, e-mail, stockage, hébergement et IA.
 4. Réaliser un audit manuel clavier et lecteur d’écran sur mobile et web, puis corriger les écarts constatés.
