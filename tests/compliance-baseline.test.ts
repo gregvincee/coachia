@@ -14,7 +14,7 @@ describe("socle conformité CoachIA", () => {
     const privacy = read("app/privacy.tsx");
     expect(launch).toContain('router.push("/terms")');
     expect(launch).toContain('router.push("/responsible-ai")');
-    expect(privacy).toContain("export et la suppression complète d’un compte utilisateur doivent encore être ajoutés");
+    expect(privacy).toContain("La suppression complète des données rattachées à un compte est désormais accessible depuis Paramètres");
     expect(read("app/terms.tsx")).toContain("Accès équitable");
     expect(read("app/responsible-ai.tsx")).toContain("Vérification humaine");
   });

@@ -107,6 +107,22 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+/** Supprime les données rattachées au compte puis le compte lui-même. Les agrégats sans userId sont conservés. */
+export async function deleteUserAccount(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Base de données indisponible pour la suppression du compte.");
+
+  await db.transaction(async (tx) => {
+    await tx.delete(userWallets).where(eq(userWallets.userId, userId));
+    await tx.delete(microPurchaseTransactions).where(eq(microPurchaseTransactions.userId, userId));
+    await tx.delete(commerceEvents).where(eq(commerceEvents.userId, userId));
+    await tx.delete(userDailyAiUsage).where(eq(userDailyAiUsage.userId, userId));
+    await tx.delete(betaCohortMembers).where(eq(betaCohortMembers.userId, userId));
+    await tx.delete(betaCohortFeedback).where(eq(betaCohortFeedback.userId, userId));
+    await tx.delete(users).where(eq(users.id, userId));
+  });
+}
+
 export async function getUserWallet(userId: number) {
   const db = await getDb();
   if (!db) return undefined;

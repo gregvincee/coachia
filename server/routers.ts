@@ -11,6 +11,7 @@ import {
   getBetaCohortMetrics,
   getBetaWaitlistSummary,
   getCommerceMetrics,
+  deleteUserAccount,
   getUserDailyPromptUsage,
   getUserPurchaseHistory,
   getUserWallet,
@@ -62,6 +63,22 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
+  }),
+
+  account: router({
+    /** Suppression irréversible : l’interface doit transmettre une confirmation explicite. */
+    delete: protectedProcedure
+      .input(z.object({ confirm: z.literal(true) }))
+      .mutation(async ({ ctx }) => {
+        try {
+          await deleteUserAccount(ctx.user.id);
+          const cookieOptions = getSessionCookieOptions(ctx.req);
+          ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
+          return { success: true } as const;
+        } catch {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "La suppression du compte n’a pas pu être terminée." });
+        }
+      }),
   }),
 
   commerce: router({
